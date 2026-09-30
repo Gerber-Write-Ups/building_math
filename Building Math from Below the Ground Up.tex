@@ -1,0 +1,1500 @@
+\documentclass[12pt]{article}
+
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{braket}
+\usepackage{glossaries}
+\usepackage{relsize}
+\usepackage{mdframed}
+
+\mdfdefinestyle{theoremrule}{
+	topline=true,
+	bottomline=true,
+	rightline=true,
+	leftline=true,
+	linewidth=0.8pt,
+	innerleftmargin=0.5em,
+	innerrightmargin=0.5em,
+	innertopmargin=0.5em,
+	innerbottommargin=0.5em,
+}
+
+\newtheoremstyle{break}% name
+{0pt}%         Space above, empty = `usual value'
+{0pt}%         Space below
+{}% Body formatting
+{\parindent}%         Indent amount (empty = no indent, \parindent = para indent)
+{\bfseries}% Thm head font
+{}%        Punctuation after thm head
+{\newline}% Space after thm head: \newline = linebreak
+{}%         Thm head spec
+
+\theoremstyle{break}
+
+\newtheorem{definition}{Definition}[section]
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{preformal definition}[definition]{Preformal Definition}
+\newtheorem{preformal theorem}[theorem]{Preformal Theorem}
+
+\surroundwithmdframed[style=theoremrule]{definition}
+\surroundwithmdframed[style=theoremrule]{theorem}
+\surroundwithmdframed[style=theoremrule]{corollary}
+\surroundwithmdframed[style=theoremrule]{lemma}
+\surroundwithmdframed[style=theoremrule]{preformal definition}
+\surroundwithmdframed[style=theoremrule]{preformal theorem}
+
+\newcommand{\bv}[1]{\boldsymbol{#1}}
+\newcommand{\mc}[1]{\mathcal{#1}}
+\newcommand{\bc}[1]{\bv{\mc{#1}}}
+\newcommand{\qq}[1]{``#1"}
+\newcommand{\N}[0]{\mathbb{N}}
+\newcommand{\norm}[1]{\left|#1\right|}
+
+% \bigtimes operator. From https://tex.stackexchange.com/questions/586507/importing-bigplus-and-bigtimes-from-mathabx-package
+\DeclareFontFamily{U}{mathx}{\hyphenchar\font45}
+\DeclareFontShape{U}{mathx}{m}{n}{
+	<-6> mathx5 <6-7> mathx6 <7-8> matha7
+	<8-9> mathx8 <9-10> mathx9
+	<10-12> mathx10 <12-> mathx12
+}{}
+\DeclareSymbolFont{mathx}{U}{mathx}{m}{n}
+\DeclareMathSymbol{\bigplus}{\mathop}{mathx}{"90}
+\DeclareMathSymbol{\bigtimes}{\mathop}{mathx}{"91}
+
+\newacronym{fol}{\textbf{FOL}}{first-order logic}
+\newacronym{lfol}{\textbf{LFOL}}{language of first-order logic}
+\newacronym{zf}{\textbf{ZF}}{Zermelo-Fraenkel}
+
+\title{Building Math from (Below) the Ground Up}
+\author{Justin Gerber}
+\date{\today}
+
+\begin{document}
+	
+	\maketitle
+	
+
+	\section{Introduction}
+	
+		\subsection{Overview}
+		
+			All of traditional mathematics can be expressed in terms of mathematical set theory.
+			Set theory is expressed in terms of a formal logic called \gls{fol} which is expressed in the \gls{lfol}.
+			The \gls{lfol} is a written formal language which means that is is composed of an explicitly and clearly defined set of symbols which constitutes the alphabet of that language and similarly explicitly and clearly defined syntax rules which identify \qq{appropriate} ways in which the symbols can be combined to form formulas.\footnote{Authors may refer to formulas as well-formed formulas (WFFs), sentences, or words.}
+			In addition to \gls{lfol}, \gls{fol} includes inference rules which, together, constitute a deductive calculus which allows us to \qq{deduce} new formulas from old formulas such that a chain of valid deductions is considered a proof of the final formula in the chain.
+			\gls{lfol} and the inference rules constitute \gls{fol}.
+			
+			A formal theory within a formal logic begins with a set of axioms which are a subset of the formulas of the formal language.
+			It is then possible, using the inference rules, to derive new formulas from these axioms using the inference rules.
+			The main question we ask about a formal theory is which formulas can be proven from the given axioms?
+			
+			One goal of this document is to state the \gls{zf} axioms which underpin mathematical set theory in the \gls{lfol} as well as to define and prove some basic concepts in set and number theory.
+			Though our goal is to formalize basic results in set and number theory, we will find that we are philosophical forced to rely on \textbf{preformal} definitions, understandings, and theorems of basic concepts related to set and number theory.
+			For example, it will be impossible to state or prove basic concepts about \gls{fol} without being able to refer to a preformal understanding of the natural numbers.
+			Yet, even further, we will find that require surprisingly powerful theorems related to structural induction and recursion to do all of the metalogic and metamathematics required to lay out these foundations.
+			That brings use to a second goal of this document which is to explore exactly how much metamathematical machinery is required to lay out the foundations of mathematics.
+			This is part of an exploration into criticisms of the foundations of mathematics as being circular.
+			We will be careful in this document not to conflate \textbf{preformal} with vague or ill-defined.
+			Rather, some of our preformal definitions and theorems will look exactly like rigorous and formal peices of mathematics.
+			
+			We will begin with an exposition of basic preformal mathematical concepts including objects, sets, set operations, relations and functions.
+			We will then proceed into a technical, but still preformal, exposition around structural induction and recursion.
+			We will see that structural induction and recursion are essential to development of \gls{lfol} and \gls{fol}.
+			After a description of sequences of objects and their manipulations, we will be ready to lay out the syntax rules of \gls{lfol}.			
+			
+			Once the syntax of \gls{lfol} is carefully described, we will be ready to introduce the idea of a logical system consisting of axioms and deduction rules used to syntactically prove theorem of the logical theory.
+			We will lay out the deduction rules for \gls{fol}.
+			Yet another goal of this work is give a technical proof that extensions by definition are conservative in \gls{fol}. 
+			After introducing the deduction and proof-building rules in \gls{fol}, we will be ready for a metalogical proof using structural induction and recursion, that extensions by definition are indeed conservative.
+			
+			With all of these preliminaries handled, we will finally be ready to introduce set theory as a specific theoretical instantiation within \gls{fol}.
+			Set theory will be \gls{fol} consisting of symbols necessary to describe sets together with the famous \gls{zf} axioms.
+		
+		\subsection{A Note on Syntax and Semantics}
+			
+			Two critical pillars within formal logic are syntax and semantics.
+			Syntax encapsulates the formal rules described above regarding the alphabet of a formal language, the syntactic rules for combining symbols into formulas, and the inference rules for deriving new formulas from old.
+			In short, syntax describes the \qq{rules of the game} of formal logic.
+			Semantics is, crudely, the assigning of meaning to the symbols of the language.
+			In its simplest form, semantics is the assigning of truth values to formulas.
+			
+			Let's consider an example.
+			Suppose we would like to formalize the statement: \qq{If $m$ is a natural number and $m$ is odd then $m \div 2$ is a natural number}.
+			In \gls{lfol} this expression might be formalized as\footnote{Here we use prefix notation so that $\in m \mathbb{N}$ formalizes that $m$ is contained in $\mathbb{N}$. This would be expressed in infix notation as $m\in \mathbb{N}$.}
+			\begin{equation*}
+				\forall m((\in m \mathbb{N} \land Om) \implies \in \div m 2 \mathbb{N})
+			\end{equation*}
+			
+			The smallest element in our formal language is the \textit{term}.
+			A term is one of three things: (1) a concrete object such as the number \qq{2}, (2) a variable into which concrete objects can be \qq{plugged in} such as \qq{$m$}, or (3) an $n$-ary function of other terms such as \qq{$\div m 2$}.
+			In fact, below we will express a concrete object as a 0-ary function.
+			The terms in the above expression are
+			\begin{align*}
+				&m\\
+				&\mathbb{N}\\
+				&m\\
+				&\div m 2\\
+				&m\\
+				&2\\
+				&\mathbb{N}
+			\end{align*}
+			Above I've included every term in the formula as it appears from left to right including repetitions of the same term.
+			The only variable which appears is \qq{$m$}.
+			We see that \qq{$2$} and \qq{$\mathbb{N}$} appear as 0-ary functions or constants.
+			We see that \qq{$\div$} appears as a 2-ary function with arguments \qq{$m$} and \qq{2} which are a variable and 0-ary function, respectively.
+			
+			The next larger element in our formal language is the \textit{atomic formula}.
+			An atomic formula is the combination of an $n$-ary predicate symbol and $n$ terms.
+			We have two predicate symbols in the above formula: \qq{$\in$} is a 2-ary predicate and \qq{$O$} is a 1-ary predicate symbol.
+			The atomic formulas are then
+			\begin{align*}
+				&\in m \mathbb{N}\\
+				&On\\
+				&\in \div m 2 \mathbb{N}
+			\end{align*}
+			
+			Finally, the next larger object in our language is the formula.
+			Atomic formulas themselves are already formulas, but we can form larger, more complex, formulas by stringing together smaller formulas with connectives such as \qq{$\land$} and \qq{$\implies$} or quantifying with \qq{$\forall$}.
+			The formulas in the above expression are
+			\begin{align*}
+				&\forall m((\in m \mathbb{N} \land O m) \implies \in \div m 2 \mathbb{N})\\
+				&(\in m\mathbb{N}\land Om) \implies \in \div m 2 \mathbb{N}\\
+				&(\in m\mathbb{N} \land Om)\\
+				&\in m \mathbb{N}\\
+				&Om\\
+				&\in \div m 2 \mathbb{N}
+			\end{align*}
+			
+			The preceding discussion within this section has been a purely syntactic analysis of the formula in question.
+			That is, we broke the formula down into smaller parts within the formal language according to the syntax rules of the language.
+			In the following sections we will learn that the formula given above is indeed a valid formula within \gls{lfol}.
+			
+			Semantics enters the discussion when we give an \textit{interpretation} to the various expressions above.
+			For example, when we \textit{interpret} the symbol \qq{2} as the number 2, the expression \qq{$\div m 2$} as the division of the variable \qq{$m$} by the number \qq{2}, or the predicate \qq{$Om$} to mean that the variable $m$ is odd, we imposing semantics onto the expression.
+			We also are making a semantic interpretation any time we impose or deduce a truth value for a given formula.
+			For example, on all of the usual interpretations, we would assign a value of \qq{false} to the formula above because the odd natural numbers are, in fact, not divisible by 2.
+			
+			This document leans towards a game formalism philosophical approach to formal logic.
+			Game formalism is a philosophical view on the foundations of mathematics which holds that it is possible to describe set theory and, by extension, all of mathematics, using only syntactic manipulations within \gls{lfol} and \gls{fol}.
+			Or, more conservatively, at the very least, game formalism asks the question of how far one can get using such an approach.
+			To that end, I would like it to be clear that all definitions and arguments should be self-contained within purely syntactic analyses.
+			At a few times, I may make reference to semantic ideas, but this will only be to motivate and give intuition for syntactic definitions and manipulations.
+			Such references should be disposable with respect to the main focus of this work.
+			One could, instead, proceed by dropping semantics entirely from the narrative.
+			In such an approach, some definitions may appear unmotivated, at least at first, but that is not, technically, a problem for the game formalist.
+		
+	\section{Basic Preformal Concepts}
+		One goal of this work is to carefully define \gls{lfol} and \gls{fol} so that we can eventually formally describe \gls{zf} set theory with \gls{fol} to serve as a foundation for the formalization of much of modern mathematics.
+		
+		However, we will not be able to perform this task starting from nothing.
+		Indeed, to create this foundation for formal mathematics, we will find ourselves relying on \textbf{preformal} conceptions of various simple mathematical constructs such as the natural, or \qq{counting}, numbers.
+		
+		In one sense, the definitions and proofs which appear about preformal concepts should be thought of like definitions of English words which are understood by speakers and listeners of the language.
+		However, some definitions and proof we will encounter will be technical and will closely or exactly mirror their formal counterparts within formal mathematics.
+		From this we take the understanding that we actually require some surprisingly powerful preformal concepts to lay out the foundations for formal mathematics.
+		
+		\subsection{Preformal Logic}
+	
+			\begin{preformal definition}[Logic]
+				To build up our formal system of logic we will indeed require a preformal system of logic.
+				It is necessary that we preformally or intuitively understand concepts like
+				\begin{itemize}
+					\item{If $\mc{A}$ is true and $\mc{B}$ is true then \qq{$\mc{A}$ and $\mc{B}$} is true.}
+					\item{If $\mc{A}$ implies $\mc{C}$ and $\mc{B}$ implies $\mc{C}$ then if \qq{$\mc{A}$ or $\mc{B}$} is true then $\mc{C}$ is true.}
+				\end{itemize}
+			\end{preformal definition}
+			
+			\begin{preformal definition}[Object]
+				An object is a clearly definable and delineated entity.
+			\end{preformal definition}
+			
+			\begin{preformal definition}[Symbol]
+				A symbols is a type of object.
+				Written symbols are specific two-dimensional patterns depicted on two-dimensional surfaces like paper or screens.
+				We will typically use symbols from the English alphabet and numeral system as well as some punctuation symbols and brackets.
+			\end{preformal definition}
+			
+			\begin{preformal definition}[Object Equality]
+				Suppose the symbols $x$, $y$, and $z$ represent objects.
+				If $x$ and $y$ are the same object then we may write $x = y$. Otherwise we write $x\not = y$.
+				From this it (preformally) follows that if $x= y$ then $y = x$ and that if $x = y$ and $y = z$ then $x = z$.
+				We of course also always have that $x = x$.
+			\end{preformal definition}		
+		
+		\subsection{Preformal Set Theory}
+		
+			\begin{preformal definition}[Set]
+				A set is an object which contains other objects.
+				if $S$ is a set, $x$ is an object, and $S$ contains $x$ then we write $x \in S$.
+				We write
+				\begin{equation*}
+					S = \{x, y, z\}
+				\end{equation*}
+				to indicate $x\in S$, $y\in S$, $z\in S$ and there is no other object in $S$ not equal to one of $x$, $y$, or $z$.
+				In other words, if $w\in S$ then $w=x$, $w=y$, or $w=z$.
+			\end{preformal definition}
+			
+			\begin{preformal definition}[Subset]
+				If $S$ and $T$ are sets and all elements that are contained in $S$ are also contained in $T$ then we say $S$ is a subset of $T$ and we denote this by $S \subset T$.
+				This can also be more rigorously by specifying that $S\subset T$ if for all $x\in S$ we have that $x\in T$.
+			\end{preformal definition}
+			
+			\begin{preformal definition}[Set Equality]
+				Two sets $S$ and $T$ are equal if they contain the same elements.
+				This is equivalent to the statement that $S\subset T$ and $T\subset S$.
+				The former statement says that every element of $S$ is in $T$ and the latter says every element of $T$ is in $S$.
+				We denote this by $S=T$.
+				
+				From this definition it follows that
+				\begin{itemize}
+					\item{$S=S$}
+					\item{$S=T$ implies $T=S$}
+					\item{If $U$ is a third set, then if $S=T$ and $T=U$ then $S=U$.}
+				\end{itemize}
+				
+				Consider $S = \{x\}$ and $S' = \{x, y\}$.
+				But suppose that $y = x$.
+				In this case we can see that $S' \subset S$ still and $S \subset S'$ so $\{x\} = S = S' = \{x, y\}$.
+				That is, a set only contains each unique element once. 
+				There is no distinction between a set containing multiple copies of the same element and the same set containing just one copy of that element.
+			\end{preformal definition}
+			
+			\begin{preformal definition}[The Empty Set]
+				There is a set which contains no elements which we denote by $\emptyset = \{\}$.
+				For any object $x$, we know that $x\not \in \emptyset$.
+				Notably, the empty set is a subset of any other set.
+			\end{preformal definition}
+			
+			\begin{preformal definition}[Subset Specification]
+				Suppose $S$ is a set and $\phi(s)$ is a logical expression that depends on a \textbf{logical variable} $s$. 		
+				We can then extract a subset of $S$ by picking out all of the elements $s\in S$ such that $\phi(s)$.
+				
+				This specification set is denoted by
+				\begin{equation*}
+					\{s\in S \mid \phi(s)\}
+				\end{equation*}
+				
+				Now suppose we have a list of logical variables $\bv{t}$.
+				Suppose also the expression $\phi(\bv{t})$ now depends on this list.
+				Suppose also we have a logical function $f(\bv{t})$ that results in a new logical object depending on the list of logical objects inserted into $\bv{t}$. 
+				We can then perform a more sophisticated type of specification given by
+				\begin{align*}
+					\{f(\bv{t})\in S \mid \phi(\bv{t})\} = \{s\in S \mid \text{ there exists } \bv{t} \text{ such that } s = \bv{t} \text{ and } \phi(\bv{t})\}
+				\end{align*}
+			\end{preformal definition}
+			
+			Sets constructed using subset specification are always subsets of a larger set $S$.
+			If we were to drop the constraint that the specification set is a subset of a larger set $S$ and allow sets of the form $\{x \mid \phi(x)\}$, i.e. to allow all objects $x$ satisfying a certain property $\phi(x)$ to form a set, then we will run into the Russel paradox which we describe now.
+			
+			The Russell paradox considers the Russell \qq{set}
+			\begin{equation*}
+				R = \{s \mid s\not \in s\}
+			\end{equation*}
+			The paradox arises when we ask the question \qq{is $R\in R$}. 
+			If we assume $R\in R$ then, by looking at the definition of $R$, we see that we must have $R\not \in R$, a contradiction.
+			If we assume $R\not \in R$ then, again, by looking at the definition of $R$, we find that $R \in R$, again, a contradiction.
+			We see a contradiction whether $R\in R$ or $R\not \in R$.
+			The Russel set exposes a major flaw if we allow \textbf{unrestricted} set specification.
+			By using \textbf{restricted} subset specification, in which we must always be selecting our specified set out of an initial set $S$, we avoid Russel's paradox.
+			
+			Another type of pathology we must avoid in formal set theory is that of infinite descending sequences of sets.
+			For this, suppose we had \qq{sets} $s$ and $t$ which satisfied $s\in t$ and $t\in s$.
+			Then we would have $t = \{s\} = \{\{t\}\} = \{\{\{s\}\} = \{\ldots \{s\}\ldots \}$.
+			In \gls{zf} set theory, we avoid such constructions using a specific axiom that forbids these \qq{rregular} sets.
+			In our preformal setting we will not explicitly address this pathology.
+			Rather, we will just only consider simple enough objects that we know this isn't of concern to the preformal theory.
+			
+			\begin{preformal definition}[Set Union]
+				If $S$ is a collection of sets.
+				We can take the union over the elements of $S$.
+				This set, denoted by $\bigcup S$, contains all the elements contained in the elements of $S$.
+				That is, $x \in \bigcup S$ if and only if there is a $y\in S$ with $x\in y$.
+				If $S$ contains two elements $T$ and $U$ then we write
+				$$
+				\bigcup S = \bigcup \{T, U\} = T \cup U
+				$$
+			\end{preformal definition}
+			
+			\begin{preformal definition}[Set Intersection]
+				If $S$ is a collection of sets then we define the intersection of the elements of $S$ to be the set whose elements are exactly those which are contained in each element of $S$.
+				$$
+				\bigcap S = \{x \in \bigcup S \mid \text{For each } y \in S \text{ we have } x \in y\}
+				$$
+				If $S$ has two elements so that $S = \{T, U\}$ then we write
+				$$
+				\bigcap S = \bigcap \{T, U\} = T \cap U
+				$$
+			\end{preformal definition}
+			
+			\begin{preformal definition}[Set Subtraction]
+				If $S$ and $T$ are sets then we may subtract $T$ from $S$ by collecting all the elements of $S$ which are not in $T$:
+				\begin{equation*}
+					S\setminus T = \{x \in S \mid x \not \in T\}
+				\end{equation*}
+			\end{preformal definition}
+			
+			\begin{definition}[Power Set]
+				If $S$ is a set then we denote the set of all subsets of $S$ by $\mc{P}(S)$.
+				Note that $\emptyset, S \in \mc{P}(S)$.
+			\end{definition}			
+			
+			\begin{preformal definition}[Ordered Pair]
+				If $x$ and $y$ are objects then we create a new object called the ordered pair of $x$ and $y$ and denote it by $\braket{x, y}$.
+				Ordered pairs have the property that $\braket{x, y} = \braket{x', y'}$ if and only if $x' = x$ and $y' = y$.
+			\end{preformal definition}
+			
+			\begin{preformal definition}[Cartesian Product]
+				If $X$ and $Y$ are two sets then we may construct a set which consists of all the ordered pairs whose first elements are contained in $X$ and whose second elements are contained in $Y$.
+				This set is called the Cartesian product of $X$ and $Y$ and is denoted by $X\times Y$.
+				We have that $\braket{x, y} \in X\times Y$ if and only if $x \in X$ and $y \in Y$.
+			\end{preformal definition}
+			
+			\begin{preformal definition}[Relation]
+				If $X$ and $Y$ are two sets and $R\subset X\times Y$ then we say $R$ is a relation between $X$ and $Y$.
+				If $\braket{x, y} \in R$ then we say $x$ and $y$ are related by $R$.
+
+				Note that there may by $X', Y'$ possibly with $X' \neq X$ and $Y' \neq Y$ such that $R\subset X' \times Y'$. 
+				So, that means that it is not uniquely determined which two sets between which $R$ is a relation.
+			\end{preformal definition}
+			
+			\begin{preformal definition}[Domain and Range]
+				Suppose $R$ is a relation between $X$ and $Y$ so that $R\subset X \times Y$.
+				We define
+				\begin{align*}
+					\text{Dom}(R) =& \{x \in X \mid \text{There exist } y \in Y \text{ such that } \braket{x, y} \in R\}\\
+					\text{Ran}(R) =& \{y \in Y \mid \text{There exist } x \in X \text{ such that } \braket{x, y} \in R\}
+				\end{align*}
+				
+				If $R\subset X \times Y$ then $\text{Dom}(R)\subset X$ and $\text{Ran}(R)\subset Y$.
+			\end{preformal definition}
+			
+			\begin{preformal definition}[Functional Relation]
+				Suppose $R\subset X \times Y$.
+				If $\braket{x, y}, \braket{x, y'}\in R$ implies that $y=y'$ then we say $R$ is a functional relation.
+				If $R$ is a functional relation and $x\in \text{Dom}(R)$ then there is a unique $y\in \text{Ran}(R)$ such that $\braket{x, y} \in R$.
+				We denote this unique $y$ by $R(x)$.
+				We may simply call a functional relation a function.
+			\end{preformal definition}
+			
+			\begin{preformal definition}[Injective Relation]
+				Suppose $R\subset X \times Y$.
+				If $\braket{x, y}, \braket{x', y} \in R$ implies $x=x'$ then $R$ we say $R$ is an injective relation.
+			\end{preformal definition}
+			
+			\begin{preformal definition}[Inverse Relation]
+				Suppose $R\subset X\times Y$.
+				We define the inverse relation $R^{-1}$ by
+				\begin{align*}
+					R^{-1} = \{\braket{y, x}\in Y\times X \mid \braket{x, y}\in R\}
+				\end{align*}
+			\end{preformal definition}
+			
+			\begin{preformal theorem}[Relation Inverse Swaps Domain and Range]
+				We will prove 
+				\begin{itemize}
+					\item{$\text{Dom}(R^{-1}) = \text{Ran}(R)$}
+					\item{$\text{Ran}(R^{-1}) = \text{Dom}(R)$}
+				\end{itemize}
+				Suppose $y\in \text{Dom}(R^{-1})$.
+				That means there exists $x\in X$ such that $\braket{y, x}\in R^{-1}$ which means $\braket{x, y}\in R$. But that means $y\in \text{Ran}(R)$ so $\text{Dom}(R^{-1})\subset \text{Ran}(R)$.
+				Now suppose $y\in \text{Ran}(R)$ which means there exists $x\in X$ with $\braket{x, y}\in R$. 
+				But that means $\braket{y, x}\in R^{-1}$ which means $y\in \text{Dom}(R^{-1})$. So we conclude $\text{Ran}(R)\subset \text{Dom}(R^{-1})$) which means $\text{Ran}(R) = \text{Dom}(R^{-1})$.
+				
+				Now suppose $x\in \text{Ran}(R^{-1})$ so that there exist $y\in Y$ such that $\braket{y, x}\in R^{-1}$.
+				This means $\braket{x, y} \in R$ which means $x\in \text{Dom}(R)$ so $\text{Ran}(R^{-1}) \subset \text{Dom}(R)$.
+				Now suppose $x\in \text{Dom}(R)$. 
+				Then there exists $y\in Y$ with $\braket{x, y}\in R$, but that means $\braket{y, x}\in R^{-1}$ so that $y\in \text{Ran}(R^{-1})$.
+				This means $\text{Dom}(R) \subset \text{Ran}(R^{-1})$ so we conclude $\text{Ran}(R^{-1}) = \text{Dom}(R)$.		
+			\end{preformal theorem}	
+			
+			\begin{preformal theorem}[Functional Implies Injective Inverse]
+				If $R\subset X\times Y$ is functional then $R^{-1}$ is injective.
+				Suppose $\braket{y, x}, \braket{y',x}\in R^{-1}$.
+				Then $\braket{x, y}, \braket{x, y'}\in R$, but $R$ is functional which implies $y=y'$. 
+				But this means $R^{-1}$ is injective.
+			\end{preformal theorem}
+			
+			\begin{preformal theorem}[Injective Implies Functional Inverse]
+				If $R\subset X\times Y$ is injective that $R^{-1}$ is functional.
+				Suppose $(y, x), (y, x')\in R^{-1}$.
+				Then $(x, y), (x', y) \in R$, but $R$ is injective, so this means $x=x'$.
+				But that means $R^{-1}$ is functional.
+				
+				Therefore, if a functional relation is injective, then we say it is invertible because the inverse relation is also functional.
+			\end{preformal theorem}
+						
+			\begin{preformal definition}[Relation Restriction]
+				Suppose $R$ is a relation between $X$ and $Y$ and $X'
+				\subset X$.
+				We define a new relation
+				$$
+				R|_{X'} = \{\braket{x', y} \in R \mid x' \in X' \text{ and } y\in Y\}
+				$$
+				$R|_{X'}$ is the restriction of $R$ to the possibly smaller set $X' \times Y \subset X \times Y$.
+			\end{preformal definition}
+			
+			\begin{preformal definition}[The Natural Numbers]
+				We require a preformal understanding of the natural numbers.
+				These are the counting numbers $0, 1, 2, \ldots$. 
+				We denote the set of all natural numbers by $\N$.
+				We assume an understanding of equality $=$ between natural numbers and of the comparison operations $<, \le, \ge, >$.
+				We also assume an understanding of the binary addition operator $+$.
+			\end{preformal definition}
+			
+			\begin{preformal definition}[The set 1 through $n$ (inclusive)]
+				We define
+				\begin{equation*}
+					[n] = \{m\in \N \mid 1 \le m \le n\}.
+				\end{equation*}
+				So, for example,
+				\begin{equation*}
+					[3] = \{1, 2, 3\}
+				\end{equation*}
+				Note that this notation uses 1-indexing rather than 0-indexing.
+			\end{preformal definition}
+			
+			\begin{preformal definition}[Tuple]
+				An $I$-tuple is a functional relation $R$ with $\text{Dom}(R) = I$.
+				We often notate the tuple in bold face, e.g. $\bv{t}$, and, for $i\in I$, notate the entries in the tuple with subscript notation:
+				\begin{equation*}
+					\bv{t}(i) = t_i
+				\end{equation*}
+				When defining the tuple we may write
+				\begin{equation*}
+					\bv{t} = (t_i)_{i\in I}.
+				\end{equation*}
+				If we are writing all the entries in the tuple explicitly we write, e.g.,
+				\begin{equation*}
+					\bv{t} = (t_1, t_2, t_3)
+				\end{equation*}
+				using parentheses as brackets.
+				
+				Typically $I = [n]$ for some $n \in \N$ in which case we call the tuple an $n$-tuple.
+				
+				If we want to emphasize that the elements within the tuple are sets we may call an $I$-tuple an $I$-indexed family.
+			\end{preformal definition}
+		
+			\begin{preformal definition}[Relation Tuple]
+				A relation tuple is a 3-tuple of the form $(X, Y, R)$ where $R\subset X\times Y$ is a relation.
+				$X$ is called the source and $Y$ is called the target.
+				Note that $\text{Dom}(R) \subset X$ and $\text{Ran}(R) \subset Y$. 
+			\end{preformal definition}
+			
+			\begin{preformal definition}[Total and Surjective]
+				If $(X, Y, R)$ is a relation tuple then we say the relation (tuple) is total if $\text{Dom}(R) = X$ and surjective if $\text{Ran}(R) = Y$.
+				Note that total and surjective only make sense in the context of a relation \textit{tuple} and not in the case of a bare relation. 
+			\end{preformal definition}
+			
+			\begin{preformal definition}[Function Tuple]
+				If $(X, Y, f)$ is a total relation tuple and $f$ is a functional relation then we say $(X, Y, f)$ is a function tuple.
+				We denote this by $f:X\to Y$.
+				
+				From the notation $f: X\to Y$ we are meant to infer that $f\subset X\times Y$, $f$ is functional, $\text{Dom}(f) = X$.
+			\end{preformal definition}
+			
+			\begin{preformal definition}[All Functions from $X$ to $Y$]
+				Suppose $f:X\to Y$ then $f\subset X\times Y$. 
+				This means $f\in \mc{P}(X\times Y)$.
+				We can, then, define the set of all functions with domain $X$ and target $Y$.
+				$$
+				\text{Func}(X, Y) = Y^X = \{f \in \mc{P}(X\times Y) \mid f: X \to Y\}
+				$$				
+			\end{preformal definition}
+			
+			\begin{preformal definition}[Cartesian Projection Functions]
+				We define
+				\begin{align*}
+					\pi_1: X\times Y \to& X\\
+					\braket{x, y}\mapsto& x\\
+					\pi_2: X\times Y \to & Y\\
+					\braket{x, y} \mapsto & y
+				\end{align*}
+				One can confirm that $\pi_1$ and $\pi_2$ thus defined are total, surjective, and functional relations.
+				However, they are not injective and, therefore, the corresponding inverse relations are not functional.
+			\end{preformal definition}
+	
+			\begin{preformal definition}[Multiple Cartesian Product]
+				Suppose $\bv{S}$ is an $n$-tuple of sets.
+				We define the multiple cartesian product as
+				\begin{equation*}
+					\bigtimes \mathcal{S} = \{\bv{s} \in \bv{S}^{[n]} \mid \text{for each } i \in [n], s_i \in S_i\}
+				\end{equation*}				
+				In other words, it is the set of $n$ tuples such that the $i^{\text{th}}$ entry is in the $i^{\text{th}}$ entry of $\bv{S}$.
+				We often notate this instead as
+				\begin{equation*}
+					\bigtimes_{i=1}^n \bv{S} = \bigtimes \bv{S}.
+				\end{equation*}
+				We also might notate, using ellipses, $\bv{S} = (S_1, \ldots, S_n)$ and notate the multiple cartesian product as
+				\begin{equation*}
+					\bigtimes \bv{S}=\bigtimes_{i=1}^n (S_1, \ldots, S_n) = S_1 \times \ldots \times S_n.
+				\end{equation*}
+				If all $n$ entries of $\bv{S}$ are equal to a common set, $S$, then we write
+				\begin{equation*}
+					\bigtimes \bv{S} = S \times \ldots \times S = S^n
+				\end{equation*}
+			\end{preformal definition}
+	
+			\begin{preformal definition}[Lists]
+				Suppose $S$ is a set.
+				We define the set of $S$ lists by
+				\begin{equation*}
+					S^* = \bigcup_{n\in \N, n\ge 1} S^n
+				\end{equation*}
+				We define a function 
+				\begin{align*}
+					\text{Len} = \{\braket{\bv{s}, n} \in S^* \times \N \mid \bv{s}: [n] \to S\}
+				\end{align*}
+				$\text{Len}$ is total on $S^*$ and functional because for each $\bv{s} \in S^*$ there is exactly on $n\in \N$ such that $\bv{s}: [n] \to S$.
+				We may also denote $\text{Len}(\bv{s}) = \norm{\bv{s}}$
+				We can see that $\bv{s}:\norm{\bv{s}} \to S$.
+			\end{preformal definition}
+	
+			\begin{preformal definition}[Function Mapping over Cartesian Product]
+				Suppose $f:X \to Y$ and $n\in \mathbb{N}$.
+				We define
+				\begin{align}
+					f^{(n)} = \{\braket{\bv{x}, \bv{y}} \in X^n \times Y^n \mid \text{for each } i \in [n], y_i = f(x_i)\}
+				\end{align}
+				
+				We see that $f^{(n)}$ is a relation between $X^n$ and $Y^n$.
+				Indeed, there is always a unique $\bv{y}$ for each $\bv{x}$ satisfying $y_i = f(x_i)$ which means $f^{(n)}$ is a total and functional relation which means we can regard it as a function.
+			\end{preformal definition}
+	
+	\section{Preformal Structural Induction and Recursion}
+
+		We now proceed into the study of preformal structural induction and recursion.
+	
+		\begin{preformal definition}[$U$ Function]
+			Suppose $U$ is a set, $U' \subset U$ and $f: (U')^{\nu} \to U$.
+			Then we say $f$ is a $\nu$-ary $U$ function.
+		\end{preformal definition}
+	
+		\begin{preformal definition}[Closed Under a  $U$ Function]
+			Suppose $f$ is a $\nu$-ary $U$ function.
+			If $U' \subset \text{Dom}(f)$ and $\text{Ran}(f|_{(U')^{\nu}}) \subset U'$ then we say $U'$ is closed under $f$
+		\end{preformal definition}
+	
+		\begin{preformal definition}[$U$ Function Family]
+			Suppose $U$ and $I$ are sets.
+			Suppose $\bv{\nu} = (\nu_i)_{i\in I}$ is an $I$-tuple with entries $\nu_i \in \N$
+			
+			Suppose $U$ is a set and $U'\subset U$. 
+			Suppose $I$ is an indexing set and $\bv{\nu} = (\nu_i)_{i\in I}$ is an $I$-tuple with entries $\nu_i \in \N$.
+			Suppose that $\bv{f}=(f_i)_{i\in I}$ is an $I$-tuple and $f_i: (U')^{\nu_i} \to U$ for each $i \in I$.
+			Then we say $\bv{f}$ is a $\bv{\nu}$-ary $U$ function family with domain $U'$.
+			If we don't specify the domain we can assume $U'=U$.
+			In some cases we may leave off the arity if it not necessary for the discussion.
+		\end{preformal definition}
+		
+		\begin{preformal definition}[Closed Under a $U$ Function Family]
+			Suppose $\bv{f} = (f_i)_{i\in I}$ is a $U$ function family with domain $U'$ and $U'' \subset U'$.
+			If $U''$ is closed under $f_i$ for each $i \in I$ then we say $U''$ is closed under $\bv{f}$.
+		\end{preformal definition}
+		
+		\begin{preformal definition}[$U$ Function Family Restriction]
+			Suppose $\bv{f}$ is a $\bv{\nu}$-ary $U$ function family with domain $U'$.
+			Suppose $U'' \subset U'$.
+			Define the $I$-tuple $\bv{f}|_{U''} = (f_i|_{(U'')^{\nu_i}})_{i\in I}$.
+			$\bv{f}|_{U''}$ is a $\bv{\nu}$-ary $U$ function family with domain $U''$.
+		\end{preformal definition}
+		
+		\begin{preformal definition}[$(U, B, \bv{f})$-Inductive]
+			Suppose $U$ is a set ($U$ stands for universe), $B\subset U$ ($B$ stands for base) and $\bv{f}$ is a $U$ function family.
+			
+			Now suppose $C\subset U$.
+			If 
+			\begin{itemize}
+				\item{$B\subset C$ and}
+				\item{$C$ is closed under $\bv{f}|_C$}
+			\end{itemize}
+			then we say $C$ is $(U, B, \bv{f})$-inductive.
+			It follows that $U$ is $(U, B, \bv{f})$-inductive.
+		\end{preformal definition}
+		
+		\begin{preformal definition}[$(B, \bv{f})$ Inductively Generated]
+			Suppose $N$ is a set with $B\subset N$ and $\bv{f}$ is an $N$ function family.
+			Suppose that any $(N, B, \bv{f})$ inductive subset of $N$ must be equal to $N$.
+			Then we say $N$ is $(B, \bv{f})$ inductively generated.
+		\end{preformal definition}
+		
+		This is equivalent to saying that $N$ is inductively generated if any subset $M\subset N$ containing $B$ and closed under $\bv{f}|_M$ must be equal to $N$.
+		
+		\begin{preformal theorem}[Inductively Generated Implies Inductive]
+			Suppose $\bv{f} = (f_i)_{i\in I}$ is an $N$ function family and $N$ is $(B, \bv{f})$ inductively generated.
+			We know that $B\subset N$ and we know that $\text{Ran}(f_i) \subset N$ for each $i\in I$ because $\bv{f}$ is an $N$ function family.
+			But this means $N$ is $(N, B, \bv{f})$ inductive.
+		\end{preformal theorem}
+		
+		\begin{preformal theorem}[The Induction Principle]
+			Suppose $\bv{f}=(f_i)_{i\in I}$ is a $\bv{\nu}$-ary $N$ function family and $N$ is $(B, \bv{f})$ inductively generated.
+			Consider an expression $\phi(n)$ which depends on $n\in N$.
+			Now consider the set
+			\begin{equation*}
+				C = \{n\in N \mid \phi(n)\}
+			\end{equation*}
+			\begin{itemize}
+				\item{Base case: Suppose we can prove $\phi(b)$ holds for each $b\in B$ so that $B\subset C$.}
+				\item{Inductive Step: Now consider $i\in I$ and $\bv{c} \in C^{\nu_i}$.
+					Suppose that if we assume $\phi(c_j)$ for each $j \in [\nu_i]$, i.e. that $c_j \in C$, that we can prove $\phi(f_i(\bv{c}))$, i.e. that $f_i(\bv{c}) \in C$. This would mean that $C$ is closed under $\bv{f}$.}
+			\end{itemize}
+			If we can prove both of these things then we can see that $C$ is $(N, B, \bv{f})$ inductive.
+			But $C \subset N$ and $N$ is $(B, \bv{f})$ inductively generated so this means $C = N$.
+			In other words, $\phi(n)$ holds for all $n\in N$.
+		\end{preformal theorem}
+		
+		The induction principle provides a means to prove some property about all of $N$ by proving that property only for $B$, the base case, and proving that $\bv{f}$ preserves that property in each inductive step.
+		
+		\begin{preformal definition}[$(U, B, \bv{f})$ Inductive Closure]
+			Suppose $\bv{f}$ is a $U$ function family.
+			We then define
+			\begin{equation*}
+				\mc{N}_{U, B, \bv{f}} = \bigcap \{N \in \mc{P}(U) \mid N \text{ is } (U, B, \bv{f})
+			\end{equation*}
+			\begin{equation*}
+				N_{U, B, \bv{f}} = \bigcap \mc{N}_{U, B, \bv{f}}.
+			\end{equation*}
+		\end{preformal definition}
+		
+		\begin{preformal theorem}[The Inductive Closure is Inductive]
+			Since each $N\in \mc{N}_{U, B, \bv{f}}$ is $(U, B, \bv{f})$ inductive we know that $B \subset N$.
+			But this means $B \subset N_{U, B, \bv{f}}$.
+			Now consider $i\in I$ and $\bv{n} \in N_{U, B, \bv{f}}^{\nu_i}$.
+			For each $j\in [\nu_i]$ we see that $n_j \in N_{U, B, \bv{f}}$.
+			But this means that $n_j \in N$ for each $N \in \mc{N}_{U, B, \bv{f}}$.
+			But since each $N$ is $(U, B, \bv{f})$ inductive, this means $f_i(\bv{n}) \in N$ each $N$.
+			But this means $f_i(\bv{n}) \in N_{U, B, \bv{f}}$.
+			Therefore $N_{U, B, \bv{f}}$ is $(U, B, \bv{f})$ inductive.
+		\end{preformal theorem}
+		
+		\begin{preformal theorem}[The Inductive Closure is Inductively Generated]
+			Let $N = N_{U, B, \bv{f}}$.
+			Now suppose $M\subset N$ is $(N, B, \bv{f}|_N)$ inductive.
+			We must show $N \subset M$.
+			But, since $N \subset U$, $(N, B, \bv{f}|_N)$ inductive implies $(U, B, \bv{f})$ inductive.
+			But if $M$ is $(U, B, \bv{f})$ inductive, then $M\in \mc{N}_{U, B, \bv{f}}$ which means $M\subset N = \bigcap \mc{N}_{U, B, \bv{f}}$.
+		\end{preformal theorem}
+		
+		\begin{preformal theorem}[Each Elemented of an Inductively Generated Set is Base or Generated]
+			Suppose $N$ is $(B, \bv{f})$ inductively generated.
+			We will show that either $n\in B$ or there is some $i\in I$ such that $n \in \text{Ran}(f_i)$.
+			
+			Consider
+			\begin{equation*}
+				C = \{n\in N \mid n\in B \text{ or there is } i\in I \text{ such that } n \in \text{Ran}(f_i)\}
+			\end{equation*}
+			Clearly $B\subset C$.
+			Now consider $i \in I$ and $\bv{n} \in N^{\nu_i}$.
+			Since $f_i(\bv{n}) \in \text{Ran}(f_i)$ we have that $f_i(\bv{n}) \in C$.
+			But this means $C$ is closed under $\bv{f}$ which means $C \subset N$ is $(N, B, \bv{f})$ inductive which implies $C = N$ because $N$ is $(B, \bv{f})$ inductively generated.
+		\end{preformal theorem}
+		
+		The last theorem establishes that if $N$ is $(B, \bv{f})$ inductively generated than any element $n\in N$ is either an element of $B$ or is in the range of $f_i$ for some $i\in I$.
+		However, it leaves open the possibilities that
+		\begin{itemize}
+			\item{$n$ may be in the range of multiple $f_i$,}
+			\item{$n$ may both be an element of $B$ and be in the range of one or more $f_i$,}
+			\item{if $n \in \text{Ran}(f_i)$ there may be multiple elements $\bv{n}\in N^{\nu_i}$ such that $n = f_i(\bv{n})$.}
+		\end{itemize}
+		The most interesting inductively generated sets are those for which there is exactly one way to construct $n$.
+		That is, $n\in B$ xor there is a unique $i \in I$ and a unique $\bv{n} \in N^{\nu_i}$ such that $n = f_i(\bv{n})$.
+		If $N$ satisfies these properties then we can imagine constructing a unique parse tree for $N$ where each node is labeled either by an element $b\in B$ or by a function $f_i$ for some $i \in I$.
+		If a node is labeled by $f_i$ then that node should have $\nu_i$ ordered children nodes.
+		If a node is labeled by an element $b\in B$ then we map that node to $b\in N$.
+		If a node is labeled by $f_i$ then that node should map to $f_i(\bv{n})$ where $n_j$ for $j \in [\nu_i]$ corresponds to the value that each child node maps to.
+		If $N$ does not have these properties then, in general, there is no unique and finite parse tree for each $n\in N$.
+		In general we are most interested in inductively generated sets which do satisfy these properties which we refer to unique readability.
+		
+		\begin{preformal definition}[Unique Readability]
+			Suppose $\bv{f}=(f_i)_{i\in I}$ is an $N$ functino family and $N$ is $(B, \bv{f})$ inductively generated.
+			Suppose also that for each $n\in N$ exactly one of the following conditions holds:
+			\begin{itemize}
+				\item{$n\in B$,}
+				\item{there exists a unique $i\in I$ and a unique $\bv{n} \in N^{\nu_i}$ such that $n = f_i(\bv{n})$.}
+			\end{itemize}
+			In this case we say $N$ exhibits unique readability.
+		\end{preformal definition}
+		
+		\begin{preformal definition}[Freely Inductively Generated]
+			Suppose $\bv{f}=(f_i)_{i\in I}$ is an $N$ function family and $N$ is $(B, \bv{f})$ inductively generated.
+			Suppose also that 
+			\begin{itemize}
+				\item{For each $i \in I$, $f_i$ is injective}
+				\item{For each $i\in I$, $\text{Ran}(f_i) \cap B = \emptyset$}
+				\item{For any $i, j \in I$ with $i \neq j$, $\text{Ran}(f_i) \cap \text{Ran}(f_j) = \emptyset$}
+			\end{itemize}
+			If these conditions are true, that range of all $f_i$ is disjoint from $B$ and any other $f_j$, then way $N$ is freely $(B, \bv{f})$ inductively generated.
+		\end{preformal definition}
+		
+		\begin{preformal theorem}[Freely Inductively Generated Implies Unique Readability]
+			Suppose $\bv{f} = (f_i)_{i\in I}$ is an $N$ function family and $N$ is freely $(B, \bv{f})$ inductively generated.
+			Then $N$ exhibits unique readability.
+			
+			If $n\in B$ then by the second freely inductively generated condition we know it is not in the range of $f_i$ for any $i\in I$.
+			If $n \not \in B$ then we know from the previous generation theorem that there is some $i\in I$ such that $n\in \text{Ran}(f_i)$.
+			But by the first freely inductively generated condition we know that $f_i$ is injective so that there is a unique $\bv{n} \in N^{\nu_i}$ such that $n = f_i(\bv{n})$ and by third freely inductively generated condition we know that there is no other $j\in I$ with $j\neq i$ such that $n\in \text{Ran}(f_j)$.
+		\end{preformal theorem}
+	
+		\begin{preformal theorem}[The Structural Recursion Theorem]
+			Suppose $\bv{f}=(f_i)_{i\in I}$ is a $\bv{\nu}$-ary $N$ function family and $N$ is $(B, \bv{f})$ inductively generated and exhibits unique readability. 
+			Suppose that there is a set $S$ and a function $h_B: B \to S$.
+			Suppose also that for each $i \in I$ there is a function $h_{f_i}: S^{\nu_i} \to S$.
+			
+			Under these conditions, the structural recursion theorem states that there is a unique function $h: N \to S$ which satisfies
+			\begin{itemize}
+				\item{$h|_B = h_B$}
+				\item{For each $i\in I$ and for each $\bv{n} \in N^{\nu_i}$, we have that $h(f_i(\bv{n})) = h_{f_i}(h^{(\nu_i)}(\bv{n}))$.}
+			\end{itemize}
+			
+			We define
+			\begin{align*}
+				\mc{H} = \{&H \in \mc{P}(N\times S) \mid H \text{ is functional and }\\
+				&H|_B = h_B \text{ and}\\
+				&\text{for all } i \in I \text{ and } \bv{n} \in N^{\nu_i},\\
+				&\text{that if } f_i(\bv{n}) \in \text{Dom}(H) \text{ then }\\
+				&n_j \in \text{Dom}(H) \text{ for each } j \in [\nu_i] \text{ and }\\
+				&H(f_i(\bv{n})) = h_{f_i}(H^{(\nu_i)}(\bv{n}))\}
+			\end{align*}
+			and take
+			\begin{equation*}
+				h = \bigcup \mc{H}.
+			\end{equation*}
+			
+			We now must prove $h$ is total on $N$, functional, satisifes the desired properties, and is unique.
+			
+			We first prove that if $H_1, H_2 \in \mc{H}$ then $H_1$ and $H_2$ agree on their common domain $D = \text{Dom}(H_1) \cap \text{Dom}(H_2)$.
+			We prove this by induction on $N$.
+			Specifically, we prove that if $n\in D$ then $H_1(n) = H_2(n)$.
+			For the base case if $n\in B$ we know that $H_1(n) = H_2(n) = h_B(n)$.
+			For the induction case we consider $i\in I$ and $\bv{n} \in N^{\nu_i}$.
+			We assume for each $j\in [\nu_i]$ that if $n_j \in D$ that $H_1(n_j) = H_2(n_j)$.
+			If $f_i(\bv{n}) \not \in D$ then there is nothing to prove.
+			If $f_i(\bv{n}) \in D$ then we know $n_j \in D$ for each $j \in [\nu_i]$. 
+			But we know that $H_1$ and $H_2$ agree on each $n_j$.
+			But we also know that
+			\begin{equation*}
+				H_1(f_i(\bv{n})) = h_{f_i}(H_1^{(\nu_i)}(\bv{n})) = h_{f_i}(H_2^{(\nu_i)}(\bv{n})) = H_2(f_i(\bv{n}))
+			\end{equation*}
+			where the middle equality follows because $H_1$ and $H_2$ agree on the $n_j$ and the outer equalities follow from the condition that $H_1, H_2 \in \mc{H}$.
+			But, since all pairs $H_1, H_2 \in \mc{H}$ agree on their common domains, this means $h = \bigcup \mc{H}$ is functional.
+			
+			We prove by induction that $h$ is total.
+			We know that $H|_B = h_B$ for each $H \in B$ so this means $h|_B = h_B$.
+			Now consider $i\in I$ and $\bv{n} \in N^{\nu_i}$ and assume that $n_j \in \text{Dom}(h)$ for each $j \in [\nu_i]$.
+			We must show that $f_i(\bv{n}) \in \text{Dom}(h)$.
+			Because $n_j \in \text{Dom}(h)$, this means there is an $H_j \in \mc{H}$ with $n_j \in \text{Dom}(H_j)$.
+			Consider the set 
+			\begin{align*}
+				H = \bigcup_{j\in [\nu_i]} H_j.
+			\end{align*}
+			We have that $n_j \in \text{Dom}(H)$ for each $j \in [\nu_i]$.
+			We know that $H|_B = h_B$.
+			Now suppose $f_{i'}(\bv{n}') \in \text{Dom}(H)$ for some $i' \in I$ and $\bv{n}' \in N^{\nu_{i'}}$.
+			This means there is some $j' \in [\nu_i]$ such that $f_{i'}(\bv{n}') \in \text{Dom}(H_{j'})$.
+			But since $H_{j'} \in \mc{H}$ this means $n'_j\in \text{Dom}(H_{j'})$ for each $j \in [\nu_{i'}]$ which means these same elements are also in $H$.
+			Because $f_{i'}(\bv{n}') \in H_{j'}$, we have that $H_{j'}(f_{i'}(\bv{n}')) = h_{f_i}(H_{j'}^{(\nu_{i'})}(\bv{n}'))$.
+			But this also means $H(f_{i'}(\bv{n}')) = h_{f_i}(H^{(\nu_{i'})}(\bv{n}'))$.
+			All of this means $H \in \mc{H}$.
+			But, now, consider
+			\begin{equation*}
+				H' = H \cup \{\braket{f_i(\bv{n}), h_{f_i}(H^{(\nu_i)}(\bv{n}))}\}
+			\end{equation*}
+			By unique readability we know $f_i(\bv{n}) \not \in B$ so $H'|_B = h_B$ still.
+			We also know that there is no other $j \in I$ such that $f_i(\bv{n}) \in \text{Ran}(f_{j})$ and there is no other $\bv{n}' \in N^{\nu_i}$ such that $f_i(\bv{n}) = f_i(\bv{n}')$.
+			This means that the conditions on $f_i(\bv{n})$ within $H \in \mc{H}$ are satisfied.
+			This means $H' \in \mc{H}$.
+			But this also means that $f_i(\bv{n}) \in \text{Dom}(h)$.
+			
+			We know that each $H\in \mc{H}$ has $H|_B = h_B$ so we know $h|_B = h_B$.
+			We also know that each $H \in \mc{H}$ satisfies the recursive condition on $\mc{H}$.
+			But this means $h$ also satisfies that condition which means $h \in \mc{H}$ and that for each $i \in I$ and $\bv{n} \in N^{\nu_i}$ that
+			\begin{equation*}
+				h(f_i(\bv{n})) = h_{f_i}(h^{(\nu_i)}(\bv{n})).
+			\end{equation*}
+			So we see that $h$ satisfies both recursion conditions.
+			
+			Now suppose $h': N \to S$ satisifes $h'|_B = h_B$ and the recursive condition.
+			Then $h'\in \mc{H}$ which means $h = h'$ since $h, h' \in \mc{H}$ and they have the same domain, namely $N$.
+		\end{preformal theorem}
+		
+		Our first use of the recursion theorem will be to define the set of predecessors of an element $n\in N$.
+		
+		\begin{preformal definition}[Predecessor Set]
+			Suppose $\bv{f} = (f_i)_{i \in I}$ is a $\bv{\nu}$-ary $N$ function family and $N$ is inductively generated and exhibits unique readability.
+			We will use the recursion theorem to define a function 
+			\begin{equation*}
+				\text{Pred}: N \to \mc{P}(N)
+			\end{equation*}
+			which satisifes
+			\begin{itemize}
+				\item{$\text{Pred}(b) = \emptyset$ if $b \in B$}
+				\item{for all $i \in I$ and $\bv{n} \in N^{\nu_i}$, $\text{Pred}(f_i(\bv{n})) = \bigcup_{j\in [\nu_i]} (\text{Pred}(n_j) \cup \{n_j\})$}
+			\end{itemize}
+			
+			We will proceed in a few stages.
+			
+			For the set $S$ in the recursion theorem we take $S = N \times \mathcal{P}(N)$.
+			For $h_B$ we define $h_B(b) = (b, \emptyset)$ for each $b\in B$.
+			Now consider $i \in I$ and the corresponding $f_i$ and $h_{f_i}$.
+			We must define $h_{f_i}(\bv{s})$ for $\bv{s} \in S^{\nu_i}$.
+			Choose $\bv{n} \in N^{\nu_i}$ such that $n_i = \pi_1(s_i)$ and let $P_i = \pi_2(s_i)$.
+			We then define $h_f$ by
+			\begin{equation*}
+				h_{f_i}(\bv{s}) = \left(f_i(\bv{n}), \bigcup_{i=1}^{n_f} \left(P_i \cup \{n_i\}\right)\right)
+			\end{equation*}
+			
+			The structural recursion theorem then asserts the existence of a function $h: N\to N \times \mathcal{P}(N)$ such that
+			
+			\begin{itemize}
+				\item{$h(b) = (b, \emptyset)$ for $b\in B$}
+				\item{$h(f(\bv{n})) = h_f(h^{(n_f)}(\bv{n})) $.}
+			\end{itemize}
+			
+			We will prove, by induction, that $\pi_1(h(n)) = n$.
+			If $n\in b$ then $\pi_1(h(n)) = \pi_1((b, \emptyset)) = b$ as needed.
+			Now consider $i\in I$, $\bv{N} \in N^{\nu_i}$, and $\bv{n}\in N^{\nu_i}$ and assume that for each $j\in [\nu_i]$ that $\pi_1(h(n_j)) = n_j$.
+			Let 
+			\begin{equation*}
+				s_j = h(n_j) = (\pi_1(h(n_j)), \pi_2(h(n_j))) = (n_i, \pi_2(h(n_j))).
+			\end{equation*}
+			where we've used the induction hypothesis that $\pi_1(h(n_i)) = n_i$.
+			Note that $\bv{s} = h^{(\nu_i)}(\bv{n})$
+			But then
+			\begin{equation*}
+				h(f_i(\bv{n})) = h_{f_i}(h^{(\nu_i)}(\bv{n})) = h_{f_i}(\bv{s}) = \left(f(\bv{n}), \bigcup_{j\in [\nu_i]} (\pi_2(h(n_j)) \cup \{n_j\})\right).
+			\end{equation*}
+			So we can see that $\pi_1(h(f_i(\bv{n}))) = f(\bv{n})$.
+			This concludes the proof by induction that $\pi_1(h(n)) = n$.
+			
+			But, consider now $\text{Pred} = \pi_2 \circ h$.
+			We can see from the equation above that for each $i\in I$ and $\bv{n} \in N^{\nu_i}$ that 
+			\begin{align*}
+				\text{Pred}(f_i(\bv{n})) = \bigcup_{j\in [\nu_i]} (\text{Pred}(n_j) \cup \{n_j\})
+			\end{align*}
+			and of course we have that $\text{Pred}(b) = \pi_2(h(b)) = \pi_2((b, \emptyset)) = \emptyset$.
+		\end{preformal definition}
+		
+		The induction principle allows us to prove a principle $\phi(n)$ for all $n\in N$ by 
+		\begin{itemize}
+			\item{proving $\phi(b)$ for all $b\in B$}
+			\item{proving for each $i\in I$ and $\bv{n}\in N^{\nu_i}$ that if we assume $\phi(n_j)$ for each $j\in [\nu_i]$ we can prove $\phi(f_i(\bv{n}))$.}
+		\end{itemize}
+		However, now that we have defined $\text{Pred}$, it is possible to formulate a strong induction principle which allows us to assume a stronger hypothesis during the induction step.
+		This stronger hypothesis is to assume $\phi(n')$ for each $n'\in \text{Pred}(f_i(\bv{n}))$.
+		This additional information may make it possible to prove $\phi(f_i(\bv{n}))$ when it otherwise may not have been possible.
+		We now state and prove the strong induction principle.
+		When necessary, we will call the previously proven induction principle the \textit{weak} induction principle.
+		
+		\begin{preformal theorem}[Strong Induction Principle]
+			Suppose $\bv{f} = (f_i)_{i\in I}$ is a $\bv{\nu}$-ary $N$ function family and $N$ is $(B, \bv{f})$ inductively generated.
+			Suppose also that $N$ exhibits unique readability so that $\text{Pred}$ is defined.
+			Consider an expression $\phi(n)$ which depends on $n\in N$.
+
+			Now consider the set
+			\begin{equation*}
+				C = \{n\in N \mid \phi(n)\}
+			\end{equation*}
+			
+			\begin{itemize}
+				\item{Base Case: Suppose we can prove $\phi(b)$ holds for each $b\in B$ so that $B\subset C$.}
+				\item{(Strong) Inductive Step: Now consider $i\in I$ and $\bv{c} \in C^{\nu_i}$ and $f_i(\bv{c})$. Suppose that if we assume $\phi(c')$ holds for each $c' \in \text{Pred}(f_i(\bv{c}))$ that we can prove $\phi(f(\bv{c}))$ holds.}
+			\end{itemize}
+			
+			We will use the weak induction principle to prove this.
+			So we assume that we can prove everything in the strong induction base case and strong inductive step.
+			We now define the set
+			\begin{equation*}
+				C' = \{n\in N \mid \phi(n) \text{ and for all } n'\in \text{Pred}(n), \phi(n')\} 
+			\end{equation*}
+			We will prove that $C'$ is inductive.
+			We have already proven $B\subset C$ for the strong induction base case.
+			Since $\text{Pred}(b) = \emptyset$ for $b\in B$ this means that $B\subset C'$ as well.
+			Now consider $i\in I$ and $\bv{c} \in N^{\nu_i}$ and suppose that $c_j \in C'$ for each $j \in [\nu_i]$.
+			In particular, this means that $\phi(c_j)$ holds and $\phi(c'_j)$ for each $j\in [\nu_i]$ and for each $c'_j \in \text{Pred}(c_j)$.
+			But
+			\begin{equation*}
+				\text{Pred}(f_i(\bv{c})) = \bigcup_{j\in [\nu_i]} (\{c_j\} \cup \text{Pred}(c_j)).
+			\end{equation*}
+			Based on this definition, we can see that $\phi(c')$ holds for each $c' \in \text{Pred}(f_i(\bv{c}))$.
+			But then the strong induction step tells us that this means $\phi(f_i(\bv{c}))$ holds so that $f_i(\bv{c}) \in C'$ and, therefore, that $C'$ is inductive.
+			
+			Since $C'$ is an inductive subset of an inductively generated set, we have $C' = N$.
+			But, because $C'$ is based on a stronger condition that $C$ we have that $C' \subset N$ so
+			\begin{equation*}
+				N = C' \subset C \subset N
+			\end{equation*}
+			which means $C = N$.
+		\end{preformal theorem}
+		
+		The structural recursion theorem allows us to take $\bv{n}$ and $h(n_i)$ for each $i\in [n]$ to construct $h(f_i(\bv{n}))$.
+		But what if we require knowledge of the value of $h$ on earlier predecessors of $f_i(\bv{n})$, $\text{Pred}(f_i(\bv{n}))$, to determine the next value of $h$? 
+		The strong structural recursion theorem addresses this.
+		When referring to the previous recursion theorem we may call it the weak structural recursion theorem to distinguish it from the forthcoming strong structural recursion theorem.
+		The proof of the strong structural recursion theorem will make use of the strong induction principle.
+		
+		\begin{preformal theorem}[Strong Structural Recursion]
+			Suppose $\bv{f} = (f_i)_{i\in I}$ is a $\bv{\nu}$-ary $N$ function family and $N$ is inductively generated and exhibits unique readability.
+			Suppose that there is a set $S$ and a function $h_B: B \to S$.
+			
+			An $S$-history for $n\in N$ is a function $g:\text{Pred}(n) \to S$.
+			We define
+			\begin{align*}
+				\text{Hist}_S^n = \{g \in S^N \mid g: \text{Pred}(n) \to S\}
+			\end{align*}
+			and
+			\begin{align*}
+				\text{Hist}_S = \bigcup_{n\in N} \text{Hist}_S^n.
+			\end{align*}
+			For each $i\in I$, we also define
+			\begin{align*}
+				D_{f_i} = \{(\bv{n}, g) \in N^{\nu_i} \times \text{Hist}_S: g \in \text{Hist}_S^{f_i(\bv{n})} \}
+			\end{align*}
+			We then suppose now, that for each $i\in I$ there is a function $h_{f_i}: D_{f_i} \to S$.
+			
+			Under these conditions, the strong structural recursion theorem then gives us the unique existence of a function $h: N \to S$ such that
+			\begin{itemize}
+				\item{$h|_B = h_B$}
+				\item{$h(f_i(\bv{n})) = h_{f_i}(\bv{n}, h|_{\text{Pred}(f_i(\bv{n}))})$ For each $i\in I$ and $\bv{n} \in N^{\nu_i}$}
+			\end{itemize}
+			We can see that we have defined $D_{f_i}$ and $h_{f_i}$ as we have so that the inductive step (via $h_{f_i}$) has access both to $\bv{n}$, the elements we are recursing on, and the value of $h$ on these elements and their predecessors, i.e. $h|_{\text{Pred}(f(\bv{n}))}$.
+			
+			We will prove this in a very similar fashion to the proof of the weak recursion principle.
+			
+			We define
+			\begin{align*}
+				\mc{H} = \{& H \in \mc{P}(N\times S) \mid H \text{ is functional and}\\
+				&H|_B = h_B \text{ and }\\
+				&\text{for all } i \in I \text{ and } \bv{n} \in N^{\nu_i},\\
+				&\text{that if } f_i(\bv{n}) \in \text{Dom}(H) \text{ then}\\
+				&\text{Pred}(f_i(\bv{n})) \subset \text{Dom}(H) \text{ and}\\
+				&H(f_i(\bv{n})) = h_{f_i}(\bv{n}, H|_{\text{Pred}(f(\bv{n}))})\}
+			\end{align*}
+			
+			We must prove that $h$ is total on $N$, functional, satisfies the desired properties, and is unique.
+			
+			We first prove that if $H_1, H_2 \in H$ then $H_1$ and $H_2$ agree on their common domain $D = \text{Dom}(H_1) \cap \text{Dom}(H_2)$.
+			We prove this by strong induction on $N$.
+			Specifically, we prove that if $n\in D$ then $H_1(n) = H_2(n)$.
+			For the base case, if $n\in B$, we know that $H_1(n) = H_2(n) = h_B(n)$.
+			For the strong induction case we consider $i\in I$ and $\bv{n} \in N^{\nu_i}$.
+			We assume that for each $n' \in \text{Pred}(f_i(\bv{n}))$ that $H_1(n') = H_2(n')$.
+			If $f_i(\bv{n}) \not \in D$ then there is nothing to prove.
+			If $f_i(\bv{n}) \in D$ then we know $n'\in D$ for each $n' \in \text{Pred}(f_i(\bv{n}))$.
+			But we know that $H_1$ and $H_2$ agree on each $n'$.
+			But we also know that
+			\begin{equation*}
+				H_1(f_i(\bv{n})) = h_{f_i}(\bv{n}, H_1|_{\text{Pred}(f_i(\bv{n}))}) = h_{f_i}(\bv{n}, H_2|_{\text{Pred}(f_i(\bv{n}))}) = H_2(f_i(\bv{n}))
+			\end{equation*}
+			where the middle equality follows because $H_1$ and $H_2$ agree on $\text{Pred}(f_i(\bv{n}))$, and the outer equalities follow from the condition that $H_1, H_2 \in \mc{H}$.
+			But, since all pairs $H_1, H_2 \in \mc{H}$ agree on their common domains, this means $h \in \bigcup \mc{H}$ is functional.
+			
+			We prove by strong induction that $h$ is total.
+			We know that $H|_B = h_B$ for each $H\in B$ so this means $h|_B = h_B$.
+			Now consider $i\in I$ and $\bv{n} \in N^{\nu_i}$ and assume $n' \in \text{Dom}(h)$ for each $n' \in \text{Pred}(f_i(\bv{n}))$.
+			We must show $f_i(\bv{n}) \in \text{Dom}(h)$.
+			Because $n' \in \text{Dom}(H)$, this means there is an $H_{n'} \in \mc{H}$ with $n' \in \text{Dom}(H_{n'})$.
+			Consider the set
+			\begin{equation*}
+				H = \bigcup_{n' \in \text{Pred}(f_i(\bv{n}))} H_{n'}.
+			\end{equation*}
+			We have that $n' \in \text{Dom}(H)$ for each $n' \in \text{Pred}(f_i(\bv{n}))$.
+			We know $H|_B = h_B$.
+			Now suppose $f_{i'}(\bv{n}'') \in \text{Dom}(H)$ for some $i' \in I$ and $\bv{n}'' \in N^{\nu_{i'}}$.
+			This means there is some $n'$ such that $f_{i'}(\bv{n}') \in \text{Dom}(H_{n'})$.
+			But since $H_{n'} \in \mc{H}$, this means $n'' \in \text{Dom}(H)_{n'}$ for each $n'' \in \text{Pred}(f_{i'}(\bv{n}''))$ which means these same elements are also in $H$.
+			Because $f_{i'}(\bv{n}'') \in H_{n'}$, we have that $H_{n'}(\bv{n}'', f_{i'}(\bv{n}'')) = h_{f_{i'}}(H_{n'}|_{\text{Pred}(f_{i'}(\bv{n}''))})$.
+			But this also means $H(f_{i'}(\bv{n}'')) = h_{f_{i'}}(\bv{n}'', H|_{\text{Pred}(f_{i'}(\bv{n}''))})$.
+			All of this means $H \in \mc{H}$.
+			But, now consider
+			\begin{equation*}
+				H' = H \cup \braket{f_i(\bv{n}), h_{f_i}(\bv{n}, H|_{\text{Pred}(f_i(\bv{n}))}}.
+			\end{equation*}
+			By unique readability, we know $f_i(\bv{n}) \not \in B$ so $H'|_B = h_B$ still.
+			We also know there is no other $j\in I$ such that $f_i(\bv{n}) \in \text{Ran}(f_j)$ and there is no other $\bv{n}' \in N^{\nu_i}$ such that $f_i(\bv{n}) = f_{i'}(\bv{n})$.
+			This means that the conditions on $f_i(\bv{n})$ within $H \in \mc{H}$ are satisfied.
+			This means $H' \in \mc{H}$.
+			But this also means $f_i(\bv{n}) \in \text{Dom}(h)$ concluding our proof that $h$ is total on $N$.
+			
+			We know that each $H \in \mc{H}$ has $H|_B = h_B$ we so know $h|_B = h_B$.
+			We also know that for each $H\in \mc{H}$ the recursive condition on $\mc{H}$ holds.
+			But this means $h$ also satisfies that condition which means $h\in \mc{H}$ and that for each $i\in I$ and $\bv{n} \in N^{\nu_i}$ that
+			\begin{equation*}
+				h(f_i(\bv{n})) = h_{f_i}(\bv{n}, H|_{\text{Pred}(f_i(\bv{n}))}).
+			\end{equation*}
+			So we see that $h$ satisfies both recursion conditions.
+			
+			Now suppose $h': N \to S$ satisfies $h'|_B = h_B$ and the recursive condition.
+			Then $h' \in \mc{H}$ which means $h = h'$ since $h, h' \in \mc{H}$ and they have the same domain, namely $N$.
+		\end{preformal theorem}
+	
+		As a first application of the strong structural recursion theorem will prove that, for a binary operation $\ast: A \times A \to A$, that binary associativity of $\ast$ leads to general associativity of $\ast$.
+		Binary associativity means that, for all $a_1, a_2, a_3 \in A$, that 
+		\begin{equation*}
+			(a_1 \ast a_2) \ast a_3 = a_1 \ast (a_2 \ast a_3).
+		\end{equation*}
+		Intuitively, generalized associativity of $\ast$ means that if we concatenate an arbitrary number of elements of $A$ using $\ast$, then we get the same result regardless of where we place the parentheses.
+		For example, consider $a_1, a_2, a_3, a_4 \in A$.
+		There are five possible parenthesizations of these 4 elements:
+		\begin{align*}
+			&a_1 \ast (a_2 \ast (a_3 \ast a_4))\\
+			&a_1 \ast ((a_2 \ast a_3) \ast a_4)\\
+			&(a_1 \ast a_2) \ast (a_3 \ast a_4)\\
+			&(a_1 \ast (a_2 \ast a_3)) \ast a_4\\
+			&((a_1 \ast a_2) \ast a_3) \ast a_4.
+		\end{align*}
+		If $\ast$ exhibited generalized associativity then all 5 of these expressions would be equal.
+		The statement of general associativity of $\ast$ will be that for any $n \in \N$ and any $n$-tuple $\bv{a} \in A^n$, that all parenthesization of $\bv{a}$ are equal.
+		However, we have yet to provide a rigorous definition of a parenthesization of $\bv{a}$.
+		In this next section we will give a definition for parenthesizations and prove that binary associativity implies generalized associativity for any binary operation.
+		
+		\begin{preformal definition}[Tuple Slicing]
+			Suppose $\bv{a} \in A^n$ is an $n$-tuple for some $n\in \N$.
+			if $1 \le i, j \le n$ then we define $\bv{a}_{i:j}$ to be the $j-1+1$ tuple satisfying
+			\begin{equation*}
+				\bv{a}_{i:j}(k) = a_{k+i-1}
+			\end{equation*}
+			where $1 \le k \le j-i+1$.
+		\end{preformal definition}
+		
+		Suppose $\ast: A\times A \to A$ is a binary operation.
+		We seek a function $\text{Par}: A^* \to \mc{P}(A)$
+		which satisfies
+		\begin{itemize}
+			\item{$\text{Par}((a)) = \{a\}$}
+			\item{$\text{Par}(\bv{a}) = \bigcup_{k=1}^{n-1} \{x \ast y \in A: x\in \text{Par}(\bv{a}_{1:k}) \text{ and } y \in \text{Par}(\bv{a}_{k+1:n})\}$}
+		\end{itemize}		
+		Since the definition of $\text{Par}$ depends on itself, we see that $\text{Par}$ must be defined using the recursion.
+		
+		We will define $\text{Par}$ using the strong recursion principle applied to $\bar{\N} = \N \setminus \{0\}$.
+		We note that this set is $(\{1\}, \{+_1\})$ inductively generated where $+_1$ is the function that takes $n \to n+1$.
+		
+		\begin{preformal definition}[Parenthesizations]
+			We let
+			\begin{equation*}
+				S = \{(n, f) \in \bar{\N} \times \mc{P}(A)^{A^*} \mid f: A^n \to \mc{P}(A)\}
+			\end{equation*}
+			The idea is that $f$ will be the parenthesization function specialised to domain $A^n$ and $n$ is carried along as a tag needed for technical reasons during th recursion construction.
+			
+			Let $h_B(1) = (1, f_1)$ where $f_1((a)) = \{a\}$.
+			Now consider $h_{+_1}: D_{+_1} \to S$.
+			In this case
+			\begin{equation*}
+				D_{+1} = \{(n, g) \in \bar{\N} \times \text{Hist}_S: g \in \text{Hist}_S^{n+1}\}.
+			\end{equation*}
+			Note that we have identified $\bar{\N}^1$ with $\bar{\N}$ under the association $(n) \to n$.
+			We let
+			\begin{equation*}
+				h_{+_1}(n, g) = (n, f_{n, g})
+			\end{equation*}
+			with $g \in \text{Hist}_S^{n+1}$.
+			We define $f_{n, g}: A^n \to \mc{P}(A)$ by
+			\begin{equation*}
+				f_{n, g}(\bv{a}) = \bigcup_{k=1}^{n-1} \{x\ast y \in A \mid x\in g_2(k)(\bv{a}_{1:k}) \text{ and } y \in g_2(n-k)(\bv{a}_{k+1:n})\}.
+			\end{equation*}
+			Note that $g(k)\in S$ so it is a tuple $(n, f)$ with $f:A^n \to \mc{P}(A)$.
+			$g_2(k)$ picks out the second component of this tuple, $f$.
+			
+			The strong structural recursion theorem then gives us the unique existence of a function $h: \bar{N} \to S$ which satisfies
+			\begin{itemize}
+				\item{$h(1) = h_B(1) = (1, f_1)$ with $f_1((a)) = \{a\}$}
+				\item{$h(n+1) = h_{+_1}(n, h|_{[n]})$, noting that $\text{Pred}(n+1) = [n]$.}
+			\end{itemize}
+			We have that 
+			\begin{equation*}
+				h_{+_1}(n, h|_{[n]}) = (n, f_{n, h|_{[n]}})
+			\end{equation*}
+			with, for $\bv{a} \in A^n$
+			\begin{equation*}
+				f_{n, h|_{[n]}}(\bv{a}) = \bigcup_{k=1}^{n-1} \{x\ast y\in A \mid x\in h_2(k)(\bv{a}_{1:k})\text{ and } y \in h_2(k)(\bv{a}_{k+1:n})\}.
+			\end{equation*}
+			
+			We now define 
+			\begin{align*}
+				\text{Par}: A^* \to& \mc{P}(A)\\
+				\bv{a} \mapsto h_2(\text{Len}(\bv{a}))(\bv{a})
+			\end{align*}
+
+			Unravelling the definitions, we can see
+			\begin{itemize}
+				\item{$\text{Par}((a)) = \{a\}$}
+				\item{$\text{Par}(\bv{a}) = \bigcup_{k=1}^{n-1}\{x\ast y \in A \mid x \in \text{Par}(\bv{a}_{1:k}) \text{ and } y \in \text{Par}(\bv{a}_{k+1:n})\}$}
+			\end{itemize}
+		\end{preformal definition}
+		
+		With this definition in hand, we can, then, defined generalized associativity to mean that for any $\bv{a} \in A^*$ that $x, y \in \text{Par}(\bv{a})$ implies $x=y$.
+
+		\begin{preformal theorem}[Binary Associativity Implies Generalized Associativity]
+			Suppose $\ast: A \times A \to A$ exhibits binary associativity.
+			We will prove, using strong induction on $\bar{N}$, that $\ast$ exhibits generalized associativity.
+			
+			Our statement $\phi(n)$ is the statement that for all $\bv{a} \in A^n$ that $x, y \in \text{Par}(\bv{a})$ implies $x=y$. We denote this unique element of $\text{Par}(\bv{a})$ by $\ast(\bv{a})$.
+			The base case is immediate because $\text{Par}((a)) = \{a\}$, a singleton.
+			
+			Now suppose that $\phi(n)$ holds for all $n\in [n]$. 
+			We must show that $\phi(n+1)$ holds.
+			Let $\bv{a} \in A^{n+1}$ and consider
+			\begin{align*}
+				\text{Par}(\bv{a}) = \bigcup_{k=1}^{n+1-1} \{x\ast y \in A \mid x\in \text{Par}(\bv{a}_{1:k}) \text{ and } y\in \text{Par}(\bv{a}_{k+1:n+1})\}
+			\end{align*}
+			However, by the strong induction hypothesis, there only one unique element in each of $\text{Par}(\bv{a}_{1:k})$ and $\text{Par}(\bv{a}_{k+1:n+1})$ because $\bv{a}_{1:k}$ and $\bv{a}_{k+1:n+1}$ are both tuples with length  $\le n$.
+			We can then write
+			\begin{align*}
+				\text{Par}(\bv{a}) =& \bigcup_{k=1}^n \{x \ast y \in A \mid x = \ast(\bv{a}_{1:k}) \text{ and } y = \ast(\bv{a}_{k+1:n+1})\}\\
+				=&  \{\ast(\bv{a}_{1:k}) \ast \ast(\bv{a}_{k+1:n+1}) \in A \mid 1 \le k \le n\}
+			\end{align*}
+			But now choose $i, j$ with $1 \le i < j \le n+1$ and consider
+			\begin{align*}
+				\ast(\bv{a}_{1:i}) \ast \ast(\bv{a}_{i+1:n+1}) =& \ast(\bv{a}_{1:i}) \ast (\ast(\bv{a}_{i+1:j}) \ast \ast(\bv{a}_{j+1:n+1}))\\
+				=& (\ast(\bv{a}_{1:i}) \ast \ast(\bv{a}_{i+1:j})) \ast \ast(\bv{a}_{j+1:n+1})\\
+				=& \ast(\bv{a}_{1:j}) \ast \ast(\bv{a}_{j+1:n+1}) 
+			\end{align*}
+			where the first and third equalities follow by considering different parenthesizations of tuples with length $\le n$ and the second equality follows by binary associativity.
+			But this means that all of the terms in the set above for $\text{Par}(\bv{a})$ are equal to eachother.
+			We denote this unique element by $\ast(\bv{a})$.
+			
+			This concludes our proof that binary associativity implies generalized associativity.
+		\end{preformal theorem}
+		
+	\section{List Operations}
+		\begin{preformal definition}[List Concatenation]
+			We define $\cdot: S^* \times S^* \to S^*$ by
+			\begin{align*}
+				\cdot(\bv{s}, \bv{t}) = \bv{s} \cdot \bv{t}
+			\end{align*}
+			with
+			\begin{align*}
+				\norm{\bv{s} \cdot \bv{t}} = \norm{\bv{s}} + \norm{\bv{t}}
+			\end{align*}
+			and
+			\begin{align*}
+				(\bv{s}\cdot \bv{t})_i = \begin{cases}
+					s_i \text{ if } 1\le i \le \norm{\bv{s}}\\
+					t_{i - \norm{\bv{s}}} \text{ if } \norm{\bv{s}} + 1 \le i \le \norm{\bv{s}\cdot \bv{t}}.
+				\end{cases}
+			\end{align*}
+			We may use juxtaposition to indicate concatenation.
+			That is,
+			\begin{equation*}
+				\bv{s}\bv{t} = \bv{s} \cdot \bv{t}
+			\end{equation*}
+		\end{preformal definition}
+
+		\begin{preformal theorem}[List Concatenation is Binary Associative]
+			Consider $\bv{a}(\bv{b}\bv{c})$. 
+			We must show that this is equal to $(\bv{a}\bv{b})\bv{c}$.
+			
+			We have that
+			\begin{align*}
+				\norm{\bv{a}(\bv{b}\bv{c})} = \norm{\bv{a}} + \norm{\bv{b}\bv{c}} = \norm{\bv{a}} + \norm{\bv{b}} + \norm{\bv{c}} = \norm{\bv{a}\bv{b}} + \norm{\bv{c}} = \norm{\bv{a}\bv{b}\bv{c}}.
+			\end{align*}
+			Note that this follows by binary associativity of addition on $\N$ which we assume as granted as a preformal concept.
+			
+			We will show that $(\bv{a}(\bv{b}\bv{c}))_i = ((\bv{a}\bv{b})\bv{c})_i$ for all $i$ with $1 \le i \le \norm{\bv{a}} + \norm{\bv{b}} + \norm{\bv{c}}$.
+	
+			First suppose $1 \le i \le \norm{\bv{a}}$.
+			Then 
+			\begin{equation*}
+				(\bv{a}(\bv{b}\bv{c}))_i = a_i
+			\end{equation*}
+			but 
+			\begin{equation*}
+				((\bv{a}\bv{b})\bv{c})_i = (\bv{a}\bv{b})_i = a_i
+			\end{equation*}
+			
+			Now suppose $\norm{\bv{a}} + 1 \le i \le \norm{\bv{a}} + \norm{\bv{b}}$.
+			Then 
+			\begin{equation*}
+				(\bv{a}(\bv{b}\bv{c})) = (\bv{b}\bv{c})_{i-\norm{\bv{a}}} = b_{i-\norm{\bv{a}}}
+			\end{equation*}
+			but
+			\begin{equation*}
+				((\bv{a}\bv{b})\bv{c})_i = (\bv{a}\bv{b})_i = b_{i-\norm{\bv{a}}}
+			\end{equation*}
+			
+			Now suppose $\norm{\bv{a}} + \norm{\bv{b}}+1 \le i \le \norm{\bv{a}} + \norm{\bv{b}} + \norm{\bv{c}}$.
+			Then
+			\begin{equation*}
+				(\bv{a}(\bv{b}\bv{c}))_i = (\bv{b}\bv{c})_{i-\norm{\bv{a}}} = c_{i-\norm{\bv{a}} - \norm{\bv{b}}}
+			\end{equation*}
+			but
+			\begin{equation*}
+				((\bv{a}\bv{b})\bv{c})_i = c_{i-\norm{\bv{a}\bv{c}}} = c_{i-\norm{\bv{a}} - \norm{\bv{b}}}.
+			\end{equation*}
+			
+			This proves that $\bv{a}(\bv{b}\bv{c}) = (\bv{a}\bv{b})\bv{c}$.
+		\end{preformal theorem}
+
+		\begin{preformal theorem}[List Concatenation Exhibits Generalized Associativity]
+			We proved above that if any binary operation exhibits binary associativity then it exhibits generalized associativity.
+			Since list concatenation exhibits binary associativity it must exhibit generalized associativity.
+			
+			The means we write e.g.
+			\begin{equation*}
+				\bv{a}_1\bv{a}_2\bv{a}_3\bv{a}_4\bv{a}_5
+			\end{equation*}
+			and not have to worry about adding any parentheses.
+			This holds true for any number of elements of $A^*$.
+			If $\mc{A} \in (A^*)^*$ we can write
+			\begin{equation*}
+				\cdot(\mc{A})
+			\end{equation*}
+			to denote the unique concatenation of all of the elements in $\mc{A}$.
+			
+			Note also that, e.g., $\bv{a} = (a_1, a_2, a_3) = (a_1)\cdot(a_2)\cdot(a_3)$.
+			We can drop the parentheses in this expression, thereby identifying $a_1$ with $(a_1)$, and write
+			$\bv{a} = (a_1, a_2, a_3) = a_1a_2a_3$.
+		\end{preformal theorem}
+
+	\section{Language of First Order Logic}
+	
+		We now have the required preformal concepts to begin developing  \gls{lfol}.
+		
+		\begin{preformal definition}[The Alphabet of \gls{lfol}]
+			
+			We outline all the types of symbols allowed in \gls{lfol}
+			
+			\begin{itemize}
+				\item{\textbf{Variables}: We have the set $\textbf{Var} = \{\qq{x_1}, \qq{x_2}, \ldots\}$. We will often use \qq{abbreviations} like $y$ to stand for a variable but, formally, we can think of the $y$ as being a human-readable abbreviation for e.g. $x_{62}$. We will try to use letters from near the end of the alphabet as abbreviations for variables.}
+				\item{\textbf{Logical Operators}: We have the set $\textbf{Log} = \{\qq{\implies}, \qq{\lnot}\}$.}
+				\item{\textbf{Quantifiers}: We have the set $\textbf{Quant} = \{\qq{\forall}\}$. This singleton set contains the \qq{for all} quantifier $\forall$.}
+				\item{\textbf{Predicates}: For each $n\in N$ we have the $n$-ary predicates $\textbf{Pred}_n = \{\qq{P^{(n)}_1}, \qq{P^{(n)}_2}, \ldots\}$ and all predicates $\textbf{Pred} = \bigcup_{n\in \N} \textbf{Pred}_n$. We will use abbreviations like $\in$ and $\subset$ to stand for predicates (2-ary in both of these cases). These abbreviations can be thought of a stand ins for the formal predicates likek $P^{(2)}_{42}$. $\curlywedge$, the contradiction symbol, is an example of a 0-ary predicate.}
+				\item{\textbf{Functions}: For each $n\in N$ we have the $n$-ary functions $\textbf{Func}_n = \{\qq{f^{(n)}_1}, \qq{f^{(n)}_2}, \ldots\}$ and all functions $\textbf{Func} = \bigcup_{n\in \N} \textbf{Func}_n$. We will use abbreviations like $\emptyset$, $\mc{P}$, $\bigcup$ to stand in for functions (0-ary, 1-ary, and 1-ary for these examples). Again these abbreviations can be thought of a stand ins for formal functions like $f^{(3)}_{99}$.}
+			\end{itemize}
+		
+			We only take a small set of logical operators, leaving out, notably, $\land$, $\lor$ and $\iff$.
+			We will prove that these operators can be constructed as abbreviations for expression involving only $\implies$ and $\lnot$.
+			Likewise, we will prove that we can introduce $\exists$, the exist quantifier, as an abbreviation for expression involving $\forall$ and other existing symbols.
+			
+			We define the set of all symbols in \gls{lfol}
+			\begin{equation*}
+				\Sigma = \bigcup \{\textbf{Var}, \textbf{Log}, \textbf{Quant}, \textbf{Pred}, \textbf{Func}\}.
+			\end{equation*}
+			We call an element of $\Sigma^*$ such as $\qq{\implies P_1^{(n)}\forall x_2 )( f_{13}^{(42)}}$ a \textit{string}.
+		\end{preformal definition}
+		
+		The string given at the end of the previous definition is clearly a meaningless string.
+		We will provide \textit{syntax rules} for \gls{lfol} that prescribe the allowed ways we can combine elements from the alphabet to form meaningful strings.
+		
+		\begin{preformal definition}[Terms]
+			Let $U=\Sigma^*$ and let $B = \textbf{Var} \cup \textbf{Func}_0$.
+			Let $I = \textbf{Func}\setminus \textbf{Func}_0$ and for each $i \in I$ define $\nu_i$ equal to the arity of $i$.
+			Define a function $f_i:(\Sigma^*)^\nu_i \to \Sigma^*$ by
+			\begin{equation*}
+				f_i(\mc{A}) = i\cdot (\cdot(\mc{A}))
+			\end{equation*}
+			This says to concatenate all of the strings in $\mc{A}$, denoted by $\cdot(\mc{A})$ and then concatenate this onto the right of the function symbol $i$.
+			
+			For example, 
+			As an example, suppose $i=f_1^{(3)} \in \textbf{Func}$ and $x_1, x_4, f_2^{(0)} \in A^*$.
+			The corresponding function 
+			\begin{equation*}
+				f_{f_1^{(3)}}(x_1, x_4, f_2^{(0)}) = f_1^{(3)}x_1x_4f_2^{(0)}
+			\end{equation*}
+			
+			We have that $\bv{f} = (f_i)_{i \in I}$ is a $U$ function family.
+			We then define
+			\begin{equation*}
+				\textbf{Term} = N_{U, B, \bv{f}}.
+			\end{equation*}
+			In other words, the set of \textit{terms} in \gls{lfol} is defined to be inductive closure with base set given by variables and 0-ary functions and inductive functions given by concatenation of an $n$-ary function symbol with $n$ other terms.
+			This means that, in general, terms are either variables, 0-ary functions, or of the form
+			\begin{equation*}
+				ft_1\ldots t_n
+			\end{equation*}
+			where $f$ is an $n$-ary symbol and $t_1, \ldots, t_n \in \textbf{Term}$.
+			
+			We can also see that the function $f_i$ all have disjoint ranges (since their output strings start with different function symbols), their ranges are disjoint from $B$ and they are all injective.
+			This means that $\textbf{Term}$ is freely inductively generated and, thus, exhibits unique readability.			
+		\end{preformal definition}
+	
+		\begin{preformal definition}[Atomic Formula]
+			We define
+			\begin{equation*}
+				\textbf{Atom} = \{P\cdot (\cdot(\mc{T})) \in \Sigma^* \mid P \in \textbf{Pred}_n \text{ and } \mc{T} \in \textbf{Term}^n\}
+			\end{equation*}
+			In other words, atomic formula are of the form
+			\begin{equation*}
+				Pt_1\ldots t_n
+			\end{equation*}
+			where $P$ is an $n$-ary predicate and $t_1, \ldots, t_n$ are terms.
+		\end{preformal definition}
+		
+		\begin{preformal definition}[Permissive Formulas]
+			Let $U = \Sigma^*$ and let $B = \textbf{Atom}$.
+			Define
+			\begin{align*}
+				f_{\lnot}(\bv{a}) =& \lnot \bv{a}\\
+				f_{\implies}(\bv{a}, \bv{b}) =& \implies \bv{a} \bv{b}\\
+			\end{align*}
+			Then for each $x \in \textbf{Var}$ define
+			\begin{align*}
+				f_x(\bv{a}) =& \forall x \bv{a}
+			\end{align*}
+			
+			
+			If we let $I = \textbf{Log}\cup \textbf{Var}$, we can see that $I$ can be used as an index set to form $\bv{f}$ a $U$ function family.
+			
+			We define
+			\begin{equation*}
+				\textbf{PForm} = N_{U, B, \bv{f}}
+			\end{equation*}
+			the set of permissive formulas.
+			
+			Permissive formulas are of the form 
+			\begin{itemize}
+				\item{$A$ where $A \in \textbf{Atom}$}
+				\item{$\lnot C$ where $C \in \textbf{PForm}$}
+				\item{$\implies CD$ where $C, D \in \textbf{PForm}$}
+				\item{$\forall x C$ where $x\in \textbf{Var}$ and $C\in \textbf{PForm}$.}
+			\end{itemize}
+			
+			We can see again that $\bv{f}$ satisfies the condition so that $\textbf{PForm}$ is freely inductively generated so that it exhibits unique readability.
+		\end{preformal definition}
+		We use Polish notation throughout, i.e. $\implies CD$ instead of $C \implies D$ or $fx_1 x_2 x_3$ instead of $f(x_1, x_2, x_3)$.
+		For human readability, we will often \textit{abbreviate} the polish notation into more standard notation including parentheses.
+		Polish notation will be useful for the metalogical proof whereas the parentheses notation is more useful for human readability and understanding.
+	
+		There are two problems with quantification within $\textbf{PForm}$.
+		\begin{itemize}
+			\item{Strings of the form $\forall x P$ are allowed in $\textbf{PForm}$ even though the variable $x$ doesn't appear in $P$. This is called redundant quantification.}
+			\item{Strings of the form $\forall x \forall x Px$ are allowed in $\textbf{PForm}$. The same variable $x$ is captured in multiple nested quantification scopes. This is called repeated quantification.}
+		\end{itemize}
+		We will define a new set, the strict formulas called $\textbf{SForm}$ or just $\textbf{Form}$ which forbid these two degenerate behaviors.
+		However, to do this, we need to be able to detect which variables are free and bound within a permissive formula.
+		
+		Because $\textbf{Term}$ and $\textbf{PForm}$ exhibit unique readability, we can use the recursion theorem to recursively define function on these sets.
+		
+		\begin{preformal definition}[Free Variables Within a Term]
+			We use the recursion theorem to define $\text{Free}: \textbf{Term} \to \mc{P}(\textbf{Var})$.
+			
+			Recall that the base set for the term inductive closure is $B = \textbf{Var}\cup \textbf{Func}_0$.
+			Define 
+			\begin{equation*}
+				h_B(t) = \begin{cases}
+					\{t\} \textbf{ if } t \in \textbf{Var}\\
+					\emptyset \textbf{ if } t \in \textbf{Func}_0
+				\end{cases}
+			\end{equation*}
+			
+			Recall that $I= \textbf{Func}\setminus \textbf{Func}_0$ and for each $i\in I$ there is $f_i: \textbf{Term}^{\nu_i} \to \textbf{Term}$ (after restricting from $\Sigma^*$ to the inductively generated $\textbf{Term}$).
+			
+			We then define $h_{f_i}: \mc{P}(\textbf{Var})^{\nu_i} \to \mc{P}(\textbf{Var})$ by 
+			\begin{equation*}
+				h_{f_i}(\bv{s}) = \bigcup_{j\in [\nu_i]} s_j.
+			\end{equation*}
+
+			The recursion theorem then gives us a function $\text{Free} = h$ which behaves like
+			\begin{equation*}
+				\text{Free}(t) = \begin{cases}
+					\{t\} \text{ if } t\in\textbf{Var}\\
+					\emptyset \text{ if } t \in \textbf{Func}_0\\
+					\bigcup_{j\in [n]} \text{Free}(t_j) \text{ if } t=f\bv{t} \text{ with } f \in \textbf{Func}_{n} \text{ and } t\in \textbf{Term}^{n}
+				\end{cases}
+			\end{equation*}
+		\end{preformal definition}
+		
+		\begin{preformal definition}[Free Variables within a Permissive Formula]
+			Let $B = \textbf{Atom}$.
+			If $A\in \textbf{Atom}$ then $A = P\bv{t}$ with $P\in \textbf{Pred}_n$ and $\bv{t} \in \textbf{Term}^n$.
+			Let $h_B(A) = \bigcup_{i \in [n]} \text{Free}(t_i)$
+			where $\text{Free}$ is the function defined on terms.
+			
+			Let
+			\begin{align*}
+				h_{f_{\lnot}}(a) =& a\\
+				h_{f_{\implies}}(a, b) =& a \cup b.
+			\end{align*}
+			Finally, for each $x\in \textbf{Var}$ let
+			\begin{align*}
+				h_{f_x}(s) = s \setminus \{x\}
+			\end{align*}
+			
+			The recursion theorem then gives us a function
+			\begin{align*}
+				\text{Free}(F) = \begin{cases}
+					\cup_{i \in n} \text{Free}(t_i) &\text{ if } F = A\bv{t} \text{ with } A \in \textbf{Pred}_0 \text{ and } \bv{t} \in \textbf{Term}^n\\
+					\text{Free}(G) &\text{ if } F = \lnot G \text{ with } G \in \textbf{PForm}\\
+					\text{Free}(G) \cup \text{Free}(H) &\text{ if } F = \implies GH \text{ with } G, H \in \textbf{PForm}\\
+					\text{Free}(G)\setminus\{x\} &\text{ if } F = \forall x G \text{ with } x \in \textbf{Var} \text{ and } G\in \textbf{PForm}
+				\end{cases}
+			\end{align*}
+			
+		\end{preformal definition}
+		
+		\begin{preformal definition}[Bound Variables Within a Permissive Formula]
+			Let $B = \textbf{Atom}$.
+			Let $h_B(b) = \emptyset$ for each $b\in B$.
+			
+			Let
+			\begin{align*}
+				h_{f_{\lnot}}(a) =& a\\
+				h_{f_{\implies}}(a, b) =& a \cup b
+			\end{align*}
+			
+			For each $x\in \textbf{Var}$ let
+			\begin{align*}
+				h_{f_x}(s) = s \cup \{x\}
+			\end{align*}
+			
+			The recursion theorem them gives us a function $\text{Bnd}: \textbf{PForm} \to \mc{P}(\textbf{Var})$ which satisfies
+			\begin{equation*}
+				\text{Bnd}(F) = \begin{cases}
+					\emptyset &\text{ if } F \in \textbf{Atom}\\
+					\text{Bnd}(G) &\text{ if } F = \lnot G \text{ with } G \in \textbf{PForm}\\
+					\text{Bnd}(G) \cup \text{Bnd}(H) &\text{ if } F = \implies GH \text{ with } G, H \in \textbf{PForm}\\
+					\text{Bnd}(G) \cup \{x\} &\text{ if } F = \forall x G \text{ with } x \in \textbf{Var} \text{ and } \\
+					&G \in \textbf{PForm}
+				\end{cases}
+			\end{equation*}
+		\end{preformal definition}
+		
+		\begin{preformal definition}[Strict Formulas]
+			We define
+			\begin{equation*}
+				\textbf{SForm} = \{F \in \textbf{PForm} \mid \text{ if } F = \forall x G \text{ then } x \in \text{Free}(G) \text{ and } x \not \in \text{Bnd}(G) \}
+			\end{equation*}
+		\end{preformal definition}
+		
+	\section{Natural Deduction}
+		natural deduction is the process of deriving new lines, under logical rules, from old.
+		
+		\begin{preformal definition}[Line of Proof]
+			We define 
+			\begin{align*}
+				L = \{&(n, f, D, i, \bv{c}) \in \N \times \textbf{SForm} \times \mc{P}(\N) \times I \times \N^* \mid d \le n \text{ for all } d \in D\\
+				&\text{and } c_j < n \text{ for all } j \in [\norm{\bv{c}}]\}
+			\end{align*}
+			
+			If we have a proof line $(n, f, D, i, \bv{c})$ then $n$ is the line number, $f$ is the formula for that line, $D$ is the set of logical dependencies for that proof line, $i$ is an index indicating the deduction rule used to derive that line, and $\bv{c}$ is the ordered set (tuple) of lines used by the rule to derive the line.
+		\end{preformal definition}
+	
+		\begin{preformal definition}[Deduction Rules]
+			A deduction rule $R$ is a function from $R: L^* \to L^*$.
+			A deduction rule must follow the following conditions.
+			
+			Consider 
+			\begin{equation*}
+				\text{Lines}(\bv{l}) = \{m \in \N \mid \exists j \in \norm{\bv{l}} \text{ such that } (\bv{l}_j)_1 = m \}
+			\end{equation*}
+			We must have that $R_i(\bv{l})$ satisfies
+			\begin{align*}
+				\norm{R_i(\bv{l})} &= \norm{\bv{l}} + 1\\
+				(R_i(\bv{l}))_{1:\norm{\bv{l}}} &= \bv{l}\\
+				((R_i(\bv{l}))_{\norm{\bv{l}} + 1})_1 &= \max(\text{Lines}(\bv{l})) + 1
+			\end{align*}
+			These rules tell us that a rule must add one line to a sequence of lines, the previous lines in the output of a rule must match the existing lines, and the newly added line number but be exactly 1 more than the maximum of all the line numbers already existing.
+			
+			Suppose $\bv{R} = (R_i)_{i\in I}$.
+			For this to be a valid deduction rule family, it must be the case that for each $i\in I$ and each $\bv{l} \in L^*$
+			\begin{align*}
+				((\bv{R}_i(\bv{l}))_{\norm{\bv{l}} + 1})_4 = i.
+			\end{align*}
+			That is, when $\bv{R}_i$ appends a line to $\bv{l}$, the 4th entry of that line 
+			
+			
+		\end{preformal definition}
+	
+		
+\end{document}
