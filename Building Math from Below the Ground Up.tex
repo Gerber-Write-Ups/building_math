@@ -576,31 +576,24 @@
 	
 		\begin{preformal definition}[Closed Under a  $U$ Function]
 			Suppose $f$ is a $\nu$-ary $U$ function.
-			If $U' \subset \text{Dom}(f)$ and $\text{Ran}(f|_{(U')^{\nu}}) \subset U'$ then we say $U'$ is closed under $f$
+			If $\text{Ran}(f|_{(U')^{\nu}}) \subset U'$ then we say $U'$ is closed under $f$.
 		\end{preformal definition}
 	
 		\begin{preformal definition}[$U$ Function Family]
 			Suppose $U$ and $I$ are sets.
-			Suppose $\bv{\nu} = (\nu_i)_{i\in I}$ is an $I$-tuple with entries $\nu_i \in \N$
-			
-			Suppose $U$ is a set and $U'\subset U$. 
-			Suppose $I$ is an indexing set and $\bv{\nu} = (\nu_i)_{i\in I}$ is an $I$-tuple with entries $\nu_i \in \N$.
-			Suppose that $\bv{f}=(f_i)_{i\in I}$ is an $I$-tuple and $f_i: (U')^{\nu_i} \to U$ for each $i \in I$.
-			Then we say $\bv{f}$ is a $\bv{\nu}$-ary $U$ function family with domain $U'$.
-			If we don't specify the domain we can assume $U'=U$.
-			In some cases we may leave off the arity if it not necessary for the discussion.
+			Suppose $\bv{\nu} = (\nu_i)_{i\in I}$, $\bv{U}' = (U_i)_{i\in I}$ and $\bv{f} = (f_i)_{i\in I}$ are all $I$-tuples.
+			Suppose, for all $i \in I$ that $\nu_i \in \N^+$, $U'_i \subset U$ and $f_i:(U'_i)^{\nu_i} \to U$.
+			Then we say $\bv{f}$ is a $\bv{\nu}$-ary $U$ function family.
 		\end{preformal definition}
 		
 		\begin{preformal definition}[Closed Under a $U$ Function Family]
-			Suppose $\bv{f} = (f_i)_{i\in I}$ is a $U$ function family with domain $U'$ and $U'' \subset U'$.
-			If $U''$ is closed under $f_i$ for each $i \in I$ then we say $U''$ is closed under $\bv{f}$.
+			Suppose $\bv{f} = (f_i)_{i\in I}$ is a $U$ function family.
+			We say $U'\subset U$ if $U'$ is closed under $f_i$ for each $i\in I$.
 		\end{preformal definition}
 		
 		\begin{preformal definition}[$U$ Function Family Restriction]
-			Suppose $\bv{f}$ is a $\bv{\nu}$-ary $U$ function family with domain $U'$.
-			Suppose $U'' \subset U'$.
-			Define the $I$-tuple $\bv{f}|_{U''} = (f_i|_{(U'')^{\nu_i}})_{i\in I}$.
-			$\bv{f}|_{U''}$ is a $\bv{\nu}$-ary $U$ function family with domain $U''$.
+			Suppose $\bv{f}$ is a $\bv{\nu}$-ary $U$ function family and $U' \subset \text{Dom}(f_i)$ for each $i\in I$.
+			Then we define the $I$-tuple $\bv{f}|_{U'} = (f_i|_{(U')^{\nu_i}})_{i\in I}$.
 		\end{preformal definition}
 		
 		\begin{preformal definition}[$(U, B, \bv{f})$-Inductive]
@@ -635,16 +628,21 @@
 			Consider an expression $\phi(n)$ which depends on $n\in N$.
 			Now consider the set
 			\begin{equation*}
-				C = \{n\in N \mid \phi(n)\}
+				\bar{N} = \{n\in N \mid \phi(n)\}
 			\end{equation*}
 			\begin{itemize}
-				\item{Base case: Suppose we can prove $\phi(b)$ holds for each $b\in B$ so that $B\subset C$.}
-				\item{Inductive Step: Now consider $i\in I$ and $\bv{c} \in C^{\nu_i}$.
-					Suppose that if we assume $\phi(c_j)$ for each $j \in [\nu_i]$, i.e. that $c_j \in C$, that we can prove $\phi(f_i(\bv{c}))$, i.e. that $f_i(\bv{c}) \in C$. This would mean that $C$ is closed under $\bv{f}$.}
+				\item{Base case: Suppose we can prove $\phi(n)$ holds for each $n\in B$.}
+				\item{Inductive Step: Now consider $i\in I$ and $\bv{n} \in \text{Dom}(f_i)$. Suppose that, if we assume $\phi(n_j)$ for each $j\in [\nu_i]$, then we can prove $\phi(f_i(\bv{n}))$.}
 			\end{itemize}
-			If we can prove both of these things then we can see that $C$ is $(N, B, \bv{f})$ inductive.
-			But $C \subset N$ and $N$ is $(B, \bv{f})$ inductively generated so this means $C = N$.
-			In other words, $\phi(n)$ holds for all $n\in N$.
+			The base case tells use that $B \subset \bar{N}$.
+			Now consider $i\in I$ and $f_i$.
+			We want to show $\bar{N}$ is closed under $f_i|_{\bar{N}^{\nu_i}}$.
+			Consider $\bv{n} \in \text{Dom}(f_i|_{\bar{N}^{\nu_i}}) = \text{Dom}(f_i) \cap \bar{N}^{\nu_i}$.
+			But this means $\bv{n} \in \bar{N}^{\nu_i}$ which, for each $j\in [\nu_i]$ that $n_j \in \bar{N}$ which means $\phi(n_j)$ holds.
+			But, the induction hypothesis then tells us that $\phi(f_i(\bv{n}))$ holds meaning $f_i(\bv{n}) \in \bar{N}$.
+			This means that $\bar{N}$ is closed under $f_i|_{\bar{N}^{\nu_i}}$ and, more generally, $\bar{N}$ is closed under $f|_{\bar{N}}$.
+			This means we have proven that $\bar{N}$ is $(N, B, \bv{f})$ inductive.
+			But since, $\bar{N}$ is a $(N, B, \bv{f})$ inductive subset of $N$ which is $(B, \bv{f})$ inductively generated, we have that $\bar{N} = N$ which means $\phi(n)$ holds for all $n\in N$.
 		\end{preformal theorem}
 		
 		The induction principle provides a means to prove some property about all of $N$ by proving that property only for $B$, the base case, and proving that $\bv{f}$ preserves that property in each inductive step.
@@ -662,13 +660,12 @@
 		
 		\begin{preformal theorem}[The Inductive Closure is Inductive]
 			Since each $N\in \mc{N}_{U, B, \bv{f}}$ is $(U, B, \bv{f})$ inductive we know that $B \subset N$.
-			But this means $B \subset N_{U, B, \bv{f}}$.
-			Now consider $i\in I$ and $\bv{n} \in N_{U, B, \bv{f}}^{\nu_i}$.
+			But this means $B \subset N_{U, B, \bv{f}}$.			
+			Now consider $i\in I$ and $\bv{n} \in \text{Dom}(f_i|_{N_{U, B, F}}) \subset N_{U, B, \bv{f}}^{\nu_i}$.
 			For each $j\in [\nu_i]$ we see that $n_j \in N_{U, B, \bv{f}}$.
 			But this means that $n_j \in N$ for each $N \in \mc{N}_{U, B, \bv{f}}$.
 			But since each $N$ is $(U, B, \bv{f})$ inductive, this means $f_i(\bv{n}) \in N$ each $N$.
-			But this means $f_i(\bv{n}) \in N_{U, B, \bv{f}}$.
-			Therefore $N_{U, B, \bv{f}}$ is $(U, B, \bv{f})$ inductive.
+			But this means $f_i(\bv{n}) \in N_{U, B, \bv{f}}$ which implies $N_{U, B, \bv{f}}$ is closed under $\bv{f}$ and is, therefore, $(U, B, \bv{f})$ inductive.
 		\end{preformal theorem}
 		
 		\begin{preformal theorem}[The Inductive Closure is Inductively Generated]
@@ -682,13 +679,14 @@
 		\begin{preformal theorem}[Each Elemented of an Inductively Generated Set is Base or Generated]
 			Suppose $N$ is $(B, \bv{f})$ inductively generated.
 			We will show that either $n\in B$ or there is some $i\in I$ such that $n \in \text{Ran}(f_i)$.
+			Call this proposition $\phi(n)$.
 			
 			Consider
 			\begin{equation*}
 				C = \{n\in N \mid n\in B \text{ or there is } i\in I \text{ such that } n \in \text{Ran}(f_i)\}
 			\end{equation*}
 			Clearly $B\subset C$.
-			Now consider $i \in I$ and $\bv{n} \in N^{\nu_i}$.
+			Now consider $i \in I$ and $\bv{n} \in \text{Dom}(f_i|_C) \subset N^{\nu_i}$.
 			Since $f_i(\bv{n}) \in \text{Ran}(f_i)$ we have that $f_i(\bv{n}) \in C$.
 			But this means $C$ is closed under $\bv{f}$ which means $C \subset N$ is $(N, B, \bv{f})$ inductive which implies $C = N$ because $N$ is $(B, \bv{f})$ inductively generated.
 		\end{preformal theorem}
@@ -736,7 +734,7 @@
 			
 			If $n\in B$ then by the second freely inductively generated condition we know it is not in the range of $f_i$ for any $i\in I$.
 			If $n \not \in B$ then we know from the previous generation theorem that there is some $i\in I$ such that $n\in \text{Ran}(f_i)$.
-			But by the first freely inductively generated condition we know that $f_i$ is injective so that there is a unique $\bv{n} \in N^{\nu_i}$ such that $n = f_i(\bv{n})$ and by third freely inductively generated condition we know that there is no other $j\in I$ with $j\neq i$ such that $n\in \text{Ran}(f_j)$.
+			But by the first freely inductively generated condition we know that $f_i$ is injective so that there is a unique $\bv{n} \in \text{Dom}(f_i) \subset N^{\nu_i}$ such that $n = f_i(\bv{n})$ and by third freely inductively generated condition we know that there is no other $j\in I$ with $j\neq i$ such that $n\in \text{Ran}(f_j)$.
 		\end{preformal theorem}
 	
 		\begin{preformal theorem}[The Structural Recursion Theorem]
@@ -747,14 +745,14 @@
 			Under these conditions, the structural recursion theorem states that there is a unique function $h: N \to S$ which satisfies
 			\begin{itemize}
 				\item{$h|_B = h_B$}
-				\item{For each $i\in I$ and for each $\bv{n} \in N^{\nu_i}$, we have that $h(f_i(\bv{n})) = h_{f_i}(h^{(\nu_i)}(\bv{n}))$.}
+				\item{For each $i\in I$ and for each $\bv{n} \in \text{Dom}(f_i) \subset N^{\nu_i}$, we have that $h(f_i(\bv{n})) = h_{f_i}(h^{(\nu_i)}(\bv{n}))$.}
 			\end{itemize}
 			
 			We define
 			\begin{align*}
 				\mc{H} = \{&H \in \mc{P}(N\times S) \mid H \text{ is functional and }\\
 				&H|_B = h_B \text{ and}\\
-				&\text{for all } i \in I \text{ and } \bv{n} \in N^{\nu_i},\\
+				&\text{for all } i \in I \text{ and } \bv{n} \in \text{Dom}(f_i) \subset  N^{\nu_i},\\
 				&\text{that if } f_i(\bv{n}) \in \text{Dom}(H) \text{ then }\\
 				&n_j \in \text{Dom}(H) \text{ for each } j \in [\nu_i] \text{ and }\\
 				&H(f_i(\bv{n})) = h_{f_i}(H^{(\nu_i)}(\bv{n}))\}
@@ -770,7 +768,7 @@
 			We prove this by induction on $N$.
 			Specifically, we prove that if $n\in D$ then $H_1(n) = H_2(n)$.
 			For the base case if $n\in B$ we know that $H_1(n) = H_2(n) = h_B(n)$.
-			For the induction case we consider $i\in I$ and $\bv{n} \in N^{\nu_i}$.
+			For the induction case we consider $i\in I$ and $\bv{n} \in \text{Dom}(f_i)\subset  N^{\nu_i}$.
 			We assume for each $j\in [\nu_i]$ that if $n_j \in D$ that $H_1(n_j) = H_2(n_j)$.
 			If $f_i(\bv{n}) \not \in D$ then there is nothing to prove.
 			If $f_i(\bv{n}) \in D$ then we know $n_j \in D$ for each $j \in [\nu_i]$. 
@@ -784,7 +782,7 @@
 			
 			We prove by induction that $h$ is total.
 			We know that $H|_B = h_B$ for each $H \in B$ so this means $h|_B = h_B$.
-			Now consider $i\in I$ and $\bv{n} \in N^{\nu_i}$ and assume that $n_j \in \text{Dom}(h)$ for each $j \in [\nu_i]$.
+			Now consider $i\in I$ and $\bv{n} \in \text{Dom}(f_i) \subset  N^{\nu_i}$ and assume that $n_j \in \text{Dom}(h)$ for each $j \in [\nu_i]$.
 			We must show that $f_i(\bv{n}) \in \text{Dom}(h)$.
 			Because $n_j \in \text{Dom}(h)$, this means there is an $H_j \in \mc{H}$ with $n_j \in \text{Dom}(H_j)$.
 			Consider the set 
@@ -804,14 +802,14 @@
 				H' = H \cup \{\braket{f_i(\bv{n}), h_{f_i}(H^{(\nu_i)}(\bv{n}))}\}
 			\end{equation*}
 			By unique readability we know $f_i(\bv{n}) \not \in B$ so $H'|_B = h_B$ still.
-			We also know that there is no other $j \in I$ such that $f_i(\bv{n}) \in \text{Ran}(f_{j})$ and there is no other $\bv{n}' \in N^{\nu_i}$ such that $f_i(\bv{n}) = f_i(\bv{n}')$.
+			We also know that there is no other $j \in I$ such that $f_i(\bv{n}) \in \text{Ran}(f_{j})$ and there is no other $\bv{n}' \in \text{Dom}(f_i) \subset N^{\nu_i}$ such that $f_i(\bv{n}) = f_i(\bv{n}')$.
 			This means that the conditions on $f_i(\bv{n})$ within $H \in \mc{H}$ are satisfied.
 			This means $H' \in \mc{H}$.
 			But this also means that $f_i(\bv{n}) \in \text{Dom}(h)$.
 			
 			We know that each $H\in \mc{H}$ has $H|_B = h_B$ so we know $h|_B = h_B$.
 			We also know that each $H \in \mc{H}$ satisfies the recursive condition on $\mc{H}$.
-			But this means $h$ also satisfies that condition which means $h \in \mc{H}$ and that for each $i \in I$ and $\bv{n} \in N^{\nu_i}$ that
+			But this means $h$ also satisfies that condition which means $h \in \mc{H}$ and that for each $i \in I$ and $\bv{n} \in \text{Dom}(f_i) \subset N^{\nu_i}$ that
 			\begin{equation*}
 				h(f_i(\bv{n})) = h_{f_i}(h^{(\nu_i)}(\bv{n})).
 			\end{equation*}
@@ -832,7 +830,7 @@
 			which satisifes
 			\begin{itemize}
 				\item{$\text{Pred}(b) = \emptyset$ if $b \in B$}
-				\item{for all $i \in I$ and $\bv{n} \in N^{\nu_i}$, $\text{Pred}(f_i(\bv{n})) = \bigcup_{j\in [\nu_i]} (\text{Pred}(n_j) \cup \{n_j\})$}
+				\item{for all $i \in I$ and $\bv{n} \in \text{Dom}(f_i) \subset N^{\nu_i}$, $\text{Pred}(f_i(\bv{n})) = \bigcup_{j\in [\nu_i]} (\text{Pred}(n_j) \cup \{n_j\})$}
 			\end{itemize}
 			
 			We will proceed in a few stages.
@@ -856,7 +854,7 @@
 			
 			We will prove, by induction, that $\pi_1(h(n)) = n$.
 			If $n\in b$ then $\pi_1(h(n)) = \pi_1((b, \emptyset)) = b$ as needed.
-			Now consider $i\in I$, $\bv{N} \in N^{\nu_i}$, and $\bv{n}\in N^{\nu_i}$ and assume that for each $j\in [\nu_i]$ that $\pi_1(h(n_j)) = n_j$.
+			Now consider $i\in I$, and $\bv{n}\in \text{Dom}(f_i) \subset N^{\nu_i}$ and assume that for each $j\in [\nu_i]$ that $\pi_1(h(n_j)) = n_j$.
 			Let 
 			\begin{equation*}
 				s_j = h(n_j) = (\pi_1(h(n_j)), \pi_2(h(n_j))) = (n_i, \pi_2(h(n_j))).
@@ -871,7 +869,7 @@
 			This concludes the proof by induction that $\pi_1(h(n)) = n$.
 			
 			But, consider now $\text{Pred} = \pi_2 \circ h$.
-			We can see from the equation above that for each $i\in I$ and $\bv{n} \in N^{\nu_i}$ that 
+			We can see from the equation above that for each $i\in I$ and $\bv{n} \in \text{Dom}(f_i) \subset N^{\nu_i}$ that 
 			\begin{align*}
 				\text{Pred}(f_i(\bv{n})) = \bigcup_{j\in [\nu_i]} (\text{Pred}(n_j) \cup \{n_j\})
 			\end{align*}
@@ -881,7 +879,7 @@
 		The induction principle allows us to prove a principle $\phi(n)$ for all $n\in N$ by 
 		\begin{itemize}
 			\item{proving $\phi(b)$ for all $b\in B$}
-			\item{proving for each $i\in I$ and $\bv{n}\in N^{\nu_i}$ that if we assume $\phi(n_j)$ for each $j\in [\nu_i]$ we can prove $\phi(f_i(\bv{n}))$.}
+			\item{proving for each $i\in I$ and $\bv{n}\in\text{Dom}(f_i) \subset  N^{\nu_i}$ that if we assume $\phi(n_j)$ for each $j\in [\nu_i]$ we can prove $\phi(f_i(\bv{n}))$.}
 		\end{itemize}
 		However, now that we have defined $\text{Pred}$, it is possible to formulate a strong induction principle which allows us to assume a stronger hypothesis during the induction step.
 		This stronger hypothesis is to assume $\phi(n')$ for each $n'\in \text{Pred}(f_i(\bv{n}))$.
@@ -896,38 +894,38 @@
 
 			Now consider the set
 			\begin{equation*}
-				C = \{n\in N \mid \phi(n)\}
+				\bar{N} = \{n\in N \mid \phi(n)\}
 			\end{equation*}
 			
 			\begin{itemize}
-				\item{Base Case: Suppose we can prove $\phi(b)$ holds for each $b\in B$ so that $B\subset C$.}
-				\item{(Strong) Inductive Step: Now consider $i\in I$ and $\bv{c} \in C^{\nu_i}$ and $f_i(\bv{c})$. Suppose that if we assume $\phi(c')$ holds for each $c' \in \text{Pred}(f_i(\bv{c}))$ that we can prove $\phi(f(\bv{c}))$ holds.}
+				\item{Base Case: Suppose we can prove $\phi(n)$ holds for each $n\in B$ so that $B\subset \bar{N}$.}
+				\item{(Strong) Inductive Step: Now consider $i\in I$ and $\bv{n} \in \text{Dom}(f_i) \subset N^{\nu_i}$ and $f_i(\bv{n})$. Suppose that if we assume $\phi(n')$ holds for each $n' \in \text{Pred}(f_i(\bv{n}))$ that we can prove $\phi(f(\bv{n}))$ holds.}
 			\end{itemize}
 			
 			We will use the weak induction principle to prove this.
 			So we assume that we can prove everything in the strong induction base case and strong inductive step.
 			We now define the set
 			\begin{equation*}
-				C' = \{n\in N \mid \phi(n) \text{ and for all } n'\in \text{Pred}(n), \phi(n')\} 
+				\bar{N}' = \{n\in N \mid \phi(n) \text{ and for all } n'\in \text{Pred}(n), \phi(n')\} 
 			\end{equation*}
-			We will prove that $C'$ is inductive.
-			We have already proven $B\subset C$ for the strong induction base case.
-			Since $\text{Pred}(b) = \emptyset$ for $b\in B$ this means that $B\subset C'$ as well.
-			Now consider $i\in I$ and $\bv{c} \in N^{\nu_i}$ and suppose that $c_j \in C'$ for each $j \in [\nu_i]$.
-			In particular, this means that $\phi(c_j)$ holds and $\phi(c'_j)$ for each $j\in [\nu_i]$ and for each $c'_j \in \text{Pred}(c_j)$.
+			We will prove that $\bar{N}'$ is inductive.
+			We have already proven $B\subset \bar{N}$ for the strong induction base case.
+			Since $\text{Pred}(n) = \emptyset$ for $n\in B$ this means that $B\subset \bar{N}'$ as well.
+			Now consider $i\in I$ and $\bv{n} \in \text{Dom}(f_i) \subset N^{\nu_i}$ and suppose that $n_j \in \bar{N}'$ for each $j \in [\nu_i]$.
+			In particular, this means that $\phi(n_j)$ holds and $\phi(n'_j)$ for each $j\in [\nu_i]$ and for each $n'_j \in \text{Pred}(n_j)$.
 			But
 			\begin{equation*}
-				\text{Pred}(f_i(\bv{c})) = \bigcup_{j\in [\nu_i]} (\{c_j\} \cup \text{Pred}(c_j)).
+				\text{Pred}(f_i(\bv{n})) = \bigcup_{j\in [\nu_i]} (\{n_j\} \cup \text{Pred}(n_j)).
 			\end{equation*}
-			Based on this definition, we can see that $\phi(c')$ holds for each $c' \in \text{Pred}(f_i(\bv{c}))$.
-			But then the strong induction step tells us that this means $\phi(f_i(\bv{c}))$ holds so that $f_i(\bv{c}) \in C'$ and, therefore, that $C'$ is inductive.
+			Based on this definition, we can see that $\phi(n')$ holds for each $n' \in \text{Pred}(f_i(\bv{n}))$.
+			But then the strong induction step tells us that this means $\phi(f_i(\bv{n}))$ holds so that $f_i(\bv{n}) \in \bar{N}'$ and, therefore, that $\bar{N}'$ is inductive.
 			
-			Since $C'$ is an inductive subset of an inductively generated set, we have $C' = N$.
-			But, because $C'$ is based on a stronger condition that $C$ we have that $C' \subset N$ so
+			Since $\bar{N}'$ is an inductive subset of an inductively generated set, we have $\bar{N}' = N$.
+			But, because $\bar{N}'$ is based on a stronger condition that $\bar{N}$ we have that $\bar{N}' \subset \bar{N}$ so
 			\begin{equation*}
-				N = C' \subset C \subset N
+				N = \bar{N}' \subset \bar{N} \subset N
 			\end{equation*}
-			which means $C = N$.
+			which means $\bar{N} = N$.
 		\end{preformal theorem}
 		
 		The structural recursion theorem allows us to take $\bv{n}$ and $h(n_i)$ for each $i\in [n]$ to construct $h(f_i(\bv{n}))$.
