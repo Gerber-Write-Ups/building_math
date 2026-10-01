@@ -427,13 +427,14 @@
 			\end{preformal theorem}
 						
 			\begin{preformal definition}[Relation Restriction]
-				Suppose $R$ is a relation between $X$ and $Y$ and $X'
-				\subset X$.
+				Suppose $R$ is a relation between $X$ and $Y$ and $X'$ is a set.
 				We define a new relation
 				$$
-				R|_{X'} = \{\braket{x', y} \in R \mid x' \in X' \text{ and } y\in Y\}
+				R|_{X'} = \{\braket{x', y} \in R \mid x' \in X'\}
 				$$
-				$R|_{X'}$ is the restriction of $R$ to the possibly smaller set $X' \times Y \subset X \times Y$.
+				$R|_{X'}$ is the restriction of $R$ to the set $(X'\cap X) \times Y \subset X \times Y$.
+				
+				Often, but not always, $X' \subset X$ so that $X' \cap X = X'$.
 			\end{preformal definition}
 			
 			\begin{preformal definition}[The Natural Numbers]
@@ -442,6 +443,7 @@
 				We denote the set of all natural numbers by $\N$.
 				We assume an understanding of equality $=$ between natural numbers and of the comparison operations $<, \le, \ge, >$.
 				We also assume an understanding of the binary addition operator $+$.
+				We let $\N^+ = \N \setminus\{0\}$.
 			\end{preformal definition}
 			
 			\begin{preformal definition}[The set 1 through $n$ (inclusive)]
@@ -541,19 +543,19 @@
 				Suppose $S$ is a set.
 				We define the set of $S$ lists by
 				\begin{equation*}
-					S^* = \bigcup_{n\in \N, n\ge 1} S^n
+					S^* = \bigcup_{n\in \N^+} S^n
 				\end{equation*}
 				We define a function 
 				\begin{align*}
-					\text{Len} = \{\braket{\bv{s}, n} \in S^* \times \N \mid \bv{s}: [n] \to S\}
+					\text{Len} = \{\braket{\bv{s}, n} \in S^* \times \N^+ \mid \bv{s}: [n] \to S\}
 				\end{align*}
-				$\text{Len}$ is total on $S^*$ and functional because for each $\bv{s} \in S^*$ there is exactly on $n\in \N$ such that $\bv{s}: [n] \to S$.
+				$\text{Len}$ is total on $S^*$ and functional because for each $\bv{s} \in S^*$ there is exactly one $n\in \N^+$ such that $\bv{s}: [n] \to S$.
 				We may also denote $\text{Len}(\bv{s}) = \norm{\bv{s}}$
 				We can see that $\bv{s}:\norm{\bv{s}} \to S$.
 			\end{preformal definition}
 	
 			\begin{preformal definition}[Function Mapping over Cartesian Product]
-				Suppose $f:X \to Y$ and $n\in \mathbb{N}$.
+				Suppose $f:X \to Y$ and $n\in \mathbb{N}^+$.
 				We define
 				\begin{align}
 					f^{(n)} = \{\braket{\bv{x}, \bv{y}} \in X^n \times Y^n \mid \text{for each } i \in [n], y_i = f(x_i)\}
