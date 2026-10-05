@@ -371,12 +371,20 @@
 				If $R\subset X \times Y$ then $\text{Dom}(R)\subset X$ and $\text{Ran}(R)\subset Y$.
 			\end{preformal definition}
 			
+			\begin{preformal definition}[Image Under a Relation]
+				If $R$ is a relation then for a set $X$, we define
+				\begin{equation*}
+					R_{\text{Img}}(X) = \{y \in \text{Ran}(R) \mid \text{There exists} x\in X \text{ and } \braket{x, y} \in R\}
+				\end{equation*}
+			\end{preformal definition}
+			
 			\begin{preformal definition}[Functional Relation]
 				Suppose $R\subset X \times Y$.
 				If $\braket{x, y}, \braket{x, y'}\in R$ implies that $y=y'$ then we say $R$ is a functional relation.
 				If $R$ is a functional relation and $x\in \text{Dom}(R)$ then there is a unique $y\in \text{Ran}(R)$ such that $\braket{x, y} \in R$.
 				We denote this unique $y$ by $R(x)$.
 				We may simply call a functional relation a function.
+				Note that $R_{\text{Img}}(\{x\}) = \{R(x)\}$.
 			\end{preformal definition}
 			
 			\begin{preformal definition}[Injective Relation]
@@ -456,10 +464,11 @@
 					[3] = \{1, 2, 3\}
 				\end{equation*}
 				Note that this notation uses 1-indexing rather than 0-indexing.
+				We allow $[0]$ but note that $[0]$ evaluates to $[0] = \emptyset$.
 			\end{preformal definition}
 			
 			\begin{preformal definition}[Tuple]
-				An $I$-tuple is a functional relation $R$ with $\text{Dom}(R) = I$.
+				An $I$-tuple is a functional relation $f$ with $\text{Dom}(f) = I$.
 				We often notate the tuple in bold face, e.g. $\bv{t}$, and, for $i\in I$, notate the entries in the tuple with subscript notation:
 				\begin{equation*}
 					\bv{t}(i) = t_i
@@ -474,9 +483,24 @@
 				\end{equation*}
 				using parentheses as brackets.
 				
-				Typically $I = [n]$ for some $n \in \N$ in which case we call the tuple an $n$-tuple.
+				Typically $I = [n]$ for some $n \in \N$ in which case we call the tuple an $n$-tuple. 
+				If $\bv{t}$ is a $[0]$-tuple then $\bv{t} = () = \emptyset$, the empty function with domain $\emptyset$.
 				
 				If we want to emphasize that the elements within the tuple are sets we may call an $I$-tuple an $I$-indexed family.
+			\end{preformal definition}
+			
+			\begin{preformal definition}[Set Operations on Tuples]
+				Suppose $\bv{S} = (S_i)_{i\in I}$.
+				We define
+				\begin{align*}
+					\bigcup_{i\in I} S_i =& \bigcup \text{Ran}(\bv{S})\\
+					\bigcap_{i\in I} S_i =& \bigcap \text{Ran}(\bv{S}).
+				\end{align*}
+				if $I = [n]$ then we define
+				\begin{align*}
+					\bigcup_{i=1}^n S_i =& \bigcup_{i\in [n]} S_i = \bigcup \text{Ran}(\bv{S})\\
+					\bigcap_{i=1}^n S_i =& \bigcap_{i\in [n]} S_i = \bigcap \text{Ran}(\bv{S})\\
+				\end{align*}
 			\end{preformal definition}
 		
 			\begin{preformal definition}[Relation Tuple]
@@ -519,43 +543,58 @@
 			\end{preformal definition}
 	
 			\begin{preformal definition}[Multiple Cartesian Product]
-				Suppose $\bv{S}$ is an $n$-tuple of sets.
+				Suppose $\bv{S}$ is an $I$-tuple of sets.
 				We define the multiple cartesian product as
 				\begin{equation*}
-					\bigtimes \mathcal{S} = \{\bv{s} \in \bv{S}^{[n]} \mid \text{for each } i \in [n], s_i \in S_i\}
+					\bigtimes \mathcal{S} = \{\bv{s} \in \bv{S}^I \mid \text{for each } i \in I, s_i \in S_i\}
 				\end{equation*}				
-				In other words, it is the set of $n$ tuples such that the $i^{\text{th}}$ entry is in the $i^{\text{th}}$ entry of $\bv{S}$.
-				We often notate this instead as
+				In other words, it is the set of $I$-tuples such that the $i^{\text{th}}$ entry is in the $i^{\text{th}}$ entry of $\bv{S}$.
+				
+				We can also notate this as
 				\begin{equation*}
-					\bigtimes_{i=1}^n \bv{S} = \bigtimes \bv{S}.
+					\bigtimes_{i\in I} S_i = \bigtimes \bv{S}
 				\end{equation*}
-				We also might notate, using ellipses, $\bv{S} = (S_1, \ldots, S_n)$ and notate the multiple cartesian product as
+				or if $I=[n]$ then
 				\begin{equation*}
-					\bigtimes \bv{S}=\bigtimes_{i=1}^n (S_1, \ldots, S_n) = S_1 \times \ldots \times S_n.
+					\bigtimes_{i=1}^n S_i = \bigtimes_{i\in I} S_i = \bigtimes \bv{S}
 				\end{equation*}
-				If all $n$ entries of $\bv{S}$ are equal to a common set, $S$, then we write
-				\begin{equation*}
-					\bigtimes \bv{S} = S \times \ldots \times S = S^n
-				\end{equation*}
+				
+				If $I=[n]$ and $S_i = S$ for each $i\in [n]$ then we let
+				\begin{align*}
+					S^n = \bigtimes_{i=1}^n S_i
+				\end{align*}
+				
+				Note that there is a natural identification between $S$ and $S^1$ given by $s \mapsto (s)$.
+				Sometimes it will be convenient for us to abuse notation and identify with $S$ with $S^1$ and $s$ with $(s)$.
+				Note that $S^0 = \{()\}$.
+			\end{preformal definition}
+	
+			\begin{preformal definition}[Bijection]
+				If $f$ is an invertible function then we say $f$ is a bijection between $\text{Dom}(f)$ and $\text{Ran}(f)$.
 			\end{preformal definition}
 	
 			\begin{preformal definition}[Lists]
 				Suppose $S$ is a set.
 				We define the set of $S$ lists by
 				\begin{equation*}
-					S^* = \bigcup_{n\in \N^+} S^n
+					S^* = \bigcup_{n\in \N} S^n
 				\end{equation*}
 				We define a function 
 				\begin{align*}
-					\text{Len} = \{\braket{\bv{s}, n} \in S^* \times \N^+ \mid \bv{s}: [n] \to S\}
+					\text{Len} = \{\braket{\bv{s}, n} \in S^* \times \N \mid \bv{s}: [n] \to S\}
 				\end{align*}
-				$\text{Len}$ is total on $S^*$ and functional because for each $\bv{s} \in S^*$ there is exactly one $n\in \N^+$ such that $\bv{s}: [n] \to S$.
+				$\text{Len}$ is total on $S^*$ and functional because for each $\bv{s} \in S^*$ there is exactly one $n\in \N$ such that $\bv{s}: [n] \to S$.
 				We may also denote $\text{Len}(\bv{s}) = \norm{\bv{s}}$
 				We can see that $\bv{s}:\norm{\bv{s}} \to S$.
+				
+				We will sometimes have use for
+				\begin{equation*}
+					S^{>0} = S^*\setminus S^0
+				\end{equation*}
 			\end{preformal definition}
 	
 			\begin{preformal definition}[Function Mapping over Cartesian Product]
-				Suppose $f:X \to Y$ and $n\in \mathbb{N}^+$.
+				Suppose $f:X \to Y$ and $n\in \mathbb{N}$.
 				We define
 				\begin{align}
 					f^{(n)} = \{\braket{\bv{x}, \bv{y}} \in X^n \times Y^n \mid \text{for each } i \in [n], y_i = f(x_i)\}
@@ -584,6 +623,7 @@
 			Suppose $\bv{\nu} = (\nu_i)_{i\in I}$, $\bv{U}' = (U_i)_{i\in I}$ and $\bv{f} = (f_i)_{i\in I}$ are all $I$-tuples.
 			Suppose, for all $i \in I$ that $\nu_i \in \N^+$, $U'_i \subset U$ and $f_i:(U'_i)^{\nu_i} \to U$.
 			Then we say $\bv{f}$ is a $\bv{\nu}$-ary $U$ function family.
+			We exclude $0$-ary functions from the definition.
 		\end{preformal definition}
 		
 		\begin{preformal definition}[Closed Under a $U$ Function Family]
@@ -949,14 +989,14 @@
 			\end{align*}
 			For each $i\in I$, we also define
 			\begin{align*}
-				D_{f_i} = \{(\bv{n}, g) \in N^{\nu_i} \times \text{Hist}_S: g \in \text{Hist}_S^{f_i(\bv{n})} \}
+				D_{f_i} = \{(\bv{n}, g) \in \text{Dom}(f_i) \times \text{Hist}_S: g \in \text{Hist}_S^{f_i(\bv{n})} \}
 			\end{align*}
 			We then suppose now, that for each $i\in I$ there is a function $h_{f_i}: D_{f_i} \to S$.
 			
 			Under these conditions, the strong structural recursion theorem then gives us the unique existence of a function $h: N \to S$ such that
 			\begin{itemize}
 				\item{$h|_B = h_B$}
-				\item{$h(f_i(\bv{n})) = h_{f_i}(\bv{n}, h|_{\text{Pred}(f_i(\bv{n}))})$ For each $i\in I$ and $\bv{n} \in N^{\nu_i}$}
+				\item{$h(f_i(\bv{n})) = h_{f_i}(\bv{n}, h|_{\text{Pred}(f_i(\bv{n}))})$ For each $i\in I$ and $\bv{n} \in \text{Dom}(f_i) \subset N^{\nu_i}$}
 			\end{itemize}
 			We can see that we have defined $D_{f_i}$ and $h_{f_i}$ as we have so that the inductive step (via $h_{f_i}$) has access both to $\bv{n}$, the elements we are recursing on, and the value of $h$ on these elements and their predecessors, i.e. $h|_{\text{Pred}(f(\bv{n}))}$.
 			
@@ -966,7 +1006,7 @@
 			\begin{align*}
 				\mc{H} = \{& H \in \mc{P}(N\times S) \mid H \text{ is functional and}\\
 				&H|_B = h_B \text{ and }\\
-				&\text{for all } i \in I \text{ and } \bv{n} \in N^{\nu_i},\\
+				&\text{for all } i \in I \text{ and } \bv{n} \in \text{Dom}(f_i) \subset N^{\nu_i},\\
 				&\text{that if } f_i(\bv{n}) \in \text{Dom}(H) \text{ then}\\
 				&\text{Pred}(f_i(\bv{n})) \subset \text{Dom}(H) \text{ and}\\
 				&H(f_i(\bv{n})) = h_{f_i}(\bv{n}, H|_{\text{Pred}(f(\bv{n}))})\}
@@ -978,7 +1018,7 @@
 			We prove this by strong induction on $N$.
 			Specifically, we prove that if $n\in D$ then $H_1(n) = H_2(n)$.
 			For the base case, if $n\in B$, we know that $H_1(n) = H_2(n) = h_B(n)$.
-			For the strong induction case we consider $i\in I$ and $\bv{n} \in N^{\nu_i}$.
+			For the strong induction case we consider $i\in I$ and $\bv{n} \in \text{Dom}(f_i) \subset N^{\nu_i}$.
 			We assume that for each $n' \in \text{Pred}(f_i(\bv{n}))$ that $H_1(n') = H_2(n')$.
 			If $f_i(\bv{n}) \not \in D$ then there is nothing to prove.
 			If $f_i(\bv{n}) \in D$ then we know $n'\in D$ for each $n' \in \text{Pred}(f_i(\bv{n}))$.
@@ -992,7 +1032,7 @@
 			
 			We prove by strong induction that $h$ is total.
 			We know that $H|_B = h_B$ for each $H\in B$ so this means $h|_B = h_B$.
-			Now consider $i\in I$ and $\bv{n} \in N^{\nu_i}$ and assume $n' \in \text{Dom}(h)$ for each $n' \in \text{Pred}(f_i(\bv{n}))$.
+			Now consider $i\in I$ and $\bv{n} \in \text{Dom}(f_i) \subset N^{\nu_i}$ and assume $n' \in \text{Dom}(h)$ for each $n' \in \text{Pred}(f_i(\bv{n}))$.
 			We must show $f_i(\bv{n}) \in \text{Dom}(h)$.
 			Because $n' \in \text{Dom}(H)$, this means there is an $H_{n'} \in \mc{H}$ with $n' \in \text{Dom}(H_{n'})$.
 			Consider the set
@@ -1012,14 +1052,14 @@
 				H' = H \cup \braket{f_i(\bv{n}), h_{f_i}(\bv{n}, H|_{\text{Pred}(f_i(\bv{n}))}}.
 			\end{equation*}
 			By unique readability, we know $f_i(\bv{n}) \not \in B$ so $H'|_B = h_B$ still.
-			We also know there is no other $j\in I$ such that $f_i(\bv{n}) \in \text{Ran}(f_j)$ and there is no other $\bv{n}' \in N^{\nu_i}$ such that $f_i(\bv{n}) = f_{i'}(\bv{n})$.
+			We also know there is no other $j\in I$ such that $f_i(\bv{n}) \in \text{Ran}(f_j)$ and there is no other $\bv{n}' \in \text{Dom}(f_i) \subset N^{\nu_i}$ such that $f_i(\bv{n}) = f_{i'}(\bv{n})$.
 			This means that the conditions on $f_i(\bv{n})$ within $H \in \mc{H}$ are satisfied.
 			This means $H' \in \mc{H}$.
 			But this also means $f_i(\bv{n}) \in \text{Dom}(h)$ concluding our proof that $h$ is total on $N$.
 			
 			We know that each $H \in \mc{H}$ has $H|_B = h_B$ we so know $h|_B = h_B$.
 			We also know that for each $H\in \mc{H}$ the recursive condition on $\mc{H}$ holds.
-			But this means $h$ also satisfies that condition which means $h\in \mc{H}$ and that for each $i\in I$ and $\bv{n} \in N^{\nu_i}$ that
+			But this means $h$ also satisfies that condition which means $h\in \mc{H}$ and that for each $i\in I$ and $\bv{n} \in \text{Dom}(f_i) \subset N^{\nu_i}$ that
 			\begin{equation*}
 				h(f_i(\bv{n})) = h_{f_i}(\bv{n}, H|_{\text{Pred}(f_i(\bv{n}))}).
 			\end{equation*}
@@ -1059,21 +1099,21 @@
 		\end{preformal definition}
 		
 		Suppose $\ast: A\times A \to A$ is a binary operation.
-		We seek a function $\text{Par}: A^* \to \mc{P}(A)$
-		which satisfies
+		We seek a function $\text{Par}: A^* \to \mc{P}(A)$ which satisfies
 		\begin{itemize}
+			\item{$\text{Par}(()) = \emptyset$}
 			\item{$\text{Par}((a)) = \{a\}$}
 			\item{$\text{Par}(\bv{a}) = \bigcup_{k=1}^{n-1} \{x \ast y \in A: x\in \text{Par}(\bv{a}_{1:k}) \text{ and } y \in \text{Par}(\bv{a}_{k+1:n})\}$}
 		\end{itemize}		
 		Since the definition of $\text{Par}$ depends on itself, we see that $\text{Par}$ must be defined using the recursion.
 		
-		We will define $\text{Par}$ using the strong recursion principle applied to $\bar{\N} = \N \setminus \{0\}$.
-		We note that this set is $(\{1\}, \{+_1\})$ inductively generated where $+_1$ is the function that takes $n \to n+1$.
+		We will define $\text{Par}$ using the strong recursion principle applied to $\N^+ = \N \setminus \{0\}$.
+		We note that this set is $(\{1\}, \{+_1\})$ inductively generated where $+_1: \N^+ \to \N^+$ is the function that takes $n \to n+1$.
 		
 		\begin{preformal definition}[Parenthesizations]
 			We let
 			\begin{equation*}
-				S = \{(n, f) \in \bar{\N} \times \mc{P}(A)^{A^*} \mid f: A^n \to \mc{P}(A)\}
+				S = \{(n, f) \in \N^+\times \mc{P}(A)^{A^{>0}} \mid f: A^n \to \mc{P}(A)\}
 			\end{equation*}
 			The idea is that $f$ will be the parenthesization function specialised to domain $A^n$ and $n$ is carried along as a tag needed for technical reasons during th recursion construction.
 			
@@ -1081,9 +1121,9 @@
 			Now consider $h_{+_1}: D_{+_1} \to S$.
 			In this case
 			\begin{equation*}
-				D_{+1} = \{(n, g) \in \bar{\N} \times \text{Hist}_S: g \in \text{Hist}_S^{n+1}\}.
+				D_{+1} = \{(n, g) \in \N^+ \times \text{Hist}_S: g \in \text{Hist}_S^{n+1}\}.
 			\end{equation*}
-			Note that we have identified $\bar{\N}^1$ with $\bar{\N}$ under the association $(n) \to n$.
+			Note that we have identified $(\N^+)^1$ with $\N^+$ under the association $(n) \to n$.
 			We let
 			\begin{equation*}
 				h_{+_1}(n, g) = (n, f_{n, g})
@@ -1096,7 +1136,7 @@
 			Note that $g(k)\in S$ so it is a tuple $(n, f)$ with $f:A^n \to \mc{P}(A)$.
 			$g_2(k)$ picks out the second component of this tuple, $f$.
 			
-			The strong structural recursion theorem then gives us the unique existence of a function $h: \bar{N} \to S$ which satisfies
+			The strong structural recursion theorem then gives us the unique existence of a function $h: \N^+ \to S$ which satisfies
 			\begin{itemize}
 				\item{$h(1) = h_B(1) = (1, f_1)$ with $f_1((a)) = \{a\}$}
 				\item{$h(n+1) = h_{+_1}(n, h|_{[n]})$, noting that $\text{Pred}(n+1) = [n]$.}
@@ -1112,27 +1152,34 @@
 			
 			We now define 
 			\begin{align*}
-				\text{Par}: A^* \to& \mc{P}(A)\\
-				\bv{a} \mapsto h_2(\text{Len}(\bv{a}))(\bv{a})
+				\text{Par}: A^*\to& \mc{P}(A)\\
+				\bv{a} \mapsto& \begin{cases} \emptyset &\text{ if } \text{Len}(\bv{a}) = 0\\
+					h_2(\text{Len}(\bv{a}))(\bv{a}) &\text{ if } \text{Len}(\bv{a}) > 0
+					\end{cases}
 			\end{align*}
 
 			Unravelling the definitions, we can see
 			\begin{itemize}
+				\item{$\text{Par}(()) = \emptyset$}
 				\item{$\text{Par}((a)) = \{a\}$}
 				\item{$\text{Par}(\bv{a}) = \bigcup_{k=1}^{n-1}\{x\ast y \in A \mid x \in \text{Par}(\bv{a}_{1:k}) \text{ and } y \in \text{Par}(\bv{a}_{k+1:n})\}$}
 			\end{itemize}
 		\end{preformal definition}
 		
-		With this definition in hand, we can, then, defined generalized associativity to mean that for any $\bv{a} \in A^*$ that $x, y \in \text{Par}(\bv{a})$ implies $x=y$.
+		With this definition in hand, we can, then, define generalized associativity to mean that for any $\bv{a} \in A^*$ that $x, y \in \text{Par}(\bv{a})$ implies $x=y$.
 
 		\begin{preformal theorem}[Binary Associativity Implies Generalized Associativity]
 			Suppose $\ast: A \times A \to A$ exhibits binary associativity.
-			We will prove, using strong induction on $\bar{N}$, that $\ast$ exhibits generalized associativity.
+			We will prove that $\ast$ also exhibits generalized associativity which means that for any $\bv{a} \in A^*$ the if $x, y \in \text{Par}(\bv{a})$ then $x=y$.
 			
-			Our statement $\phi(n)$ is the statement that for all $\bv{a} \in A^n$ that $x, y \in \text{Par}(\bv{a})$ implies $x=y$. We denote this unique element of $\text{Par}(\bv{a})$ by $\ast(\bv{a})$.
-			The base case is immediate because $\text{Par}((a)) = \{a\}$, a singleton.
+			If $\text{Len}(\bv{a}) = 0$ then $\text{Par}(\bv{a}) = \emptyset$ so there are no $x, y \in \text{Par}(\bv{a})$ to check.
 			
-			Now suppose that $\phi(n)$ holds for all $n\in [n]$. 
+			For $\text{Len}(\bv{a}) \ge 1$ we will proceed by strong induction on $\N^+$.
+			Our statement $\phi(n)$ is the statement that for all $\bv{a} \in A^n$ that $x, y \in \text{Par}(\bv{a})$ implies $x=y$. 
+			There is, then, one unique element of $\text{Par}(\bv{a})$ which we denote by $\ast(\bv{a})$.
+			The base case is immediate because for $(a) \in A^1$, $\text{Par}((a)) = \{a\}$, a singleton.
+			
+			Now suppose that $\phi(n)$ holds for all $n\in \text{Pred}(n+1) = [n]$. 
 			We must show that $\phi(n+1)$ holds.
 			Let $\bv{a} \in A^{n+1}$ and consider
 			\begin{align*}
@@ -1167,23 +1214,34 @@
 			\begin{align*}
 				\norm{\bv{s} \cdot \bv{t}} = \norm{\bv{s}} + \norm{\bv{t}}
 			\end{align*}
-			and
+			and for $1 \le i \le \norm{\bv{s}\cdot \bv{t}}$
 			\begin{align*}
 				(\bv{s}\cdot \bv{t})_i = \begin{cases}
-					s_i \text{ if } 1\le i \le \norm{\bv{s}}\\
-					t_{i - \norm{\bv{s}}} \text{ if } \norm{\bv{s}} + 1 \le i \le \norm{\bv{s}\cdot \bv{t}}.
+					s_i &\text{ if } i \le \norm{\bv{s}}\\
+					t_{i - \norm{\bv{s}}} &\text{ if } \norm{\bv{s}} + 1 \le i \le \norm{\bv{s}\cdot \bv{t}}.
 				\end{cases}
 			\end{align*}
-			We may use juxtaposition to indicate concatenation.
+			If $\bv{s} = \bv{t} = ()$ then $\bv{s} \cdot \bv{t} = ()$.
+			
+			We will use juxtaposition to indicate concatenation.
 			That is,
 			\begin{equation*}
 				\bv{s}\bv{t} = \bv{s} \cdot \bv{t}
 			\end{equation*}
+			We will also abuse notation and conflate $s\in S$ with $(s) \in S^1 \subset S^*$ so that
+			\begin{align*}
+				ss' =& (s) \cdot (s') = (s, s')\\
+				\bv{s} =& (s_1, s_2)\\
+				\bv{s}s_3 =& \bv{s}(s_3) = (s_1, s_2) \cdot (s_3) = (s_1, s_2, s_3)
+			\end{align*}
 		\end{preformal definition}
 
 		\begin{preformal theorem}[List Concatenation is Binary Associative]
-			Consider $\bv{a}(\bv{b}\bv{c})$. 
-			We must show that this is equal to $(\bv{a}\bv{b})\bv{c}$.
+			Suppose $\bv{a}, \bv{b}, \bv{c} \in S^*$
+			We wish to show
+			\begin{equation*}
+				\bv{a}(\bv{b}\bv{c}) = (\bv{a}\bv{b})\bv{c}
+			\end{equation*}
 			
 			We have that
 			\begin{align*}
@@ -1223,114 +1281,222 @@
 				((\bv{a}\bv{b})\bv{c})_i = c_{i-\norm{\bv{a}\bv{c}}} = c_{i-\norm{\bv{a}} - \norm{\bv{b}}}.
 			\end{equation*}
 			
-			This proves that $\bv{a}(\bv{b}\bv{c}) = (\bv{a}\bv{b})\bv{c}$.
+			Note if $\bv{a}, \bv{b}, \bv{c} = ()$ then $\bv{a}(\bv{b}\bv{c}) = (\bv{a}(\bv{b}\bv{c})) = ()$.
+			
+			This all proves that $\bv{a}(\bv{b}\bv{c}) = (\bv{a}\bv{b})\bv{c}$.
 		\end{preformal theorem}
 
 		\begin{preformal theorem}[List Concatenation Exhibits Generalized Associativity]
 			We proved above that if any binary operation exhibits binary associativity then it exhibits generalized associativity.
 			Since list concatenation exhibits binary associativity it must exhibit generalized associativity.
 			
-			The means we write e.g.
-			\begin{equation*}
-				\bv{a}_1\bv{a}_2\bv{a}_3\bv{a}_4\bv{a}_5
-			\end{equation*}
-			and not have to worry about adding any parentheses.
-			This holds true for any number of elements of $A^*$.
-			If $\mc{A} \in (A^*)^*$ we can write
-			\begin{equation*}
-				\cdot(\mc{A})
-			\end{equation*}
-			to denote the unique concatenation of all of the elements in $\mc{A}$.
+			Suppose $\bv{\alpha} \in (A^*)^*$.
+			We have $\text{Par}(\bv{\alpha})$ is the set of all parenthesizations on the entries of $\bv{a}$, but, because of generalized associativity, we know that $\text{Par}(\bv{\alpha})$ is a singleton which we will denote $\cdot(\bv{\alpha})$.
 			
-			Note also that, e.g., $\bv{a} = (a_1, a_2, a_3) = (a_1)\cdot(a_2)\cdot(a_3)$.
-			We can drop the parentheses in this expression, thereby identifying $a_1$ with $(a_1)$, and write
-			$\bv{a} = (a_1, a_2, a_3) = a_1a_2a_3$.
+			For brevity, we will often associate $a\in A$ with $(a)\in A^*$ and $\bv{a} \in A^*$ with $(\bv{a}) \in (A^*)^*$.
+			So, for example, if $\bv{\alpha}\in (A^*)^*$, $\bv{a} \in A^*$, and $a\in A$, we may write
+			\begin{equation*}
+				\bv{\alpha}\bv{a}a
+			\end{equation*}
+			to mean
+			\begin{equation*}
+				\cdot(\bv{\alpha}) \cdot (\cdot(\bv{a}, (a))) \in A^*
+			\end{equation*}
 		\end{preformal theorem}
-
+	
 	\section{Language of First Order Logic}
 	
 		We now have the required preformal concepts to begin developing  \gls{lfol}.
 		
 		\begin{preformal definition}[The Alphabet of \gls{lfol}]
-			
-			We outline all the types of symbols allowed in \gls{lfol}
-			
-			\begin{itemize}
-				\item{\textbf{Variables}: We have the set $\textbf{Var} = \{\qq{x_1}, \qq{x_2}, \ldots\}$. We will often use \qq{abbreviations} like $y$ to stand for a variable but, formally, we can think of the $y$ as being a human-readable abbreviation for e.g. $x_{62}$. We will try to use letters from near the end of the alphabet as abbreviations for variables.}
-				\item{\textbf{Logical Operators}: We have the set $\textbf{Log} = \{\qq{\implies}, \qq{\lnot}\}$.}
-				\item{\textbf{Quantifiers}: We have the set $\textbf{Quant} = \{\qq{\forall}\}$. This singleton set contains the \qq{for all} quantifier $\forall$.}
-				\item{\textbf{Predicates}: For each $n\in N$ we have the $n$-ary predicates $\textbf{Pred}_n = \{\qq{P^{(n)}_1}, \qq{P^{(n)}_2}, \ldots\}$ and all predicates $\textbf{Pred} = \bigcup_{n\in \N} \textbf{Pred}_n$. We will use abbreviations like $\in$ and $\subset$ to stand for predicates (2-ary in both of these cases). These abbreviations can be thought of a stand ins for the formal predicates likek $P^{(2)}_{42}$. $\curlywedge$, the contradiction symbol, is an example of a 0-ary predicate.}
-				\item{\textbf{Functions}: For each $n\in N$ we have the $n$-ary functions $\textbf{Func}_n = \{\qq{f^{(n)}_1}, \qq{f^{(n)}_2}, \ldots\}$ and all functions $\textbf{Func} = \bigcup_{n\in \N} \textbf{Func}_n$. We will use abbreviations like $\emptyset$, $\mc{P}$, $\bigcup$ to stand in for functions (0-ary, 1-ary, and 1-ary for these examples). Again these abbreviations can be thought of a stand ins for formal functions like $f^{(3)}_{99}$.}
-			\end{itemize}
-		
-			We only take a small set of logical operators, leaving out, notably, $\land$, $\lor$ and $\iff$.
-			We will prove that these operators can be constructed as abbreviations for expression involving only $\implies$ and $\lnot$.
-			Likewise, we will prove that we can introduce $\exists$, the exist quantifier, as an abbreviation for expression involving $\forall$ and other existing symbols.
-			
-			We define the set of all symbols in \gls{lfol}
+			We will use the following symbols in \gls{lfol}:
 			\begin{equation*}
-				\Sigma = \bigcup \{\textbf{Var}, \textbf{Log}, \textbf{Quant}, \textbf{Pred}, \textbf{Func}\}.
+				\textbf{Symb} = \{v, c, P, f, \implies, \lnot, \forall\}
 			\end{equation*}
-			We call an element of $\Sigma^*$ such as $\qq{\implies P_1^{(n)}\forall x_2 )( f_{13}^{(42)}}$ a \textit{string}.
+			$v$ will be used for variables, $c$ for constants, $P$ for predicates, $f$ for functions.
+			$\implies$, $\lnot$, and $\forall$ are logical symbols.
+			
+			From these we define the following sets
+			\begin{align*}
+				\textbf{Var} =& ((v, n))_{n\in \N} = (v_n)_{n\in \N}\\
+				\textbf{Const} =& ((c, n))_{n\in \N} = (c_n)_{n\in \N}\\				
+				\textbf{Pred} =& ((P, \nu, n))_{(\nu, n) \in \N \times \N} = (P_n^{(\nu)})_{(\nu, n) \in \N\times \N}\\
+				\textbf{Func} =& ((f, \nu, n))_{(\nu, n) \in \N^+ \times \N} = (f_n^{(\nu)})_{(\nu, n) \in \N^+ \times \N}\\				
+				\textbf{Log} =& \{\implies, \lnot\}\\
+				\textbf{Quant} =& \{\forall\}
+			\end{align*}
+			Here $n$ is to be thought of as a subscript to distinguish e.g. one constant from another.
+			$\nu$ indicates the \qq{arity} of a function or predicate.
+			Note that we allow $0$-ary predicates which are like expressions that simply evaluate to a truth value with no input.
+			However, we do not allow $0$-ary functions since these would be redundant with constants.
+			
+			The alphabet of \gls{lfol} is the union of all of these
+			\begin{equation*}
+				\Sigma = \bigcup \{\textbf{Var}, \textbf{Const}, \textbf{Pred}, \textbf{Func}, \textbf{Log}, \textbf{Quant}\}
+			\end{equation*}
+			If $\sigma \in \Sigma^*$ is a $\Sigma$ list we say $\sigma$ is a \gls{lfol} string.
+			
+			We will highlight that now, for the first time, we are beginning to define objects of our \textit{formal} language.
+			This is in contrast to all of the work thus far which has been preformal.
+			When we are discussing concepts within the formal language \textit{using} the preformal framework, we will frequently uses alias/nicknames/abbreviations for symbols or strings from the formal language.
+			For example, we will use letters from near the end of the alphabet like $x$, $y$, $z$ to denote variables however, these should be understood to be aliases for true symbols of the formal language such as $v_1$, $v_2$, $v_3$.
+			Similarly we will work with predicates like $\in$, $\subset$, and $=$ which may be aliases for, e.g. $P^{(2)}_0$, $P^{(2)}_1$, and $P^{(2)}_2$ and functions like $\bigcup$ and $\mc{P}$ which may be aliases for, e.g. $f^{(1)}_0$ and $f^{(1)}_1$.
 		\end{preformal definition}
 		
-		The string given at the end of the previous definition is clearly a meaningless string.
-		We will provide \textit{syntax rules} for \gls{lfol} that prescribe the allowed ways we can combine elements from the alphabet to form meaningful strings.
+		We have only admitted $\implies$ and $\lnot$ as logical operators and $\forall$ as a quantifier into our language. 
+		Notably, we have left out $\land$, $\lor$, $\iff$ and $\exists$.
+		This has been done in an effort to keep the formal language as concise as possible so as to reduce the amount of work needed for the various metalogical proof. 
+		We will introduce these other symbols later as aliases or abbreviations of expressions in terms of symbols that are included in \gls{lfol}:
+		\begin{align*}
+			\land PQ &\sim \lnot \implies P \lnot Q\\
+			\lor PQ &\sim \implies \lnot P Q\\
+			\implies PQ &\sim \land\implies PQ \implies QP\\
+			\exists x P &\sim \lnot \forall x \lnot P
+		\end{align*}
+
+		We will, now, provide \textit{syntax rules} for \gls{lfol} that prescribe the allowed ways we can combine elements from the alphabet to form meaningful strings.
 		
 		\begin{preformal definition}[Terms]
-			Let $U=\Sigma^*$ and let $B = \textbf{Var} \cup \textbf{Func}_0$.
-			Let $I = \textbf{Func}\setminus \textbf{Func}_0$ and for each $i \in I$ define $\nu_i$ equal to the arity of $i$.
-			Define a function $f_i:(\Sigma^*)^\nu_i \to \Sigma^*$ by
-			\begin{equation*}
-				f_i(\mc{A}) = i\cdot (\cdot(\mc{A}))
-			\end{equation*}
-			This says to concatenate all of the strings in $\mc{A}$, denoted by $\cdot(\mc{A})$ and then concatenate this onto the right of the function symbol $i$.
+			Let $U=\Sigma^*$ and let $B = \textbf{Var} \cup \textbf{Const}$.
+			Now define a $U$ family of functions $\bv{g} = (g_n^{\nu})_{(\nu, n) \in \N^+ \times \N}$ such that $g_n^{\nu}: (\Sigma^*)^{\nu} \to \Sigma^*$ is defined by
+			\begin{align*}
+				g_n^{\nu}(\bv{\sigma}) = f_n^{(\nu)}\bv{\sigma}
+			\end{align*}
+			for $\bv{\sigma} \in (\Sigma^*)^\nu$.
 			
-			For example, 
-			As an example, suppose $i=f_1^{(3)} \in \textbf{Func}$ and $x_1, x_4, f_2^{(0)} \in A^*$.
-			The corresponding function 
+			For example, suppose $\bv{\sigma} = (\bv{s}_0, \bv{s}_1, \bv{s}_2)$ 
 			\begin{equation*}
-				f_{f_1^{(3)}}(x_1, x_4, f_2^{(0)}) = f_1^{(3)}x_1x_4f_2^{(0)}
+				g_4^{(3)}((\bv{s}_0, \bv{s}_1, \bv{s}_2)) = f_4^{(3)}\bv{s}_0\bv{s}_1\bv{s}_2
 			\end{equation*}
 			
-			We have that $\bv{f} = (f_i)_{i \in I}$ is a $U$ function family.
-			We then define
+			We then define $\textbf{Term}$ to be the $(U, B, \bv{g})$ inductive closure
 			\begin{equation*}
-				\textbf{Term} = N_{U, B, \bv{f}}.
-			\end{equation*}
-			In other words, the set of \textit{terms} in \gls{lfol} is defined to be inductive closure with base set given by variables and 0-ary functions and inductive functions given by concatenation of an $n$-ary function symbol with $n$ other terms.
-			This means that, in general, terms are either variables, 0-ary functions, or of the form
-			\begin{equation*}
-				ft_1\ldots t_n
-			\end{equation*}
-			where $f$ is an $n$-ary symbol and $t_1, \ldots, t_n \in \textbf{Term}$.
-			
-			We can also see that the function $f_i$ all have disjoint ranges (since their output strings start with different function symbols), their ranges are disjoint from $B$ and they are all injective.
-			This means that $\textbf{Term}$ is freely inductively generated and, thus, exhibits unique readability.			
+				\textbf{Term} = N_{U, B, \bv{g}}
+			\end{equation*}			
 		\end{preformal definition}
+	
+		The definition of $t\in \bv{Term}$ means that $t$ must take one or more of the following forms:
+		\begin{itemize}
+			\item{$t=v_n$for some $n\in \N$ with $v_n \in \textbf{Var}$}
+			\item{$t=c_n$ for some $n\in \N$ with $c_n \in \textbf{Const}$}
+			\item{$t=f_n^{(\nu)}\bv{T}$ for some $\nu \in \N^+$, $n\in \N$ with $f_n^{(\nu)} \in \textbf{Func}$ and $\bv{T} \in \textbf{Term}^\nu$.}
+		\end{itemize}
+		We want to prove that $\bv{Term}$ exhibits unique readability which will mean that $t\in \bv{Term}$ must take exactly one of the forms above.
+		
+		\begin{preformal definition}[List Suffix]
+			If $l$ is a list then for any $1\le i \le \norm{l}$, the list $l_{i:\norm{l}}$ is a suffix for $l$
+		\end{preformal definition}
+		
+		\begin{preformal theorem}[The Suffix of a Term is Always Equal to a List of Terms]
+			If $t \in \textbf{Term}$ then if $t'$ is a suffix of $t$ then there is some $n \in \N^+$ and $\bv{t} \in \textbf{Term}^n$ such that $t' = \cdot(\bv{t})$.
+			
+			We prove this by induction on the string length.
+			We prove that for $\ell \in \N^+$, if $t\in \textbf{Term}$ and $\norm{t} = \ell$ then if $t'$ is a suffix of $t$ then there exists $n\in \N^+$ and $\bv{t} \in \textbf{Term}^n$ such that $t' = \cdot(\bv{t})$.
+			
+			If $\ell=1$ then $t$ is the only suffix of $t$ and it is already a term so we take $\bv{t} = (t) \in \textbf{Term}^1$.
+			
+			Now suppose the hypothesis holds for all $\ell' < \ell$ and consider
+			\begin{equation*}
+				t = f_n^{(\nu)} \bv{t}
+			\end{equation*}
+			with $\bv{t} \in \textbf{Term}^{\nu}$.
+			
+			Consider a suffix $t' = t_{i:\norm{t}}$.
+			If $i=1$ then $t'=t$ which is a term.
+			Suppose $i>1$. 
+			There are two cases.
+			In some cases $i$ splits one of the terms of $\bv{t}$ in the middle, e.g.
+			\begin{equation*}
+				t' = (t_j)_{i':\norm{t_j}} \bv{t}'
+			\end{equation*}
+			where $\bv{t}' = \bv{t}_{k:\nu}$.
+			That is, $t'$ is a suffix for $t_j$ followed by the remaining elements of $\bv{t}$.
+			But, $\norm{t_j} < \ell$ which means that any suffix is a concatenation of terms $\cot(\bv{t}'')$ with $\bv{t}'' \in \textbf{Term}^{\nu'}$ for some $\nu' \in \N^+$ by the induction hypothesis so we have
+			\begin{equation*}
+				t' = \bv{t}''\bv{t}'
+			\end{equation*}
+			but this is a concatenation of terms.
+			In the other case $i$ splits between two terms within $\bv{t}$ so we simply have
+			\begin{equation*}
+				t' = \bv{t}'
+			\end{equation*}
+			in which case we already have a sequence of terms.			
+		\end{preformal theorem}
+		
+		\begin{preformal theorem}[Equality of a a Tuple of Terms as Strings Implies Equality as a Tuple]
+			Suppose $\bv{t} \in \textbf{Term}^{\nu}$, $\bv{t}'\in \textbf{Term}^{\nu'}$ and $\cdot(\bv{t}') = \cdot(\bv{t})$. 
+			Then $\nu' = \nu$ and $\bv{t}' = \bv{t}$ as tuples, that is $t_i = t'_i$ for each $i \in [\nu]$.
+			
+			We proceed by induction on $\ell^+$, the length of the string.
+			Our induction statement is consider $\ell \in \N^+$.
+			Suppose $\bv{t} \in \textbf{Term}^{\nu}$, $\bv{t}' \in \textbf{Term}^{\nu'}$ and $\cdot(\bv{t}) = \cdot(\bv{t}')$ and $\norm{\cdot(\bv{t})} = \norm{\cdot(\bv{t}')} = \ell$.
+			Then $\bv{t} = \bv{t}'$ as tuples.
+			
+			if $\ell=1$ then $\cdot (\bv{t}) = \cdot (\bv{t}') = t$ so $\bv{t} = \bv{t}' = (t)$.
+			
+			Now suppose the hypothesis holds for $\ell' < \ell$ and consider $\bv{t} \in \textbf{Term}^{\nu}$ and $\bv{t}' \in \textbf{Term}^{\nu'}$.
+			We can write
+			\begin{align*}
+				\cdot(\bv{t}) = \cdot(t_1, \bv{t}_{2:\nu}) = \cdot(t'_1, \bv{t}'_{2:\nu}) = \cdot(\bv{t}')
+			\end{align*}
+			with length $\ell$.
+			But consider $t_1$ and $t'_1$.
+			Suppose $\norm{t'_1} > \norm{t_1}$.
+			Then we can write $t'_1 = \cdot(t_1, \bv{t}'')$ for some $\bv{t}'' \in \textbf{Term}^{\nu''}$ since $\cdot(\bv{t}'')$ is a suffix of $t'_1$.
+			But then 
+			\begin{equation*}
+				\cdot(t_1', \bv{t}'_{2:\nu}) = \cdot(t_1, \bv{t}'', \bv{t}'_{2:\nu}) = \cdot(t_1, \bv{t}_{2:\nu})
+			\end{equation*}
+			But this means
+			\begin{equation*}
+				\cdot(\bv{t}_{2:\nu}) = \cdot(\bv{t}'', \bv{t}'_{2:\nu})
+			\end{equation*}
+			But this contradicts the induction hypothesis because the length of this string is $<\ell$ but $\bv{t}_{2:\nu} \in \textbf{Term}^{\nu-1}$ but $\bv{t}'' \cdot \bv{t}'_{2:\nu} \in \textbf{Term}^{\nu-1 + \nu''}$.
+			So, by contradiction, $t_1$ and $t_1'$ must have the same length, but this means they are equal as strings.
+			But this then means that
+			\begin{equation*}
+				\cdot(\bv{t}_{2:\nu}) = \cdot(\bv{t}'_{2:\nu})
+			\end{equation*}
+			are equal which means $\bv{t}'_{2:\nu} = \bv{t}_{2:\nu}$ as tuples.
+			Sinces $t'_1 = t_1$, this meanse $\bv{t}' = \bv{t}$ as tuples.
+		\end{preformal theorem}
+		
+		\begin{preformal theorem}[$\textbf{Term}$ Exhibits Unique Readability]
+			We now prove that $\textbf{Term}$ exhibits unique readability by demonstrating that is is freely inductively generated.
+			
+			For each $g_n^{\nu}$ the first symbol in the output is $f_n^{(\nu)}$.
+			This means the range of any two $g_n^{|nu}$ and $g_{n'}^{(\nu')}$ are disjoint because their outputs start with unequal function symbols.
+			The ranges are also disjoint from $B = \textbf{Var} \cup \textbf{Const}$ because none of these strings can begin with a function symbol.
+			
+			Now we must show that each $g_n^{(\nu)}$ is injective.
+			For this we must show that if
+			\begin{equation*}
+				f_n^{(\nu)}\bv{t} = f_n^{(\nu)}\bv{t}'
+			\end{equation*}
+			with $\bv{t}, \bv{t}' \in \textbf{Term}^{\nu}$ then $\bv{t} = \bv{t}'$ with equality regarded in $\textbf{Term}^{\nu}$.
+			But we can see that $\cdot(\bv{t}') = \cdot(\bv{t})$.
+			This means, by the previous theorem, that $\bv{t}' = \bv{t}$ regarded as tuples.
+			
+			Therefore $\textbf{Term}$ is freely inductively generated and, therefore, exhibits unique readability.
+		\end{preformal theorem}
 	
 		\begin{preformal definition}[Atomic Formula]
 			We define
 			\begin{equation*}
-				\textbf{Atom} = \{P\cdot (\cdot(\mc{T})) \in \Sigma^* \mid P \in \textbf{Pred}_n \text{ and } \mc{T} \in \textbf{Term}^n\}
+				\textbf{Atom} = \{ \cdot(P_n^{(\nu)}, \bv{t}) \in \Sigma^* \mid \bv{t} \in \textbf{Term}^n \}
 			\end{equation*}
-			In other words, atomic formula are of the form
-			\begin{equation*}
-				Pt_1\ldots t_n
-			\end{equation*}
-			where $P$ is an $n$-ary predicate and $t_1, \ldots, t_n$ are terms.
 		\end{preformal definition}
 		
 		\begin{preformal definition}[Permissive Formulas]
 			Let $U = \Sigma^*$ and let $B = \textbf{Atom}$.
-			Define
+			We define $f_{\lnot}:\Sigma^* \to \Sigma^*$ and $f_{\implies}:(\Sigma^*)^2 \to \Sigma^*$
 			\begin{align*}
-				f_{\lnot}(\bv{a}) =& \lnot \bv{a}\\
-				f_{\implies}(\bv{a}, \bv{b}) =& \implies \bv{a} \bv{b}\\
+				f_{\lnot}(\bv{\sigma}) =& \lnot \bv{\sigma}\\
+				f_{\implies}(\bv{\sigma}, \bv{\tau}) =& \implies \bv{\sigma} \bv{\tau}\\
 			\end{align*}
-			Then for each $x \in \textbf{Var}$ define
+			and for each $x \in \textbf{Var}$ we define $f_x:\Sigma^* \to \Sigma^*$
 			\begin{align*}
-				f_x(\bv{a}) =& \forall x \bv{a}
+				f_x(\bv{\sigma}) =& \forall x \bv{\sigma}
 			\end{align*}
 			
 			
@@ -1345,14 +1511,14 @@
 			Permissive formulas are of the form 
 			\begin{itemize}
 				\item{$A$ where $A \in \textbf{Atom}$}
-				\item{$\lnot C$ where $C \in \textbf{PForm}$}
-				\item{$\implies CD$ where $C, D \in \textbf{PForm}$}
-				\item{$\forall x C$ where $x\in \textbf{Var}$ and $C\in \textbf{PForm}$.}
+				\item{$\lnot P$ where $P \in \textbf{PForm}$}
+				\item{$\implies PQ$ where $P, Q \in \textbf{PForm}$}
+				\item{$\forall x P$ where $x\in \textbf{Var}$ and $P\in \textbf{PForm}$.}
 			\end{itemize}
 			
 			We can see again that $\bv{f}$ satisfies the condition so that $\textbf{PForm}$ is freely inductively generated so that it exhibits unique readability.
 		\end{preformal definition}
-		We use Polish notation throughout, i.e. $\implies CD$ instead of $C \implies D$ or $fx_1 x_2 x_3$ instead of $f(x_1, x_2, x_3)$.
+		We use Polish notation throughout, i.e. $\implies PQ$ instead of $P \implies Q$ or $fx_1 x_2 x_3$ instead of $f(x_1, x_2, x_3)$.
 		For human readability, we will often \textit{abbreviate} the polish notation into more standard notation including parentheses.
 		Polish notation will be useful for the metalogical proof whereas the parentheses notation is more useful for human readability and understanding.
 	
@@ -1366,133 +1532,362 @@
 		
 		Because $\textbf{Term}$ and $\textbf{PForm}$ exhibit unique readability, we can use the recursion theorem to recursively define function on these sets.
 		
-		\begin{preformal definition}[Free Variables Within a Term]
-			We use the recursion theorem to define $\text{Free}: \textbf{Term} \to \mc{P}(\textbf{Var})$.
+		\begin{preformal definition}[Free Variables]
+			We define a function $\text{Free}: \textbf{PForm} \to \mc{P}(\textbf{Var})$ which maps a formula $P$ in $\textbf{PForm}$ to the set of variables which appear in $P$ but which are not within the scope of a quantifier.
 			
-			Recall that the base set for the term inductive closure is $B = \textbf{Var}\cup \textbf{Func}_0$.
-			Define 
+			First we define $\text{Free}_T: \textbf{Term} \to \mc{P}(\textbf{Var})$
 			\begin{equation*}
-				h_B(t) = \begin{cases}
-					\{t\} \textbf{ if } t \in \textbf{Var}\\
-					\emptyset \textbf{ if } t \in \textbf{Func}_0
+				\text{Free}_T(t) = \begin{cases}
+					\emptyset &\text{ if } t \in \textbf{Const}\\					
+					\{t\} &\text{ if } t\in \textbf{Var}\\
+					\bigcup_{i\in [\nu]} \left(\text{Free}_T^{(\nu)}(\bv{t})\right)_i &\text{ if } t=f_n^{(\nu)}\bv{t}
 				\end{cases}
 			\end{equation*}
-			
-			Recall that $I= \textbf{Func}\setminus \textbf{Func}_0$ and for each $i\in I$ there is $f_i: \textbf{Term}^{\nu_i} \to \textbf{Term}$ (after restricting from $\Sigma^*$ to the inductively generated $\textbf{Term}$).
-			
-			We then define $h_{f_i}: \mc{P}(\textbf{Var})^{\nu_i} \to \mc{P}(\textbf{Var})$ by 
+			and then we define $\text{Free}: \textbf{PForm} \to \mc{P}(\textbf{Var})$
 			\begin{equation*}
-				h_{f_i}(\bv{s}) = \bigcup_{j\in [\nu_i]} s_j.
-			\end{equation*}
-
-			The recursion theorem then gives us a function $\text{Free} = h$ which behaves like
-			\begin{equation*}
-				\text{Free}(t) = \begin{cases}
-					\{t\} \text{ if } t\in\textbf{Var}\\
-					\emptyset \text{ if } t \in \textbf{Func}_0\\
-					\bigcup_{j\in [n]} \text{Free}(t_j) \text{ if } t=f\bv{t} \text{ with } f \in \textbf{Func}_{n} \text{ and } t\in \textbf{Term}^{n}
+				\text{Free}(P) = \begin{cases}
+					\bigcup_{i\in [\nu]} \left(\text{Free}_T^{(\nu)}(\bv{t})\right)_i &\text{ if } P = P_n^{(\nu)}\bv{t}\\
+					\text{Free}(Q) &\text{ if } P = \lnot Q\\
+					\text{Free}(Q) \cup \text{Free}(R) &\text{ if } P = \implies QR\\
+					\text{Free}(Q) \setminus \{x\} &\text{ if } P = \forall x Q
 				\end{cases}
 			\end{equation*}
 		\end{preformal definition}
 		
-		\begin{preformal definition}[Free Variables within a Permissive Formula]
-			Let $B = \textbf{Atom}$.
-			If $A\in \textbf{Atom}$ then $A = P\bv{t}$ with $P\in \textbf{Pred}_n$ and $\bv{t} \in \textbf{Term}^n$.
-			Let $h_B(A) = \bigcup_{i \in [n]} \text{Free}(t_i)$
-			where $\text{Free}$ is the function defined on terms.
-			
-			Let
-			\begin{align*}
-				h_{f_{\lnot}}(a) =& a\\
-				h_{f_{\implies}}(a, b) =& a \cup b.
-			\end{align*}
-			Finally, for each $x\in \textbf{Var}$ let
-			\begin{align*}
-				h_{f_x}(s) = s \setminus \{x\}
-			\end{align*}
-			
-			The recursion theorem then gives us a function
-			\begin{align*}
-				\text{Free}(F) = \begin{cases}
-					\cup_{i \in n} \text{Free}(t_i) &\text{ if } F = A\bv{t} \text{ with } A \in \textbf{Pred}_0 \text{ and } \bv{t} \in \textbf{Term}^n\\
-					\text{Free}(G) &\text{ if } F = \lnot G \text{ with } G \in \textbf{PForm}\\
-					\text{Free}(G) \cup \text{Free}(H) &\text{ if } F = \implies GH \text{ with } G, H \in \textbf{PForm}\\
-					\text{Free}(G)\setminus\{x\} &\text{ if } F = \forall x G \text{ with } x \in \textbf{Var} \text{ and } G\in \textbf{PForm}
-				\end{cases}
-			\end{align*}
-			
-		\end{preformal definition}
-		
-		\begin{preformal definition}[Bound Variables Within a Permissive Formula]
-			Let $B = \textbf{Atom}$.
-			Let $h_B(b) = \emptyset$ for each $b\in B$.
-			
-			Let
-			\begin{align*}
-				h_{f_{\lnot}}(a) =& a\\
-				h_{f_{\implies}}(a, b) =& a \cup b
-			\end{align*}
-			
-			For each $x\in \textbf{Var}$ let
-			\begin{align*}
-				h_{f_x}(s) = s \cup \{x\}
-			\end{align*}
-			
-			The recursion theorem them gives us a function $\text{Bnd}: \textbf{PForm} \to \mc{P}(\textbf{Var})$ which satisfies
+		\begin{preformal definition}[Bound Variables]
+			We define another function $\text{Bnd}: \textbf{PForm} \to \mc{P}(\textbf{Var})$ by
 			\begin{equation*}
-				\text{Bnd}(F) = \begin{cases}
-					\emptyset &\text{ if } F \in \textbf{Atom}\\
-					\text{Bnd}(G) &\text{ if } F = \lnot G \text{ with } G \in \textbf{PForm}\\
-					\text{Bnd}(G) \cup \text{Bnd}(H) &\text{ if } F = \implies GH \text{ with } G, H \in \textbf{PForm}\\
-					\text{Bnd}(G) \cup \{x\} &\text{ if } F = \forall x G \text{ with } x \in \textbf{Var} \text{ and } \\
-					&G \in \textbf{PForm}
+				\text{Bnd}(P) = \begin{cases}
+					\emptyset &\text{ if } P \in \textbf{Atom}\\
+					\text{Bnd}(Q) &\text{ if } P = \lnot Q\\
+					\text{Bnd}(Q) \cup \text{Bnd}(R) &\text{ if } P = \implies QR\\
+					\text{Bnd}(Q) \cup \{x\} &\text{ if } P = \forall x Q
 				\end{cases}
 			\end{equation*}
+		\end{preformal definition}
+		
+		\begin{preformal definition}[All Variables in a Formula]
+			We define $\text{Vars}: \textbf{PForm} \cup \textbf{Term} \to \mc{P}(\textbf{Var})$ by
+			\begin{equation*}
+				\text{Vars}(X) = \begin{cases}
+					\text{Free}_T(X) &\text{ if } X \in \textbf{Term}\\
+					\text{Free}(X) \cup \text{Bnd}(X) &\text{ if } X \in \textbf{PForm}
+				\end{cases}
+			\end{equation*}
+		\end{preformal definition}
+		
+		\begin{preformal definition}[Open and Closed Formulas]
+			Suppose $P \in \textbf{PForm}$. 
+			If $\text{Free}(P) = \emptyset$ we say $P$ is a closed formula, otherwise we say $P$ is an open formula.
+			
+			Semantically, a closed formula can in principle take on a truth value where as an open formula has variables open that need to be populated before we can attempt to judge a truth value.
 		\end{preformal definition}
 		
 		\begin{preformal definition}[Strict Formulas]
-			We define
+			Let $U = \textbf{PForm}$ and $B=\textbf{Atom} \subset \textbf{PForm}$.
+			We again define $f_{\lnot}: \textbf{PForm} \to \textbf{PForm}$ and $f_{\implies}: \textbf{PForm}^2 \to \textbf{PForm}$ by
+			\begin{align*}
+				f_{\lnot}(P) =& \lnot P\\
+				f_{\implies}(P, Q) =& \implies PQ.
+			\end{align*}
+			For each $x\in \textbf{Var}$ we then define
 			\begin{equation*}
-				\textbf{SForm} = \{F \in \textbf{PForm} \mid \text{ if } F = \forall x G \text{ then } x \in \text{Free}(G) \text{ and } x \not \in \text{Bnd}(G) \}
+				D_x = \{P \in \textbf{PForm} \mid x\in \text{Free}(P) \text{ and } x \not \in \text{Bnd}(P)\}
 			\end{equation*}
+			and $f_x: D_x \subset \textbf{PForm} \to \textbf{PForm}$ by
+			\begin{equation*}
+				f_x(P) = \forall x P.
+			\end{equation*}
+			We then collect $f_{\lnot}, f_{\implies}, f_x$ into $\bv{f}$ a $U$-function family and let
+			\begin{equation*}
+				\textbf{SForm} = N_{U, B, \bv{f}}
+			\end{equation*}
+			
+			$\textbf{SForm}$ is the subset of $\textbf{PForm}$ which excludes redundant and repeated quantification.
 		\end{preformal definition}
 		
+		\begin{preformal definition}[Finite Set]
+			Suppose $S$ is a set.
+			If there exists an $n\in \N$ and a bijection $f:S \to [n]$ then we say $S$ is finite.
+			
+			We define
+			\begin{equation*}
+				\mc{P}_{\text{fin}}(S) = \{s \in \mc{P}(S) \mid s \text{ is finite}\}.
+			\end{equation*}
+			
+			If $M \subset \N$ is finite then there exists a unique $m\in M$ such that $n < m$ for all $n\in M$ with $n\neq m$.
+			We call this element $\text{max}(M)$.
+			
+			We note, but do not prove, that $\text{Free}(P)$ and $\text{Bnd}(P)$ are finite for each $P \in \textbf{PForm}$.
+			It could be proven by induction.
+		\end{preformal definition}
+		
+		\begin{preformal definition}[Fresh Variable]
+			We define a function $\text{Fresh}: \mc{P}(\textbf{Var}) \to \textbf{Var}$ by
+			\begin{equation*}
+				\text{Fresh}(V) = \begin{cases} v_0 &\text{ if } V = \emptyset\\
+					v_{\text{max}(\{n \in \N \mid v_n \in V\}) + 1} &\text{ if } V \neq \emptyset
+					\end{cases}
+			\end{equation*}
+		\end{preformal definition}
+	
+		\begin{preformal definition}[Free Variable Replacement]
+			We define a new operation for each $v \in \textbf{Var}$ and each $t\in \textbf{Term}$
+			\begin{equation*}
+				\text{Rep}_{v, t}: \textbf{PForm} \to \textbf{PForm}
+			\end{equation*}
+			recursively.
+			
+			First we define, for each $v \in \textbf{Var}$ and $s \in \textbf{Term}$
+			\begin{equation*}
+				\text{Rep}_{T; v, s}: \textbf{Term} \to \textbf{Term}
+			\end{equation*}
+			by
+			\begin{equation*}
+				\text{Rep}_{T; v, s}(t) = \begin{cases}
+					s &\text{if } t=v\\
+					t &\text{if } t\neq v \text{ and } t\in \textbf{Var}\cup \textbf{Const}\\
+					f_n^{(\nu)}\text{Rep}_{T; v, s}^{(\nu)}(\bv{t}) &\text{if } t = f_n^{(\nu)} \bv{t} 
+				\end{cases}
+			\end{equation*}
+			
+			Then for $v \in \textbf{Var}$ and $t \in \textbf{Term}$, we define
+			\begin{equation*}
+				\text{Rep}_{v, t}: \textbf{PForm} \to \textbf{Pform}
+			\end{equation*}
+			by
+			\begin{equation*}
+				\text{Rep}_{v, t}(P) = \begin{cases}
+					P_n^{(\nu)}\text{Rep}_{T; v, t}^{(\nu)}(\bv{t}) &\text{ if } P = P_n^{(\nu)}\bv{t}\\
+					\lnot \text{Rep}_{v, t}(Q) &\text{ if } P=\lnot Q\\					
+					\implies \text{Rep}_{v, t}(Q)\text{Rep}_{v, t}(R) &\text{ if } P=\implies QR\\
+					\forall x Q &\text{ if } P = \forall x Q \text{ and }x=v\\
+					\forall x \text{Rep}_{v, t}(Q) &\text{ if } P = \forall x Q \text{ and } x \neq v\\
+					&\text{ and } x \not \in \text{Vars}(t)\\
+					\forall y \text{Rep}_{v, t}(\text{Rep}_{x, y}(Q)) &\text{ if } P=\forall x Q \text{ and } x \neq v\\
+					&\text{ and } x \in \text{Vars}(t)\\
+					&\text{ and } y = \text{Fresh}(\text{Vars}(Q) \cup \text{Vars}(t))
+				\end{cases}
+			\end{equation*}
+			
+			The first $\forall$ case stops the replacement when $v$ is bound within a quantifier.
+			The second $\forall$ case does the replacement in the simple case when no free variable within $t$ would be erroneously \qq{captured} by the quantifier.
+			The third $\forall$ case covers the case when the replacement would result in \qq{capture} of a free variable within $t$ by the quantifier.
+			It works around the capture by changing the quantification variable to be a fresh variable.
+			So, for example,
+			\begin{equation*}
+				\text{Rep}_{z, f_0^{(1)}x}(\forall x P_0^{(2)}xz) = \forall y P_0^{(1)}yf_0^{(1)}x 
+			\end{equation*}			
+			
+			It can be proven by induction that $\text{Rep}_{v, t}(P) \in \textbf{PForm}$ and that $\text{Free}(\text{Rep}_{v, t}(P)) = (\text{Free}(P) \setminus \{v\}) \cup \text{Free}_T(t)$.
+		\end{preformal definition}
+	
+		\begin{preformal definition}[Term Generalization]
+			For each $t\in \textbf{Term}$ with $t$ closed and each $v \in \textbf{Var}$, we define
+			\begin{equation*}
+				\text{Gen}_{t, v}(P): \textbf{PForm} \to \textbf{PForm}.
+			\end{equation*}
+			
+			First, for each $s\in \textbf{Term}$ with $s$ closed and $v\in \textbf{Var}$, we define
+			\begin{equation*}
+				\text{Gen}_{T; s, v}(t) = \begin{cases}
+					v &\text{ if } t \in \textbf{Const} \text{ and } t=s\\
+					t &\text{ if } t \in \textbf{Const} \cup \textbf{Var} \text{ and } t \neq s\\
+					f_n^{(\nu)} \text{Gen}_{T; s, v}^{(\nu)}(\bv{t}) &\text{ if } t = f_n^{(\nu)}\bv{t}
+				\end{cases}
+			\end{equation*}
+			
+			and then we define
+			\begin{equation*}
+				\text{Gen}_{t, v}(P) = \begin{cases}
+					P_n^{(\nu)} \text{Gen}_{t, v}^{(\nu)}(\bv{t}) &\text{ if } P = P_n^{(\nu)}\bv{t}\\
+					\lnot \text{Gen}_{t, v}(Q) &\text{ if } P = \lnot Q\\
+					\implies \text{Gen}_{t, v}(Q) \text{Gen}_{t, v}(R) & \text{ if } P = \implies QR\\
+					\forall x \text{Gen}_{t, v}(Q) &\text{ if } P = \forall x Q \text{ and } v \neq x\\
+					\forall y \text{Gen}_{t, v}(\text{Rep}_{x, y}(Q)) &\text{ if } P = \forall x Q \text{ and } v = x\\
+					& \text{ with } y = \text{Fresh}(\text{Vars}(P) \cup \text{Vars}(v))
+				\end{cases}
+			\end{equation*}
+			
+			It can be proven by induction that $\text{Gen}_{t, v}(P) \in \textbf{PForm}$ and $\text{Free}(\text{Gen}_{t, v}(P)) = \text{Free}(P) \cup \text{Free}_T(v)$
+		\end{preformal definition}
+	
+		\begin{preformal definition}[Terms]
+			\begin{equation*}
+				\textbf{Terms}(t) = \begin{cases}
+					\{t\} &\text{ if } t \in \textbf{Var}\cup \textbf{Const}\\
+					\{t\} \cup \bigcup_{i\in [\nu]} \left(\textbf{Terms}^{(\nu)}(\bv{t})\right)_i &\text{ if } t = f_n^{(\nu)}\bv{t}
+				\end{cases}
+			\end{equation*}
+			\begin{equation*}
+				\text{Terms}(P) = \begin{cases}
+					\bigcup_{i\in [\nu]} \text{Terms}^{(\nu)}(\bv{t}) &\text{ if } P = P_n^{(\nu)}\bv{t}\\
+					\text{Terms}(Q) &\text{ if } P = \lnot Q\\
+					\text{Terms}(Q) \cup \text{Terms}(R) &\text{ if } P = \implies QR\\
+					\text{Terms}(Q) &\text{ if } P = \forall x Q
+				\end{cases}
+			\end{equation*}
+		\end{preformal definition}
+	
 	\section{Natural Deduction}
 		natural deduction is the process of deriving new lines, under logical rules, from old.
 		
 		\begin{preformal definition}[Line of Proof]
 			We define 
 			\begin{align*}
-				L = \{&(n, f, D, i, \bv{c}) \in \N \times \textbf{SForm} \times \mc{P}(\N) \times I \times \N^* \mid d \le n \text{ for all } d \in D\\
+				L = \{&(n, s, D, i, \bv{c}) \in \N^+ \times \textbf{SForm} \times \mc{P}(\N^+) \times I \times (\N^+)^* \mid d \le n \text{ for all } d \in D\\
 				&\text{and } c_j < n \text{ for all } j \in [\norm{\bv{c}}]\}
 			\end{align*}
 			
-			If we have a proof line $(n, f, D, i, \bv{c})$ then $n$ is the line number, $f$ is the formula for that line, $D$ is the set of logical dependencies for that proof line, $i$ is an index indicating the deduction rule used to derive that line, and $\bv{c}$ is the ordered set (tuple) of lines used by the rule to derive the line.
+			If we have a proof line $(n, s, D, i, \bv{c})$ then $n$ is the line number, $s$ is the formula for that line, $D$ is the set of logical dependencies for that proof line, $i$ is an index indicating the deduction rule used to derive that line, and $\bv{c}$ is the ordered set (tuple) of lines used by the rule to derive the line.			
+		\end{preformal definition}
+	
+		\begin{preformal definition}[Proof]
+			We define $\textbf{Proof} = L^*$.
+			Note that not all elements in proof are valid proofs.
+			
+			If $\bv{l} \in \textbf{Proof} = L^*$ we define
+			\begin{align*}
+				\bv{n} =& ((l_j)_1)_{j \in \norm{\bv{l}}}\\
+				\bv{s} =& ((l_j)_2)_{j \in \norm{\bv{l}}}\\
+				\bv{D} =& ((l_k)_3)_{j \in \norm{\bv{l}}}\\
+				\bv{i} =& ((l_j)_4)_{j \in \norm{\bv{l}}}\\
+				\bv{C} =& ((l_j)_5)_{j \in \norm{\bv{l}}}\\																
+			\end{align*}
+			So that for each $j \in \norm{\bv{l}} = ($ we have
+			\begin{align*}
+				l_j = (n_j, s_j, D_j, i_j, C_j)
+			\end{align*}
 		\end{preformal definition}
 	
 		\begin{preformal definition}[Deduction Rules]
-			A deduction rule $R$ is a function from $R: L^* \to L^*$.
-			A deduction rule must follow the following conditions.
+			A deduction rule $R$ is an $L^*$ function which follows certain conditions.
 			
-			Consider 
+			Let 
 			\begin{equation*}
 				\text{Lines}(\bv{l}) = \{m \in \N \mid \exists j \in \norm{\bv{l}} \text{ such that } (\bv{l}_j)_1 = m \}
 			\end{equation*}
-			We must have that $R_i(\bv{l})$ satisfies
+			We must have that $R(\bv{l})$ satisfies
 			\begin{align*}
-				\norm{R_i(\bv{l})} &= \norm{\bv{l}} + 1\\
-				(R_i(\bv{l}))_{1:\norm{\bv{l}}} &= \bv{l}\\
-				((R_i(\bv{l}))_{\norm{\bv{l}} + 1})_1 &= \max(\text{Lines}(\bv{l})) + 1
+				\norm{R(\bv{l})} =& \norm{\bv{l}} + 1\\
+				(R(\bv{l}))_{1:\norm{\bv{l}}} =& \bv{l}\\
+				(R(\bv{l}))_{\norm{l} + 1} =& l'\\
+				(l')_1 =& \max(\text{Lines}(\bv{l})) + 1
 			\end{align*}
-			These rules tell us that a rule must add one line to a sequence of lines, the previous lines in the output of a rule must match the existing lines, and the newly added line number but be exactly 1 more than the maximum of all the line numbers already existing.
+			where $l'$ is the new line added by the deduction rule.
 			
-			Suppose $\bv{R} = (R_i)_{i\in I}$.
-			For this to be a valid deduction rule family, it must be the case that for each $i\in I$ and each $\bv{l} \in L^*$
+			Suppose $I$ is a rule type index and $(P_i)_{i\in I}$ are sets of rule parameters.
+			
+			Suppose $I$ is a rule type index and $n_i$ is the number of construction lines needed for each rule type and $S_i$ is the set of formulas that inform that rule type (e.g. any formula can be assumed). 
+			Define 
+			\begin{equation*}
+				I' = \{(i, \bv{c}, s) \in I \times (N^+)^* \mid \bv{c} \in (N^+)^{n_i}, s \in S_i\}
+			\end{equation*}
+			Suppose $\bv{R} = (R_{(i, \bv{c}, s)})_{(i, \bv{c}, s) \in I'}$.
+			For this to be a valid deduction rule family, it must be the case that for each $(i, \bv{c}, s) \in I'$ and each $\bv{l} \in L^*$ that if $R_{(i, \bv{c})}(\bv{l}) = l' = (n, f, D, i', \bv{c}')$ that $i'=i$ and $\bv{c}' = \bv{c}$.
+			That is, when $\bv{R}_{(i, \bv{c}, s)}$ appends a line $l'$ to $\bv{l}$, the rule type index $i'$ and construction tuple $\bv{c}'$ match $i$ and $\bv{c}$, the index on the rule.
+			
+		\end{preformal definition}
+	
+		\begin{preformal definition}[Rules of Natural Deduction]
+			Let $I$ contain 8 rule types
 			\begin{align*}
-				((\bv{R}_i(\bv{l}))_{\norm{\bv{l}} + 1})_4 = i.
+				I = \{&\\
+				&\text{Assume},\\
+				&\implies I,\\
+				&\implies E,\\
+				&\lnot I,\\
+				&\lnot E,\\
+				&\text{DN},\\
+				&\forall I,\\
+				&\forall E,\\
+				&\}
 			\end{align*}
-			That is, when $\bv{R}_i$ appends a line to $\bv{l}$, the 4th entry of that line 
+			Each rule has the following required number of construction lines:
+			\begin{align*}
+				n_{\text{Assume}} =& 0\\
+				n_{\implies I} =& 2\\
+				n_{\implies E} =& 2\\
+				n_{\lnot I} =& 2\\
+				n_{\lnot E} =& 2\\
+				n_{\text{DN}} =&1\\
+				n_{\forall I} =& 1\\
+				n_{\forall E} =& 1
+			\end{align*}
+			and informing formulas
+			\begin{align*}
+				S_{\text{Assume}} =& \textbf{SForm}\\
+				S_{\implies I} =& \{\curlywedge\}\\
+				S_{\implies E} =& \{\curlywedge\}\\
+				S_{\lnot I} =& \{\curlywedge\}\\
+				S_{\lnot E} =& \{\curlywedge\}\\
+				S_{\text{DN}} =& \{\curlywedge\}\\
+				S_{\forall I} =& \{\curlywedge\}\\
+				S_{\forall E} =& \{\curlywedge\}
+			\end{align*}
+			We use $\curlywedge$ as a sentinel symbol for when a rule doesn't rule an external formula as input.
 			
+			
+			We now specifiy a rule family $\bv{R} = (R_{(i, \bv{c}, s)})_{(i, \bv{c}, S) \in I'}$.
+			
+			Rule Assume: 
+			\begin{equation*}
+				\text{Dom}(R_{\text{Assume}, (), s}) = L^*
+			\end{equation*}
+			The new line generated by this rule is of the form
+			\begin{equation*}
+				(n, s, \{n\}, \text{Assume}, ())
+			\end{equation*}
+			
+			Rule $\implies I$:
+			\begin{align*}
+				\text{Dom}(R_{(\implies I, (j, k), \curlywedge)}) = \{&\bv{l} \in L^* \mid n_j(\bv{l}) \in D_k(\bv{l})\}
+			\end{align*}
+			The new line generated by this rule of the form
+			\begin{equation*}
+				(n, \implies s_j(\bv{l}) s_k(\bv{l}), D_k \setminus \{j\}, \implies I, (j, k))
+			\end{equation*}
+			
+			Rule $\implies E$
+			\begin{align*}
+				\text{Dom}_{(\implies E, (j, k), \curlywedge)} = \{\bv{l} \in L^* \mid s_j(\bv{l}) \text{ is a conditional with antecedant equal to } s_k(\bv{l})\}
+			\end{align*}
+			and the new line is
+			\begin{align*}
+				(n, \text{Consequent}(s_j(\bv{l})), D_j \cup D_k, \implies E, (j, k))
+			\end{align*}
+			
+			Rule $\lnot I$
+			\begin{align*}
+				\text{Dom}(R_{(\lnot I, (j, k), \curlywedge)}) = \{\bv{l} \in L^* \mid n_j(\bv{l}) \in D_k(\bv{l}) \text{ and } i_j(\bv{l}) = \text{Assume} \text{ and } s_k(\bv{l}) = \curlywedge\}
+			\end{align*}
+			and the new line is
+			\begin{align*}
+				(n, \lnot s_j(\bv{l}), D_k(\bv{l}) \setminus \{j\}, \lnot I, (j, k))
+			\end{align*}
+			
+			Rule $\lnot E$
+			\begin{align*}
+				\text{Dom}(R_{(\lnot E, (j, k), \curlywedge)}) = \{\bv{l}\in L^* \mid s_k(\bv{l}) = \lnot s_j(\bv{l})\}
+			\end{align*}
+			and the new line is
+			\begin{align*}
+				(n, \curlywedge, D_j(\bv{l}) \cup D_k(\bv{l}), \lnot E,  (j, k))
+			\end{align*}
+			
+			Rule $\text{DN}$
+			\begin{equation*}
+				\text{Dom}(R_{(\text{DN}, (j), \curlywedge)}) = \{\bv{l} \in L^* \mid s_j(\bv{l}) = \lnot\lnot P \text{ for some } P \in \textbf{SForm}\}
+			\end{equation*}
+			and the new line is
+			\begin{equation*}
+				(n, \text{DNStrip}(s_j(\bv{l})), D_j, \text{DN}, (j))
+			\end{equation*}
+			
+			Rule $\forall I$
+			\begin{equation*}
+				\text{Dom}(R_{(\forall I), (j), \curlywedge)} = \{\bv{l}\in L^* \mid \}
+			\end{equation*}
 			
 		\end{preformal definition}
 	
