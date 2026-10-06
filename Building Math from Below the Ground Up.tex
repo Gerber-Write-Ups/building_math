@@ -1533,7 +1533,7 @@
 		Because $\textbf{Term}$ and $\textbf{PForm}$ exhibit unique readability, we can use the recursion theorem to recursively define function on these sets.
 		
 		\begin{preformal definition}[Free Variables]
-			We define a function $\text{Free}: \textbf{PForm} \to \mc{P}(\textbf{Var})$ which maps a formula $P$ in $\textbf{PForm}$ to the set of variables which appear in $P$ but which are not within the scope of a quantifier.
+			We define a function $\text{Free}: \textbf{PForm} \cup \textbf{Term} \to \mc{P}(\textbf{Var})$ which maps a formula $P$ in $\textbf{PForm}$ to the set of variables which appear in $P$ but which are not within the scope of a quantifier.
 			
 			First we define $\text{Free}_T: \textbf{Term} \to \mc{P}(\textbf{Var})$
 			\begin{equation*}
@@ -1543,13 +1543,20 @@
 					\bigcup_{i\in [\nu]} \left(\text{Free}_T^{(\nu)}(\bv{t})\right)_i &\text{ if } t=f_n^{(\nu)}\bv{t}
 				\end{cases}
 			\end{equation*}
-			and then we define $\text{Free}: \textbf{PForm} \to \mc{P}(\textbf{Var})$
+			and then we define $\text{Free}_P: \textbf{PForm} \to \mc{P}(\textbf{Var})$
 			\begin{equation*}
 				\text{Free}(P) = \begin{cases}
 					\bigcup_{i\in [\nu]} \left(\text{Free}_T^{(\nu)}(\bv{t})\right)_i &\text{ if } P = P_n^{(\nu)}\bv{t}\\
 					\text{Free}(Q) &\text{ if } P = \lnot Q\\
 					\text{Free}(Q) \cup \text{Free}(R) &\text{ if } P = \implies QR\\
 					\text{Free}(Q) \setminus \{x\} &\text{ if } P = \forall x Q
+				\end{cases}
+			\end{equation*}
+			then we define $\text{Free}: \textbf{PForm} \cup \textbf{Term} \to \mc{P}(\textbf{Var})$ by
+			\begin{equation*}
+				\text{Free}(X) = \begin{cases}
+					\text{Free}_T(X) &\text{ if } X \in \textbf{Term}\\
+					\text{Free}_P(X) &\text{ if } X \in \textbf{PForm}.
 				\end{cases}
 			\end{equation*}
 		\end{preformal definition}
@@ -1570,17 +1577,19 @@
 			We define $\text{Vars}: \textbf{PForm} \cup \textbf{Term} \to \mc{P}(\textbf{Var})$ by
 			\begin{equation*}
 				\text{Vars}(X) = \begin{cases}
-					\text{Free}_T(X) &\text{ if } X \in \textbf{Term}\\
+					\text{Free}(X) &\text{ if } X \in \textbf{Term}\\
 					\text{Free}(X) \cup \text{Bnd}(X) &\text{ if } X \in \textbf{PForm}
 				\end{cases}
 			\end{equation*}
 		\end{preformal definition}
 		
-		\begin{preformal definition}[Open and Closed Formulas]
-			Suppose $P \in \textbf{PForm}$. 
-			If $\text{Free}(P) = \emptyset$ we say $P$ is a closed formula, otherwise we say $P$ is an open formula.
+		\begin{preformal definition}[Open and Closed Formulas and Terms]
+			Suppose $X \in \textbf{PForm} \times \textbf{Term}$. 
+			If $\text{Free}(X) = \emptyset$ we say $X$ is a closed term or formula, otherwise we say $X$ is an open term or formula.
 			
-			Semantically, a closed formula can in principle take on a truth value where as an open formula has variables open that need to be populated before we can attempt to judge a truth value.
+			A closed term still have variables which need to be \qq{plugged in} before that term represents a single specific object.
+			If a formula is open then this means it still has variables that need to be plugged in before it can be considered to be a \qq{complete statement}.
+			From a semantic perspective, a closed formula is one for which we can assign a truth value, whereas an open formula requires that we first plug in closed terms for all variables.
 		\end{preformal definition}
 		
 		\begin{preformal definition}[Strict Formulas]
@@ -1623,7 +1632,7 @@
 		\end{preformal definition}
 		
 		\begin{preformal definition}[Fresh Variable]
-			We define a function $\text{Fresh}: \mc{P}(\textbf{Var}) \to \textbf{Var}$ by
+			We define a function $\text{Fresh}: \mc{P}_{\text{Fin}}(\textbf{Var}) \to \textbf{Var}$ by
 			\begin{equation*}
 				\text{Fresh}(V) = \begin{cases} v_0 &\text{ if } V = \emptyset\\
 					v_{\text{max}(\{n \in \N \mid v_n \in V\}) + 1} &\text{ if } V \neq \emptyset
@@ -1664,7 +1673,7 @@
 					\forall x Q &\text{ if } P = \forall x Q \text{ and }x=v\\
 					\forall x \text{Rep}_{v, t}(Q) &\text{ if } P = \forall x Q \text{ and } x \neq v\\
 					&\text{ and } x \not \in \text{Vars}(t)\\
-					\forall y \text{Rep}_{v, t}(\text{Rep}_{x, y}(Q)) &\text{ if } P=\forall x Q \text{ and } x \neq v\\
+					\forall y \text{Rep}_{v, t}(\text{Rep}_{P; x, y}(Q)) &\text{ if } P=\forall x Q \text{ and } x \neq v\\
 					&\text{ and } x \in \text{Vars}(t)\\
 					&\text{ and } y = \text{Fresh}(\text{Vars}(Q) \cup \text{Vars}(t))
 				\end{cases}
@@ -1682,18 +1691,25 @@
 			It can be proven by induction that $\text{Rep}_{v, t}(P) \in \textbf{PForm}$ and that $\text{Free}(\text{Rep}_{v, t}(P)) = (\text{Free}(P) \setminus \{v\}) \cup \text{Free}_T(t)$.
 		\end{preformal definition}
 	
+		\begin{preformal definition}[Closed Terms]
+			We define
+			\begin{equation*}
+				\textbf{CTerm} = \{t\in \textbf{Term} \mid t \text{ is closed}\}
+			\end{equation*}
+		\end{preformal definition}
+	
 		\begin{preformal definition}[Term Generalization]
-			For each $t\in \textbf{Term}$ with $t$ closed and each $v \in \textbf{Var}$, we define
+			For each $t\in \textbf{CTerm}$ and each $v \in \textbf{Var}$, we define
 			\begin{equation*}
 				\text{Gen}_{t, v}(P): \textbf{PForm} \to \textbf{PForm}.
 			\end{equation*}
 			
-			First, for each $s\in \textbf{Term}$ with $s$ closed and $v\in \textbf{Var}$, we define
+			First, for each $s\in \textbf{CTerm}$ and $v\in \textbf{Var}$, we define
 			\begin{equation*}
 				\text{Gen}_{T; s, v}(t) = \begin{cases}
-					v &\text{ if } t \in \textbf{Const} \text{ and } t=s\\
-					t &\text{ if } t \in \textbf{Const} \cup \textbf{Var} \text{ and } t \neq s\\
-					f_n^{(\nu)} \text{Gen}_{T; s, v}^{(\nu)}(\bv{t}) &\text{ if } t = f_n^{(\nu)}\bv{t}
+					v & \text{ if } t = s\\
+					t &\text{ if } t\neq x \text{ and }t \in \textbf{Const} \cup \textbf{Var}\\
+					f_n^{(\nu)} \text{Gen}_{T; s, v}^{(\nu)}(\bv{t}) &\text{ if } t\neq s \text{ and } t = f_n^{(\nu)}\bv{t}
 				\end{cases}
 			\end{equation*}
 			
@@ -1709,24 +1725,79 @@
 				\end{cases}
 			\end{equation*}
 			
-			It can be proven by induction that $\text{Gen}_{t, v}(P) \in \textbf{PForm}$ and $\text{Free}(\text{Gen}_{t, v}(P)) = \text{Free}(P) \cup \text{Free}_T(v)$
+			It can be proven by induction that $\text{Gen}_{t, v}(P) \in \textbf{PForm}$ and 
+			\begin{equation*}
+				\text{Free}(\text{Gen}_{t, v}(P)) = \text{Free}(P) \cup \text{Free}_T(v)
+			\end{equation*}
 		\end{preformal definition}
 	
 		\begin{preformal definition}[Terms]
+			We now define a function that collects all of the terms present in a term or formula $\text{Terms}: \textbf{PForm} \cup \textbf{Term} \to \mc{P}(\textbf{Term}$.
+			
+			First we define $\text{Terms}_T: \textbf{Term} \to \mc{P}(\textbf{Term})$
 			\begin{equation*}
-				\textbf{Terms}(t) = \begin{cases}
+				\text{Terms}_T(t) = \begin{cases}
 					\{t\} &\text{ if } t \in \textbf{Var}\cup \textbf{Const}\\
-					\{t\} \cup \bigcup_{i\in [\nu]} \left(\textbf{Terms}^{(\nu)}(\bv{t})\right)_i &\text{ if } t = f_n^{(\nu)}\bv{t}
+					\{t\} \cup \bigcup_{i\in [\nu]} \text{Terms}_T(t_i) &\text{ if } t = f_n^{(\nu)}\bv{t}
 				\end{cases}
 			\end{equation*}
+			Note that this is equivalent to $\text{Terms}_T(t) = \text{Pred}(t) \cup \{t\}$.
+			We then define $\text{Terms}_P:\textbf{PForm} \to \mc{P}(\textbf{Term})$ by
 			\begin{equation*}
-				\text{Terms}(P) = \begin{cases}
-					\bigcup_{i\in [\nu]} \text{Terms}^{(\nu)}(\bv{t}) &\text{ if } P = P_n^{(\nu)}\bv{t}\\
-					\text{Terms}(Q) &\text{ if } P = \lnot Q\\
-					\text{Terms}(Q) \cup \text{Terms}(R) &\text{ if } P = \implies QR\\
-					\text{Terms}(Q) &\text{ if } P = \forall x Q
+				\text{Terms}_P(P) = \begin{cases}
+					\bigcup_{i\in [\nu]} \text{Terms}_T(t_i)&\text{ if } P = P_n^{(\nu)}\bv{t}\\
+					\text{Terms}_P(Q) &\text{ if } P = \lnot Q\\
+					\text{Terms}_P(Q) \cup \text{Terms}_P(R) &\text{ if } P = \implies QR\\
+					\text{Terms}_P(Q) &\text{ if } P = \forall x Q
 				\end{cases}
 			\end{equation*}
+			and finally we define $\text{Terms}: \textbf{PForm} \cup \textbf{Term} \to \mc{P}(\textbf{Term})$ by
+			\begin{equation*}
+				\text{Terms}(X) = \begin{cases}
+					\text{Terms}_T(X) &\text{ if } X \in \textbf{Term}\\
+					\text{Terms}_P(X) &\text{ if } X \in \textbf{PForm}
+				\end{cases}
+			\end{equation*}
+		\end{preformal definition}
+		
+		\begin{preformal definition}[Closed Formulas]
+			For natural deduction we will work with the set
+			\begin{equation*}
+				\textbf{CForm} = \{P \in \textbf{SForm} \mid P \text{ is closed}\}
+			\end{equation*}
+		\end{preformal definition}
+	
+		\begin{preformal definition}[String Parsing Operations]
+			We require a few string parsing operations for our deduction rules.
+			
+			First we define
+			\begin{equation*}
+				\textbf{PForm}_{\implies} = \{\implies PQ \in \textbf{PForm}\}
+			\end{equation*}
+			then we define $\text{Ant}, \text{Con}: \textbf{PForm}\to\textbf{PForm}$ by
+			\begin{align*}
+				\text{Ant}(\implies PQ) =& P\\
+				\text{Con}(\implies PQ) =& Q
+			\end{align*}
+			
+			Then we define
+			\begin{equation*}
+				\textbf{PForm}_{\text{DN}} = \{\lnot\lnot P \in \textbf{PForm}\}
+			\end{equation*}
+			and $\text{Body}_{\text{DN}}: \textbf{PForm}_{\text{DN}} \to \textbf{PForm}$ by
+			\begin{equation*}
+				\text{Body}_{\text{DN}}(\lnot \lnot P) = P
+			\end{equation*}
+			
+			and finally we define
+			\begin{equation*}
+				\textbf{PForm}_{\forall} = \{\forall x P \in \textbf{PForm}\}
+			\end{equation*}
+			and we define $\text{Body}_{\forall}: \textbf{PForm}_{\forall} \to \textbf{PForm}$ and $\text{QVar}: \textbf{PForm}_{\forall} \to \textbf{Var}$ by
+			\begin{align*}
+				\text{Body}_{\forall}(\forall xP) =& P\\
+				\text{QVar}(\forall x P) =& x
+			\end{align*}			
 		\end{preformal definition}
 	
 	\section{Natural Deduction}
@@ -1735,11 +1806,11 @@
 		\begin{preformal definition}[Line of Proof]
 			We define 
 			\begin{align*}
-				L = \{&(n, s, D, i, \bv{c}) \in \N^+ \times \textbf{SForm} \times \mc{P}(\N^+) \times I \times (\N^+)^* \mid d \le n \text{ for all } d \in D\\
-				&\text{and } c_j < n \text{ for all } j \in [\norm{\bv{c}}]\}
+				L = \{&(n, C, D, r, \bv{a}, p) \in \N^+ \times \textbf{CForm} \times \mc{P}(\N^+) \times I_R \times (\N^+)^*\times P \mid d \le n \text{ for all } d \in D\\
+				&\text{and } a_j < n \text{ for all } j \in [\norm{\bv{a}}]\}
 			\end{align*}
 			
-			If we have a proof line $(n, s, D, i, \bv{c})$ then $n$ is the line number, $s$ is the formula for that line, $D$ is the set of logical dependencies for that proof line, $i$ is an index indicating the deduction rule used to derive that line, and $\bv{c}$ is the ordered set (tuple) of lines used by the rule to derive the line.			
+			If we have a proof line $(n, C, D, r, \bv{a})$ then $n$ is the line number, $C$ is the formula for that line, $D$ is the set of logical dependencies for that proof line, $r\in I_R$ is an index indicating the deduction rule used to derive that line, $\bv{a}$ is the tuple of lines used by the rule to derive the line, and $p\in P$ captures any extra parameters needed for the rule to function.
 		\end{preformal definition}
 	
 		\begin{preformal definition}[Proof]
@@ -1749,16 +1820,19 @@
 			If $\bv{l} \in \textbf{Proof} = L^*$ we define
 			\begin{align*}
 				\bv{n} =& ((l_j)_1)_{j \in \norm{\bv{l}}}\\
-				\bv{s} =& ((l_j)_2)_{j \in \norm{\bv{l}}}\\
+				\bv{C} =& ((l_j)_2)_{j \in \norm{\bv{l}}}\\
 				\bv{D} =& ((l_k)_3)_{j \in \norm{\bv{l}}}\\
-				\bv{i} =& ((l_j)_4)_{j \in \norm{\bv{l}}}\\
-				\bv{C} =& ((l_j)_5)_{j \in \norm{\bv{l}}}\\																
+				\bv{r} =& ((l_j)_4)_{j \in \norm{\bv{l}}}\\
+				\bv{A} =& ((l_j)_5)_{j \in \norm{\bv{l}}}\\	
+				\bv{p} =& ((l_j)_6)_{j \in \norm{\bv{l}}}\\																			
 			\end{align*}
 			So that for each $j \in \norm{\bv{l}} = ($ we have
 			\begin{align*}
-				l_j = (n_j, s_j, D_j, i_j, C_j)
+				l_j = (n_j, C_j, D_j, r_j, \bv{a}_j, p_j)
 			\end{align*}
 		\end{preformal definition}
+		
+			
 	
 		\begin{preformal definition}[Deduction Rules]
 			A deduction rule $R$ is an $L^*$ function which follows certain conditions.
@@ -1771,72 +1845,70 @@
 			\begin{align*}
 				\norm{R(\bv{l})} =& \norm{\bv{l}} + 1\\
 				(R(\bv{l}))_{1:\norm{\bv{l}}} =& \bv{l}\\
-				(R(\bv{l}))_{\norm{l} + 1} =& l'\\
-				(l')_1 =& \max(\text{Lines}(\bv{l})) + 1
+				(R(\bv{l}))_{\norm{l} + 1} =& l' = (n', C', D', r', \bv{a}', p')\\
+				n' =& \max\left(\bigcup_{j \in |\norm{\bv{l}}|} n_j\right) + 1
 			\end{align*}
 			where $l'$ is the new line added by the deduction rule.
 			
-			Suppose $I$ is a rule type index and $(P_i)_{i\in I}$ are sets of rule parameters.
-			
-			Suppose $I$ is a rule type index and $n_i$ is the number of construction lines needed for each rule type and $S_i$ is the set of formulas that inform that rule type (e.g. any formula can be assumed). 
-			Define 
+			Suppose $I^{(R)}$ is a rule type index $\bv{n}^{(R)} = (n^{(R)}_r)_{r\in I^{(R)}}$ is a mapping from each rule type index to $n_r^{(R)}$, the number of lines that rule depends on, and $\bv{P}^{(R)} = (P^{(R)}_r)_{r\in I^{(R)}}$ is a mapping from each rule type index into a set $P_r^{(R)}$ of extra rule parameters.
+			We define a joint index
 			\begin{equation*}
-				I' = \{(i, \bv{c}, s) \in I \times (N^+)^* \mid \bv{c} \in (N^+)^{n_i}, s \in S_i\}
+				I = \left\{(r, \bv{a}, p) \in I^{(R)} \times (\N^+)^* \times \bv{P}\mid \bv{a} \in (\N^+)^{n^{(R)}_r} \text{ and } p \in P^{(R)}_r\right\}
 			\end{equation*}
-			Suppose $\bv{R} = (R_{(i, \bv{c}, s)})_{(i, \bv{c}, s) \in I'}$.
-			For this to be a valid deduction rule family, it must be the case that for each $(i, \bv{c}, s) \in I'$ and each $\bv{l} \in L^*$ that if $R_{(i, \bv{c})}(\bv{l}) = l' = (n, f, D, i', \bv{c}')$ that $i'=i$ and $\bv{c}' = \bv{c}$.
-			That is, when $\bv{R}_{(i, \bv{c}, s)}$ appends a line $l'$ to $\bv{l}$, the rule type index $i'$ and construction tuple $\bv{c}'$ match $i$ and $\bv{c}$, the index on the rule.
-			
+			Suppose $\bv{R} = (R_{r, \bv{a}, p})_{(r, \bv{a}, p) \in I^{(R)}}$ where each $\bv{R}$ is a deduction rule.
+			If, for each $(r, \bv{a}, p) \in I$ and for each $\bv{l} \in L^*$ we have that $R_{r, \bv{a}, p}$ adds new line 
+			\begin{equation*}
+				l' = (n', C', D', r', \bv{a}', p')
+			\end{equation*}
+			with $r' = r$, $\bv{a}' = \bv{a}$, and $p'=p$ then $\bv{R}$ is a valid deduction rule family.			
 		\end{preformal definition}
 	
 		\begin{preformal definition}[Rules of Natural Deduction]
 			Let $I$ contain 8 rule types
 			\begin{align*}
-				I = \{&\\
-				&\text{Assume},\\
+				I^{(R)} = \Big\{&\text{Assume},\\
 				&\implies I,\\
 				&\implies E,\\
 				&\lnot I,\\
 				&\lnot E,\\
 				&\text{DN},\\
 				&\forall I,\\
-				&\forall E,\\
-				&\}
+				&\forall E\Big\}
 			\end{align*}
 			Each rule has the following required number of construction lines:
 			\begin{align*}
-				n_{\text{Assume}} =& 0\\
-				n_{\implies I} =& 2\\
-				n_{\implies E} =& 2\\
-				n_{\lnot I} =& 2\\
-				n_{\lnot E} =& 2\\
-				n_{\text{DN}} =&1\\
-				n_{\forall I} =& 1\\
-				n_{\forall E} =& 1
+				n^{(R)}_{\text{Assume}} =& 0\\
+				n^{(R)}_{\implies I} =& 2\\
+				n^{(R)}_{\implies E} =& 2\\
+				n^{(R)}_{\lnot I} =& 2\\
+				n^{(R)}_{\lnot E} =& 2\\
+				n^{(R)}_{\text{DN}} =&1\\
+				n^{(R)}_{\forall I} =& 1\\
+				n^{(R)}_{\forall E} =& 1
 			\end{align*}
-			and informing formulas
+			and extra parameter sets
 			\begin{align*}
-				S_{\text{Assume}} =& \textbf{SForm}\\
-				S_{\implies I} =& \{\curlywedge\}\\
-				S_{\implies E} =& \{\curlywedge\}\\
-				S_{\lnot I} =& \{\curlywedge\}\\
-				S_{\lnot E} =& \{\curlywedge\}\\
-				S_{\text{DN}} =& \{\curlywedge\}\\
-				S_{\forall I} =& \{\curlywedge\}\\
-				S_{\forall E} =& \{\curlywedge\}
+				P^{(R)}_{\text{Assume}} =& \textbf{CForm}\\
+				P^{(R)}_{\implies I} =& \{\curlywedge\}\\
+				P^{(R)}_{\implies E} =& \{\curlywedge\}\\
+				P^{(R)}_{\lnot I} =& \{\curlywedge\}\\
+				P^{(R)}_{\lnot E} =& \{\curlywedge\}\\
+				P^{(R)}_{\text{DN}} =& \{\curlywedge\}\\
+				P^{(R)}_{\forall I} =& \textbf{CTerm} \times \textbf{Var}\\
+				P^{(R)}_{\forall E} =& \textbf{CTerm}
 			\end{align*}
 			We use $\curlywedge$ as a sentinel symbol for when a rule doesn't rule an external formula as input.
 			
 			
-			We now specifiy a rule family $\bv{R} = (R_{(i, \bv{c}, s)})_{(i, \bv{c}, S) \in I'}$.
+			We now specifiy a rule family $\bv{R} = (R_{(r, \bv{a}, p)})_{(r, \bv{a}, p) \in I}$.
 			
 			Rule Assume: 
 			\begin{equation*}
-				\text{Dom}(R_{\text{Assume}, (), s}) = L^*
+				\text{Dom}(R_{\text{Assume}, (), C}) = L^*
 			\end{equation*}
 			The new line generated by this rule is of the form
 			\begin{equation*}
-				(n, s, \{n\}, \text{Assume}, ())
+				(n, C, \{n\}, \text{Assume}, (), C)
 			\end{equation*}
 			
 			Rule $\implies I$:
@@ -1845,49 +1917,63 @@
 			\end{align*}
 			The new line generated by this rule of the form
 			\begin{equation*}
-				(n, \implies s_j(\bv{l}) s_k(\bv{l}), D_k \setminus \{j\}, \implies I, (j, k))
+				(n, \implies C_j(\bv{l}) C_k(\bv{l}), D_k \setminus \{j\}, \implies I, (j, k), \curlywedge)
 			\end{equation*}
 			
 			Rule $\implies E$
 			\begin{align*}
-				\text{Dom}_{(\implies E, (j, k), \curlywedge)} = \{\bv{l} \in L^* \mid s_j(\bv{l}) \text{ is a conditional with antecedant equal to } s_k(\bv{l})\}
+				\text{Dom}_{(\implies E, (j, k), \curlywedge)} = \{\bv{l} \in L^* \mid \text{Ant}(C_j(\bv{l})) = C_k(\bv{l})\}
 			\end{align*}
 			and the new line is
 			\begin{align*}
-				(n, \text{Consequent}(s_j(\bv{l})), D_j \cup D_k, \implies E, (j, k))
+				(n, \text{Con}(C_j(\bv{l})), D_j \cup D_k, \implies E, (j, k), \curlywedge)
 			\end{align*}
 			
 			Rule $\lnot I$
 			\begin{align*}
-				\text{Dom}(R_{(\lnot I, (j, k), \curlywedge)}) = \{\bv{l} \in L^* \mid n_j(\bv{l}) \in D_k(\bv{l}) \text{ and } i_j(\bv{l}) = \text{Assume} \text{ and } s_k(\bv{l}) = \curlywedge\}
+				\text{Dom}(R_{(\lnot I, (j, k), \curlywedge)}) = \{\bv{l} \in L^* \mid n_j(\bv{l}) \in D_k(\bv{l}) \text{ and } r_j(\bv{l}) = \text{Assume} \text{ and } C_k(\bv{l}) = \curlywedge\}
 			\end{align*}
 			and the new line is
 			\begin{align*}
-				(n, \lnot s_j(\bv{l}), D_k(\bv{l}) \setminus \{j\}, \lnot I, (j, k))
+				(n, \lnot C_j(\bv{l}), D_k(\bv{l}) \setminus \{j\}, \lnot I, (j, k), \curlywedge)
 			\end{align*}
 			
 			Rule $\lnot E$
 			\begin{align*}
-				\text{Dom}(R_{(\lnot E, (j, k), \curlywedge)}) = \{\bv{l}\in L^* \mid s_k(\bv{l}) = \lnot s_j(\bv{l})\}
+				\text{Dom}(R_{(\lnot E, (j, k), \curlywedge)}) = \{\bv{l}\in L^* \mid C_k(\bv{l}) = \lnot C_j(\bv{l})\}
 			\end{align*}
 			and the new line is
 			\begin{align*}
-				(n, \curlywedge, D_j(\bv{l}) \cup D_k(\bv{l}), \lnot E,  (j, k))
+				(n, \curlywedge, D_j(\bv{l}) \cup D_k(\bv{l}), \lnot E,  (j, k), \curlywedge)
 			\end{align*}
 			
 			Rule $\text{DN}$
 			\begin{equation*}
-				\text{Dom}(R_{(\text{DN}, (j), \curlywedge)}) = \{\bv{l} \in L^* \mid s_j(\bv{l}) = \lnot\lnot P \text{ for some } P \in \textbf{SForm}\}
+				\text{Dom}(R_{(\text{DN}, (j), \curlywedge)}) = \{\bv{l} \in L^* \mid C_j(\bv{l}) \in \textbf{PForm}_{\text{DN}}\}
 			\end{equation*}
 			and the new line is
 			\begin{equation*}
-				(n, \text{DNStrip}(s_j(\bv{l})), D_j, \text{DN}, (j))
+				(n, \text{Body}_{\text{DN}}(C_j(\bv{l})), D_j(\bv{l}), \text{DN}, (j), \curlywedge)
 			\end{equation*}
 			
 			Rule $\forall I$
-			\begin{equation*}
-				\text{Dom}(R_{(\forall I), (j), \curlywedge)} = \{\bv{l}\in L^* \mid \}
-			\end{equation*}
+			\begin{align*}
+				\text{Dom}(R_{(\forall I, (j), (t, v))}) = \{&\bv{l}\in L^* \mid t\in \text{Terms}(C_j(\bv{l}))\\ 
+				&\text{and } t\not \in \text{Terms}(C_d(\bv{l})) \text{ for each } d \in D_j(\bv{l})\}
+			\end{align*}
+			and the new line is
+			\begin{align*}
+				(n, \forall v \text{Gen}_{t, v}(C_j(\bv{l})), D_j(\bv{l}), \forall I, (j), (t, v))
+			\end{align*}
+			
+			Rule $\forall E$
+			\begin{align*}
+				\text{Dom}(R_{(\forall E, (j), t)}) = \{\bv{l} \in L^* \mid C_j(\bv{l}) \in \textbf{PForm}_{\forall}\}
+			\end{align*}
+			and the new line is
+			\begin{align*}
+				(n, \text{Rep}_{\text{QVar}(C_j(\bv{l})), t}(\text{body}_{\forall}(C_j(\bv{l}))), D_j(\bv{l}), \forall E, (j), t)
+			\end{align*}
 			
 		\end{preformal definition}
 	
