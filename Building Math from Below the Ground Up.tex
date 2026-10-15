@@ -1206,34 +1206,28 @@
 		
 	\section{List Operations}
 		\begin{preformal definition}[List Concatenation]
-			We define $\cdot: S^* \times S^* \to S^*$ by
+			We define $\ast: S^* \times S^* \to S^*$ by
 			\begin{align*}
-				\cdot(\bv{s}, \bv{t}) = \bv{s} \cdot \bv{t}
+				\ast(\bv{s}, \bv{t}) = \bv{s} \ast \bv{t}
 			\end{align*}
 			with
 			\begin{align*}
-				\norm{\bv{s} \cdot \bv{t}} = \norm{\bv{s}} + \norm{\bv{t}}
+				\norm{\bv{s} \ast \bv{t}} = \norm{\bv{s}} + \norm{\bv{t}}
 			\end{align*}
 			and for $1 \le i \le \norm{\bv{s}\cdot \bv{t}}$
 			\begin{align*}
-				(\bv{s}\cdot \bv{t})_i = \begin{cases}
+				(\bv{s}\ast \bv{t})_i = \begin{cases}
 					s_i &\text{ if } i \le \norm{\bv{s}}\\
 					t_{i - \norm{\bv{s}}} &\text{ if } \norm{\bv{s}} + 1 \le i \le \norm{\bv{s}\cdot \bv{t}}.
 				\end{cases}
 			\end{align*}
-			If $\bv{s} = \bv{t} = ()$ then $\bv{s} \cdot \bv{t} = ()$.
+			If $\bv{s} = \bv{t} = ()$ then $\bv{s} \ast \bv{t} = ()$.
 			
 			We will use juxtaposition to indicate concatenation.
 			That is,
 			\begin{equation*}
-				\bv{s}\bv{t} = \bv{s} \cdot \bv{t}
+				\bv{s}\bv{t} = \bv{s} \ast \bv{t}
 			\end{equation*}
-			We will also abuse notation and conflate $s\in S$ with $(s) \in S^1 \subset S^*$ so that
-			\begin{align*}
-				ss' =& (s) \cdot (s') = (s, s')\\
-				\bv{s} =& (s_1, s_2)\\
-				\bv{s}s_3 =& \bv{s}(s_3) = (s_1, s_2) \cdot (s_3) = (s_1, s_2, s_3)
-			\end{align*}
 		\end{preformal definition}
 
 		\begin{preformal theorem}[List Concatenation is Binary Associative]
@@ -1291,25 +1285,80 @@
 			Since list concatenation exhibits binary associativity it must exhibit generalized associativity.
 			
 			Suppose $\bv{\alpha} \in (A^*)^*$.
-			We have $\text{Par}(\bv{\alpha})$ is the set of all parenthesizations on the entries of $\bv{a}$, but, because of generalized associativity, we know that $\text{Par}(\bv{\alpha})$ is a singleton which we will denote $\cdot(\bv{\alpha})$.
+			We have $\text{Par}(\bv{\alpha})$ is the set of all parenthesizations on the entries of $\bv{\alpha}$, but, because of generalized associativity, we know that $\text{Par}(\bv{\alpha})$ is a singleton which we will denote $\circledast(\bv{\alpha})$.
+			We examine the following operations
+			\begin{itemize}
+				\item{$\ast: A^* \times A^* \to A^*$, this is the standard binary concatenation operation defined above.}
+				\item{$\circledast: (A^*)^* \to A^*$, this is the generalized concatenation oepration which takes a list of lists and returns a list that is the result of concatenating all the input lists}
+				\item{$\circ: (A^*)^* \times (A^*)^* \to (A^*)^*$ this is standard list concatenation but acting on lists of lists}
+				\item{$\circledcirc: ((A^*)^*)^* \to (A^*)^*$ this operation takes a list of lists of lists and returns a list of lists. We only use it here to define an overloaded concatenation operation which allows us to concatenate objects from multiple layers of this heirarchy.}
+			\end{itemize}
 			
-			For brevity, we will often associate $a\in A$ with $(a)\in A^*$ and $\bv{a} \in A^*$ with $(\bv{a}) \in (A^*)^*$.
-			So, for example, if $\bv{\alpha}\in (A^*)^*$, $\bv{a} \in A^*$, and $a\in A$, we may write
+			Let $D = (A^*)^* \cup A^* \cup \Sigma$.
+			We define a function $\text{Normalize}: D^* \to ((A^*)^*)^*$
+			\begin{align*}
+				\text{Normalize}(\bv{d})_i = \begin{cases}
+					d_i &\text{ if } d_i \in (A^*)^*\\
+					(d_i) & \text{ if } d_i \in A^*\\
+					((d_i)) & \text{ if } d_i \in A
+				\end{cases}
+			\end{align*}
+			for each $i\in [\norm{\bv{d}}]$.
+			We then define an overloaded concatenation operation which allows us to concatenate arbitary elements whether they are in $A$, $A^*$, or $(A^*)^*$.
+			We define $\text{Cat}: D^* \to A^*$ by 
 			\begin{equation*}
-				\bv{\alpha}\bv{a}a
+				\text{Cat}(\bv{d}) = \circledast(\circledcirc(\text{Normalize}(\bv{d})))
 			\end{equation*}
-			to mean
+			
+			So, for example, if $a\in A$, $\bv{a} \in A^*$ and $\bv{\alpha}\in (A^*)^*$, then
 			\begin{equation*}
-				\cdot(\bv{\alpha}) \cdot (\cdot(\bv{a}, (a))) \in A^*
-			\end{equation*}
+				\text{Cat}((a, \bv{a}, \bv{\alpha})) = \circledast(\circledcirc((((a)), (\bv{a}), \bv{\alpha}))) = a \bv{a}\bv{\alpha} 
+			\end{equation*} 
+			We use juxtaposiiton as a shorthand for the overloaded $\text{Cat}$ operation.
+			Note that when an element $\bv{\alpha} \in (A^*)^*$ stands alone in an expression it may be ambiguous whether we are referring to e.g. $\bv{\alpha}\in (A^*)^*$ or $\text{Cat}((\bv{\alpha})) \in A^*$.
+			Likewise for an element $a\in A$.
+			In such ambiguous cases we will explicitly use the $\text{Cat}$ notation to disambiguate.
+			
 		\end{preformal theorem}
 	
 	\section{Language of First Order Logic}
 	
 		We now have the required preformal concepts to begin developing  \gls{lfol}.
+		\gls{lfol} is a formal language which, here, means a set of symbols and syntax rules that allows us to form those symbols into valid strings of symbols.
+		We will begin by specifying the \text{alphabet} for our language, that is, the set of symbols which we will use to construct everything in our language.
+		The language is contained in the set of symbols $\Sigma$.
 		
-		\begin{preformal definition}[The Alphabet of \gls{lfol}]
-			We will use the following symbols in \gls{lfol}:
+		Next, we will discuss how variables, constants, and function symbols can be combined to form terms within the language.
+		Semantically speaking, terms are the \textit{subjects} of our language. 
+		That is, terms are the things about which the language makes statements.
+		Terms are captured in $\textbf{Term} \subset \Sigma^*$.	
+		$\textbf{Term}$ is defined as an inductive closure with a certain base set and formation rules.
+		
+		Then we discuss how terms can be inserted into predicates to form atomic formulas.
+		Semantically, a predicate is a true or false statement about one or more objects (terms).
+		We then discuss how logical connectives can be used to combine atomic formulas into more complicated logical expressions.
+		The object we have at the end of this construction is $\textbf{PForm}$, the set of permissive formulas.
+		Again, $\textbf{PForm}$ is constructed as an inductive closure.
+		
+		$\textbf{PForm}$ stands for the set of \textit{permissive} formulas.
+		This is because it permits two sorts of degenerate quantification.
+		Here we restrict to $\textbf{SForm}$, the set of strict formulas which don't exhibit these degenericies.
+		As far as I can tell this is a non-standard move for logical treatments. 
+		We make the choice to reject these degeneracies so that our subsequent proof better reflect typical mathematical reasoning.
+		
+		Along the way towards developing $\textbf{SForm}$ we define numerous recursively functions required to parse, operate on, and understand (pre)formally the formulas of the language.
+		We also develop techincal results such as the unique readability of $\textbf{Term}$ and $\textbf{PForm}$.
+		
+		Loosely speaking, what we here call $\textbf{PForm}$ is most closely related to what other texts, such as Forbes, call \gls{lfol}.
+		After defining $\textbf{PForm}$ and $\textbf{SForm}$ we will have use for both going forward. 
+		For example, sometimes we will use the more general $\textbf{PForm}$ structure to define functions which restrict to $\textbf{SForm}$. 
+		So it is not clear that there is one thing in this text which we should call \gls{lfol}.
+		Instead, we will target $\textbf{PForm}$ and use language around these sets going forward.
+		
+		Finally, though we made reference to semantic interpretations of elements of the langauge above, we remind the reader that this is purely to help the reader form an intuitive and understanding and is not required at all for the syntactic development of the framework.
+		
+		\begin{preformal definition}[The Alphabet of $\textbf{PForm}$]
+			We will use the following symbols in $\textbf{PForm}$:
 			\begin{equation*}
 				\textbf{Symb} = \{v, c, P, f, \implies, \lnot, \forall\}
 			\end{equation*}
@@ -1327,40 +1376,50 @@
 			\end{align*}
 			Here $n$ is to be thought of as a subscript to distinguish e.g. one constant from another.
 			$\nu$ indicates the \qq{arity} of a function or predicate.
-			Note that we allow $0$-ary predicates which are like expressions that simply evaluate to a truth value with no input.
+			Note that we allow $0$-ary predicates which, semantically, are like expressions that simply evaluate to a truth value with no input.
 			However, we do not allow $0$-ary functions since these would be redundant with constants.
+			Because constants are treated differently than functions in the various inductive structures we choose separate them out into their own category rather than lumping them in with function as $0$-ary functions.
 			
-			The alphabet of \gls{lfol} is the union of all of these
+			The alphabet of $\text{PForm}$ is the union of all of these
 			\begin{equation*}
 				\Sigma = \bigcup \{\textbf{Var}, \textbf{Const}, \textbf{Pred}, \textbf{Func}, \textbf{Log}, \textbf{Quant}\}
 			\end{equation*}
 			If $\sigma \in \Sigma^*$ is a $\Sigma$ list we say $\sigma$ is a \gls{lfol} string.
 			
-			We will highlight that now, for the first time, we are beginning to define objects of our \textit{formal} language.
-			This is in contrast to all of the work thus far which has been preformal.
-			When we are discussing concepts within the formal language \textit{using} the preformal framework, we will frequently uses alias/nicknames/abbreviations for symbols or strings from the formal language.
-			For example, we will use letters from near the end of the alphabet like $x$, $y$, $z$ to denote variables however, these should be understood to be aliases for true symbols of the formal language such as $v_1$, $v_2$, $v_3$.
-			Similarly we will work with predicates like $\in$, $\subset$, and $=$ which may be aliases for, e.g. $P^{(2)}_0$, $P^{(2)}_1$, and $P^{(2)}_2$ and functions like $\bigcup$ and $\mc{P}$ which may be aliases for, e.g. $f^{(1)}_0$ and $f^{(1)}_1$.
+
 		\end{preformal definition}
+		
+		We will highlight that now, for the first time, we are beginning to define objects of our \textit{formal} language.
+		This is in contrast to all of the work thus far which has been preformal.
+		When we are discussing concepts within the formal language \textit{using} the preformal framework, we will frequently uses aliases for symbols or strings from the formal language.
+		For example, we will use letters from near the end of the alphabet like $x$, $y$, $z$ to denote variables however, these should be understood to be aliases for true symbols of the formal language such as $v_1$, $v_2$, $v_3$.
+		Similarly we will work with predicates like $\in$, $\subset$, and $=$ which may be aliases for, e.g. $P^{(2)}_0$, $P^{(2)}_1$, and $P^{(2)}_2$ and functions like $\bigcup$ and $\mc{P}$ which may be aliases for, e.g. $f^{(1)}_0$ and $f^{(1)}_1$.
+		Notably, the symbol $\curlywedge$ will be used as a $0$-ary predicate and it will have a special role in our natural deduction system.
+		We will consider $\curlywedge$ to be an alias for $P_0^{(0)}$.
+		We denote \qq{is an alias for} using $\equiv$ so that
+		\begin{equation*}
+			\curlywedge \equiv P_0^{(0)}
+		\end{equation*}
 		
 		We have only admitted $\implies$ and $\lnot$ as logical operators and $\forall$ as a quantifier into our language. 
 		Notably, we have left out $\land$, $\lor$, $\iff$ and $\exists$.
 		This has been done in an effort to keep the formal language as concise as possible so as to reduce the amount of work needed for the various metalogical proof. 
 		We will introduce these other symbols later as aliases or abbreviations of expressions in terms of symbols that are included in \gls{lfol}:
 		\begin{align*}
-			\land PQ &\sim \lnot \implies P \lnot Q\\
-			\lor PQ &\sim \implies \lnot P Q\\
-			\implies PQ &\sim \land\implies PQ \implies QP\\
-			\exists x P &\sim \lnot \forall x \lnot P
+			\lor PQ &\equiv \implies \lnot P Q\\			
+			\land PQ &\equiv \lnot \lor \lnot P \lnot Q\\
+			\iff PQ &\equiv \land\implies PQ \implies QP\\
+			\exists x P &\equiv \lnot \forall x \lnot P
 		\end{align*}
 
-		We will, now, provide \textit{syntax rules} for \gls{lfol} that prescribe the allowed ways we can combine elements from the alphabet to form meaningful strings.
+		We will, now, provide \textit{syntax rules} for $\textbf{PForm}$ that prescribe the allowed ways we can combine elements from the alphabet to form meaningful strings.
+		We begin with terms.		
 		
 		\begin{preformal definition}[Terms]
 			Let $U=\Sigma^*$ and let $B = \textbf{Var} \cup \textbf{Const}$.
-			Now define a $U$ family of functions $\bv{g} = (g_n^{\nu})_{(\nu, n) \in \N^+ \times \N}$ such that $g_n^{\nu}: (\Sigma^*)^{\nu} \to \Sigma^*$ is defined by
+			Now define a $U$ family of functions $\bv{g} = (g_n^{(\nu)})_{(\nu, n) \in \N^+ \times \N}$ such that $g_n^{(\nu)}: (\Sigma^*)^{\nu} \to \Sigma^*$ is defined by
 			\begin{align*}
-				g_n^{\nu}(\bv{\sigma}) = f_n^{(\nu)}\bv{\sigma}
+				g_n^{(\nu)}(\bv{\sigma}) = f_n^{(\nu)}\bv{\sigma}
 			\end{align*}
 			for $\bv{\sigma} \in (\Sigma^*)^\nu$.
 			
@@ -1375,19 +1434,24 @@
 			\end{equation*}			
 		\end{preformal definition}
 	
-		The definition of $t\in \bv{Term}$ means that $t$ must take one or more of the following forms:
+		The definition of $t\in \textbf{Term}$ means that $t$ must take one or more of the following forms:
 		\begin{itemize}
-			\item{$t=v_n$for some $n\in \N$ with $v_n \in \textbf{Var}$}
+			\item{$t=v_n$ for some $n\in \N$ with $v_n \in \textbf{Var}$}
 			\item{$t=c_n$ for some $n\in \N$ with $c_n \in \textbf{Const}$}
 			\item{$t=f_n^{(\nu)}\bv{T}$ for some $\nu \in \N^+$, $n\in \N$ with $f_n^{(\nu)} \in \textbf{Func}$ and $\bv{T} \in \textbf{Term}^\nu$.}
 		\end{itemize}
-		We want to prove that $\bv{Term}$ exhibits unique readability which will mean that $t\in \bv{Term}$ must take exactly one of the forms above.
+		
+		We want to prove that $\textbf{Term}$ exhibits unique readability which will mean that $t\in \textbf{Term}$ must take exactly one of the forms above.
+		To do this we require a couple technical results about the string structure of terms.
 		
 		\begin{preformal definition}[List Suffix]
 			If $l$ is a list then for any $1\le i \le \norm{l}$, the list $l_{i:\norm{l}}$ is a suffix for $l$
 		\end{preformal definition}
 		
-		\begin{preformal theorem}[The Suffix of a Term is Always Equal to a List of Terms]
+		\begin{preformal theorem}[The Suffix of a Term is Always Equal to the concatenation of a List of Terms]
+			In this theorem we use $\cdot$ to be the concatenation defined on $\Sigma^*$ and $\ast$ to be concatenation defined on $(\Sigma^*)^*$. 
+			Note that binary $\cdot: \Sigma^* \times \Sigma^* \to \Sigma^*$ but generalized $\cdot: (\Sigma^*)^* \to \Sigma*$ while binary $\ast: (\Sigma^*)^* \times (\Sigma^*)^* \to (\Sigma^*)^*$.
+			
 			If $t \in \textbf{Term}$ then if $t'$ is a suffix of $t$ then there is some $n \in \N^+$ and $\bv{t} \in \textbf{Term}^n$ such that $t' = \cdot(\bv{t})$.
 			
 			We prove this by induction on the string length.
@@ -1397,30 +1461,31 @@
 			
 			Now suppose the hypothesis holds for all $\ell' < \ell$ and consider
 			\begin{equation*}
-				t = f_n^{(\nu)} \bv{t}
+				t = f_n^{(\nu)} \bv{t} = f_n^{(\nu)} \cdot (\cdot(\bv{t}))
 			\end{equation*}
 			with $\bv{t} \in \textbf{Term}^{\nu}$.
 			
 			Consider a suffix $t' = t_{i:\norm{t}}$.
 			If $i=1$ then $t'=t$ which is a term.
 			Suppose $i>1$. 
-			There are two cases.
-			In some cases $i$ splits one of the terms of $\bv{t}$ in the middle, e.g.
+			Then there is some $1 \le j \le \nu$ such that
 			\begin{equation*}
-				t' = (t_j)_{i':\norm{t_j}} \bv{t}'
+				t' = (\cdot(\bv{t}))_{i-1:\ell} = (t_j)_{i':\norm{t_j}} \cdot(\cdot(\bv{t}_{j+1:\nu}))
 			\end{equation*}
-			where $\bv{t}' = \bv{t}_{k:\nu}$.
-			That is, $t'$ is a suffix for $t_j$ followed by the remaining elements of $\bv{t}$.
-			But, $\norm{t_j} < \ell$ which means that any suffix is a concatenation of terms $\cot(\bv{t}'')$ with $\bv{t}'' \in \textbf{Term}^{\nu'}$ for some $\nu' \in \N^+$ by the induction hypothesis so we have
+			with $1 \le i' \le \norm{t_j}$.
+			The idea is that terms in slots $k<j$ have been eliminated, term $k=j$ has be sliced somewhere between its start and finish, and terms $k>j$ remain unmodified.
+			
+			If $i'=1$ then we can see that
 			\begin{equation*}
-				t' = \bv{t}''\bv{t}'
+				t' = \cdot\left(\bv{t}_{j:\nu}\right)
 			\end{equation*}
-			but this is a concatenation of terms.
-			In the other case $i$ splits between two terms within $\bv{t}$ so we simply have
+			as needed.
+			If $i'>1$ then, because $\norm{(t_j)_{i': \norm{t_j}}} < \ell$, we know there is a $\bv{t}' \in \textbf{Term}^{\nu'}$ such that $(t_j)_{i':\norm{t_j}} = \cdot(\bv{t}')$.
+			But then we can see
 			\begin{equation*}
-				t' = \bv{t}'
+				t' = \cdot(\bv{t}') \cdot (\cdot(\bv{t}_{j+1:\nu})) = \cdot (\bv{t}' \ast \bv{t}_{j+1:\nu})
 			\end{equation*}
-			in which case we already have a sequence of terms.			
+			with $\bv{t}' \ast \bv{t}_{j+1:\nu} \in \textbf{Term}^{\nu - j + \nu'}$.
 		\end{preformal theorem}
 		
 		\begin{preformal theorem}[Equality of a a Tuple of Terms as Strings Implies Equality as a Tuple]
@@ -1437,15 +1502,15 @@
 			Now suppose the hypothesis holds for $\ell' < \ell$ and consider $\bv{t} \in \textbf{Term}^{\nu}$ and $\bv{t}' \in \textbf{Term}^{\nu'}$.
 			We can write
 			\begin{align*}
-				\cdot(\bv{t}) = \cdot(t_1, \bv{t}_{2:\nu}) = \cdot(t'_1, \bv{t}'_{2:\nu}) = \cdot(\bv{t}')
+				\cdot(\bv{t}) = t_1 \cdot (\cdot(\bv{t}_{2:\nu})) = t'_1 \cdot (\cdot(\bv{t}'_{2:\nu})) = \cdot(\bv{t}')
 			\end{align*}
 			with length $\ell$.
 			But consider $t_1$ and $t'_1$.
 			Suppose $\norm{t'_1} > \norm{t_1}$.
-			Then we can write $t'_1 = \cdot(t_1, \bv{t}'')$ for some $\bv{t}'' \in \textbf{Term}^{\nu''}$ since $\cdot(\bv{t}'')$ is a suffix of $t'_1$.
+			Then we can write $t'_1 = t_1 \cdot (\cdot(\bv{t}''))$ for some $\bv{t}'' \in \textbf{Term}^{\nu''}$ since $\cdot(\bv{t}'')$ is a suffix of $t'_1$.
 			But then 
 			\begin{equation*}
-				\cdot(t_1', \bv{t}'_{2:\nu}) = \cdot(t_1, \bv{t}'', \bv{t}'_{2:\nu}) = \cdot(t_1, \bv{t}_{2:\nu})
+				t'_1 \cdot (\cdot(\bv{t}'_{2:\nu})) = \cdot(t_1, \bv{t}'', \bv{t}'_{2:\nu}) = \cdot(t_1, \bv{t}_{2:\nu})
 			\end{equation*}
 			But this means
 			\begin{equation*}
@@ -1913,7 +1978,7 @@
 			
 			Rule $\implies I$:
 			\begin{align*}
-				\text{Dom}(R_{(\implies I, (j, k), \curlywedge)}) = \{&\bv{l} \in L^* \mid n_j(\bv{l}) \in D_k(\bv{l})\}
+				\text{Dom}(R_{(\implies I, (j, k), \curlywedge)}) = L^*
 			\end{align*}
 			The new line generated by this rule of the form
 			\begin{equation*}
@@ -1931,7 +1996,7 @@
 			
 			Rule $\lnot I$
 			\begin{align*}
-				\text{Dom}(R_{(\lnot I, (j, k), \curlywedge)}) = \{\bv{l} \in L^* \mid n_j(\bv{l}) \in D_k(\bv{l}) \text{ and } r_j(\bv{l}) = \text{Assume} \text{ and } C_k(\bv{l}) = \curlywedge\}
+				\text{Dom}(R_{(\lnot I, (j, k), \curlywedge)}) = \{\bv{l} \in L^* \mid C_k(\bv{l}) = \curlywedge\}
 			\end{align*}
 			and the new line is
 			\begin{align*}
@@ -1974,8 +2039,329 @@
 			\begin{align*}
 				(n, \text{Rep}_{\text{QVar}(C_j(\bv{l})), t}(\text{body}_{\forall}(C_j(\bv{l}))), D_j(\bv{l}), \forall E, (j), t)
 			\end{align*}
-			
 		\end{preformal definition}
 	
+		\begin{preformal definition}[Valid Proofs]
+			Let $U = \textbf{Proof}$, let $B = \{()\} \subset U=\textbf{Proof}$ and let $\bv{R}$ be a valid deduction rule family such as the rules of natural deduction.
+			We then define
+			\begin{equation*}
+				\textbf{VProof} = N_{\textbf{Proof}, \{()\}, \bv{R}}.
+			\end{equation*}
+			A valid proof is an element of the inductive closure under the deduction rules.
+		\end{preformal definition}
+		
+		\begin{preformal definition}[Derivability Judgement]
+			Consider $\Gamma \subset \textbf{CForm}$ and $C \in \textbf{CForm}$.
+			We say $C$ is derivable (under deduction rule family $\bv{R}$ from $\Gamma$ if there exists $\bv{p} \in \textbf{Proof}$ and there is some $n$ such that 
+			\begin{align*}
+				C_n(\bv{p}) =& C\\
+				\Gamma =& \{C_m(\bv{p}) \in \textbf{CForm} \mid m\in D_n(\bv{p})\}
+			\end{align*}
+			Under this condition we say
+			\begin{equation*}
+				\Gamma \vdash_{\bv{R}} C
+			\end{equation*}
+			or simply $\Gamma \vdash C$.
+		\end{preformal definition}
+		
+		\begin{preformal definition}[Theory]
+			If $\Gamma \subset \textbf{CForm}$ then
+			\begin{equation*}
+				\textbf{Th}(\Gamma, \bv{R}) = \{C \in \textbf{CForm} \mid \Gamma_{\bv{R}} \vdash C\}
+			\end{equation*}
+			The set $\Gamma$ is called the axioms of the theory.
+		\end{preformal definition}
+		
+		\begin{preformal definition}[Extension By Rule Addition]
+			Suppose $\bv{R} = (R_{(r, \bv{a}, p)})_{(r, \bv{a}, p) \in I}$ is a valid deduction rule family.
+			Now suppose $I'$ is another index set and $I \subset I'$ and $\bv{R}'$ is a valid deduction rule family under index set $I'$.
+			We say that $\bv{R}'$ is an extension of $\bv{R}$.
+			We say that $\textbf{Th}(\Gamma, \bv{R}')$ is the extension of $\textbf{Th}(\Gamma, \bv{R})$ by rule addition.
+			
+			It can be seen that $\textbf{Th}(\Gamma, \bv{R}) \subset \textbf{Th}(\Gamma, \bv{R}')$.
+			If it is the case that $\textbf{Th}(\Gamma, \bv{R}') \subset \textbf{Th}(\Gamma, \bv{R})$ then we say the extension is conservative.
+		\end{preformal definition}
+		
+		\begin{preformal definition}
+			We introduce our first derived rule call duplication and denoted by $\text{DUP}$.
+			This rule has $n_{\text{DUP}}^{(R)} = 1$, $P_{\text{POE}}^{(R)} = \{\curlywedge\}$ and domain
+			\begin{equation*}
+				\text{Dom}(R_{(\text{DUP}, (j), \curlywedge)}) = L^*
+			\end{equation*}
+			with new line
+			\begin{equation*}
+				(n, C_j(\bv{l}), D_j(\bv{l}), \text{DUP}, j, \curlywedge)
+			\end{equation*}
+			This rule simply duplicates a previous line.
+			We will primarily use it when we want to show an alias for a formula on one line, but show the actual formula on another.
+			For example, $\implies \lnot P Q$ is aliased by $\lor PQ$.
+			We might start a proof with $\lor PQ$ but then want to show $\implies \lnot P Q$ is the actual (not aliased) formula.
+			We may want to use it to simply move an expression from an earlier line down to the end of the proof just as a visual aid.
+		\end{preformal definition}
+		
+		\begin{preformal theorem}[Principle of Explosion]
+			The following meta proof establishes that if we have derived $\curlywedge$ on any line of a proof with dependencies $D$, then we may derive any formula $P$ on a later line, also with dependencies $D$.
+			\begin{equation*}
+				\begin{array}{c|c|c|c|c|c}
+					\text{line} & \text{formula} & \text{dependencies} & \text{rule} & \text{citations} & \text{parameters}\\ \hline
+					n_1 & \curlywedge & D_{n_1} & \cdots & \cdots & \cdots\\
+					n_2 & \lnot P & \{n_2\} & \text{Assume} & () & \lnot P\\
+					n_3 & \lnot \lnot P & D_{n_1} & \lnot I & (n_1, n_2) & \curlywedge\\
+					n_4 & P & D_{n_1} & \text{DN} & (n_3) & \curlywedge
+				\end{array}
+			\end{equation*}		
+			We can codify this into a rule with index name $\text{POE}$, $n_{\text{POE}}^{(R)} = 1$, and $P_{\text{POE}}^{(R)} = \textbf{CForm}$.
+			\begin{equation*}
+				\text{Dom}(R_{(\text{POE}, (j), C)}) = \{\bv{l} \in L^* \mid C_j(\bv{l}) = \curlywedge\}
+			\end{equation*}
+			with new line
+			\begin{equation*}
+				(n, P, D_j(\bv{l}), \text{POE}, (j), P)
+			\end{equation*}
+			The metaproof above establishes that extension by $R_{\text{POE}}$ is conservative. because if $\Gamma \vdash_{\bv{R}'} C$, we can see that we can use the metaproof pattern above so that $\Gamma \vdash_{\bv{R}} C$. 
+			This is proven formally using structural induction on $\textbf{VProof}'$, but the only non-trivial step is showing that application of the new rule results in a deduction judgement that is valid without that rule.
+		\end{preformal theorem}
+		
+		
+		\begin{preformal theorem}[$\lor E$]
+			We let
+			\begin{equation*}
+				\lor PQ
+			\end{equation*}
+			be an alias for
+			\begin{equation*}
+				\lnot P \implies Q
+			\end{equation*}
+			We define 
+			\begin{equation*}
+				\textbf{PForm}_{\lor} = \{\lor PQ \in \textbf{PForm}\}
+			\end{equation*}
+			and define $\text{Body}_{\lor, L}, \text{Body}_{\lor, R}: \textbf{PForm}_{\lor} \to \textbf{PForm}$ by
+			\begin{align*}
+				\text{Body}_{\lor, L}(\lor PQ) =& P\\
+				\text{Body}_{\lor, R}(\lor PQ) =& Q\\				
+			\end{align*}
+						
+			We now establish a rule $\lor E$
+			
+			\begin{equation*}
+				\begin{array}{c|c|c|c|c|c}
+					\text{line} & \text{formula} & \text{dependencies} & \text{rule} & \text{citations} & \text{parameters}\\ \hline
+					n_1& \implies \lnot P Q& D_{n_1} & \cdots & \cdots & \cdots \\
+					n_2 & \implies PR & D_{n_2} & \cdots & \cdots & \cdots\\
+					n_3 & \implies QR & D_{n_3} & \cdots & \cdots & \cdots\\
+					n_4 & \lnot R & \{n_4\} & \text{Assume} & () & \lnot R\\
+					n_5 & P & \{n_5\} & \text{Assume} & () & P\\
+					n_6 & R & D_{n_2} \cup \{n_5\} & \implies E & (n_2, n_5) & \curlywedge\\
+					n_7 & \curlywedge & D_{n_2} \cup \{n_4, n_5\} & \lnot E & (n_6, n_4) & \curlywedge\\
+					n_8 & \lnot P & D_{n_2} \cup \{n_4\} & \lnot I & (n_5, n_7) & \curlywedge\\
+					n_9 & Q & D_{n_1} \cup D_{n_2} \cup \{n_4\} & \implies E & (n_1, n_8) & \curlywedge\\
+					n_{10} & R & D_{n_1} \cup D_{n_2} \cup D_{n_3} \cup \{n_4\} & \implies E & (n_3, n_9) & \curlywedge\\
+					n_{11} & \curlywedge & D_{n_1} \cup D_{n_2} \cup D_{n_3} \cup \{n_4\} & \lnot E & (n_{10}, n_4) & \curlywedge\\
+					n_{12} & \lnot \lnot R & D_{n_1} \cup D_{n_2} \cup D_{n_3} & \lnot I & (n_4, n_{11}) & \curlywedge\\
+					n_{13} & R & D_{n_1} \cup D_{n_2} \cup D_{n_3} & \text{DN} & (12) & \curlywedge
+				\end{array}
+			\end{equation*}			
+			
+			and introduce the rule $\lor E$ with $n_{\lor E}^{(R)} = 3$, $P_{\lor E}^{(R)} = \{\curlywedge\}$:
+			\begin{align*}
+				\text{Dom}(R_{(\lor E, (i, j, k), \curlywedge)}) = \{&\bv{l} \in L^* \mid \text{Ant}(C_j(\bv{l})) = \text{Body}_{\lor, L}(C_i(\bv{l}))\\ &\text{and } \text{Ant}(C_k(\bv{l})) = \text{Body}_{\lor, R}(C_i(\bv{l}))\\
+				&\text{and } \text{Con}(C_j(\bv{l})) = \text{Con}(C_k(\bv{l}))\}
+			\end{align*}
+			with new line
+			\begin{equation*}
+				(n, \text{Con}(C_j(\bv{l})), D_i(\bv{l}) \cup D_j(\bv{l}) \cup D_k(\bv{l}), \lor E, (i, j, k), \curlywedge)
+			\end{equation*}
+			
+			Extension by this rule is conservative, via this metaproof.
+		\end{preformal theorem}
+		
+		\begin{preformal theorem}[$\lor I$]
+			If we have derived $P$ then we can derive $lor PQ$ or $\lor QP$ for any $Q$.
+			We prove this now.
+			
+			\begin{equation*}
+				\begin{array}{c|c|c|c|c|c}
+					\text{line} & \text{formula} & \text{dependencies} & \text{rule} & \text{citations} & \text{parameters}\\ \hline
+					n_1 & P & D_{n_1} & \cdots & \cdots & \cdots\\
+					n_2 & \lnot P & \{n_2\} & \text{Assume} & () & \lnot P\\
+					n_3 & \curlywedge & D_{n_1} \cup \{n_2\} & \lnot E & (n_1, n_2) & \curlywedge \\
+					n_4 & Q & D_{n_1} \cup \{n_2\} & \text{POE} & (n_3) & Q\\
+					n_5 & \implies \lnot P Q & D_{n_1} & \implies I & (n_1, n_4) & \curlywedge
+				\end{array}
+			\end{equation*}
+			So we introduce the rule $\lor I_L$ with $n_{\lor I_L}^{(R)} = 1$ and $P_{\lor I_L}^{(R)} = \textbf{CForm}$ with
+			\begin{equation*}
+				\text{Dom}(R_{(\lor I_L, (j), C)}) = L^*
+			\end{equation*}
+			and new line
+			\begin{equation*}
+				(n, \lor C_j(\bv{l}) C, D_j(\bv{l}), \lor I_L, (j), C)
+			\end{equation*}
+			
+			And also a rule for right $\lor I_R$:
+			
+			\begin{equation*}
+				\begin{array}{c|c|c|c|c|c}
+					\text{line} & \text{formula} & \text{dependencies} & \text{rule} & \text{citations} & \text{parameters}\\ \hline
+					n_1 & \implies \lnot P Q & D_{n_1} & \cdots & \cdots & \cdots\\
+					n_2 & \lnot Q & \{n_2\} & \text{Assume} & () & \lnot Q\\
+					n_3 & \lnot P & \{n_3\} & \text{Assume} & () & P\\
+					n_4 & Q & D_{n_1} \cup \{n_3\} & \implies E & (n_1, n_3) & \curlywedge\\
+					n_5 & \curlywedge & D_{n_1} \cup \{n_2, n_3\} & \lnot E & (n_4, n_2) & \curlywedge\\
+					n_6 & \lnot \lnot P & D_{n_1} \cup \{n_2\} & \lnot I & (n_3, n_5) & \curlywedge\\
+					n_7 & P & D_{n_1} \cup \{n_2\} & \text{DN} & (n_6) & \curlywedge\\
+					n_8 & \implies \lnot Q P & D_{n_1} & \implies I & (n_2, n_7) & \curlywedge
+				\end{array}
+			\end{equation*}			
+			So we introduce the rule $\lor I_R$ with $n_{\lor I_R}^{(R)} = 1$ and $P_{\lor I_R}^{(R)} = \textbf{CForm}$ with
+			\begin{equation*}
+				\text{Dom}(R_{(\lor I_L, (j), C)}) = L^*
+			\end{equation*}
+			and new line
+			\begin{equation*}
+				(n, \lor C C_j(\bv{l}), D_j(\bv{l}), \lor I_L, (j), C)
+			\end{equation*}
+		\end{preformal theorem}
+	
+		\begin{preformal definition}[$\land E$]
+			We let
+			\begin{equation*}
+				\land PQ
+			\end{equation*}
+			be an alias for
+			\begin{equation*}
+				\lnot \lor \lnot P \lnot Q
+			\end{equation*}
+			and define
+			\begin{equation*}
+				\textbf{PForm}_{\land} = \{\land PQ \in \textbf{PForm}\}
+			\end{equation*}
+			and $\text{Body}_{\land, L}, \text{Body}_{\land, R}: \textbf{PForm}_{\land} \to \textbf{PForm}$
+			\begin{align*}
+				\text{Body}_{\land, L}(\land PQ) =& P\\
+				\text{Body}_{\land, R}(\land PQ) =& Q\\				
+			\end{align*}
+			
+			and establish two $\land E$ rules
+			
+			\begin{equation*}
+				\begin{array}{c|c|c|c|c|c}
+					\text{line} & \text{formula} & \text{dependencies} & \text{rule} & \text{citations} & \text{parameters}\\ \hline			
+					n_1 & \lnot \lor \lnot P \lnot Q & D_{n_1} & \cdots & \cdots & \cdots\\
+					n_2 & \lnot P & \{n_2\} & \text{Assume} & () & \lnot P\\
+					n_3 & \lor \lnot P \lnot Q & \{n_2\} & \lor I_L & (n_2) & \lnot Q\\
+					n_4 & \curlywedge & D_{n_1} \cup \{n_2\} & \lnot E & (n_3, n_1) & \curlywedge\\
+					n_5 & \lnot \lnot P & D_{n_1} & \lnot I & (n_2, n_4) & \curlywedge\\
+					n_6 & P & D_{n_1} & \text{DN} & (n_5) & \curlywedge
+				\end{array}
+			\end{equation*}
+			So we establish a new rule $\land E_L$ with $n_{\land E_L}^{(R)} = 1$ and $P_{\land E_L}^{(R)} = \{\curlywedge\}$
+			\begin{equation*}
+				\text{Dom}(R_{(\land E_L, (j), \curlywedge)}) = \{\bv{l} \in L^* \mid  C_j(\bv{l}) \in \textbf{PForm}_{\land}\}\\
+			\end{equation*}
+			with new line
+			\begin{equation*}
+				(n, \text{Body}_{\land, L}, D_j(\bv{l}), \land E_L, (j), \curlywedge)
+			\end{equation*}
+			
+			\begin{equation*}
+				\begin{array}{c|c|c|c|c|c}
+					\text{line} & \text{formula} & \text{dependencies} & \text{rule} & \text{citations} & \text{parameters}\\ \hline			
+					n_1 & \lnot \lor \lnot P \lnot Q & D_{n_1} & \cdots & \cdots & \cdots\\
+					n_2 & \lnot Q & \{n_2\} & \text{Assume} & () & \lnot Q\\
+					n_3 & \lor \lnot P \lnot Q & \{n_2\} & \lnot I_R & (n_2) & \lnot P\\ 
+					n_4 & \curlywedge & D_{n_1} \cup \{n_2\} & \lnot E & (n_3, n_1) & \curlywedge\\
+					n_5 & \lnot \lnot Q & D_{n_1} & \lnot I & (n_2, n_4) & \curlywedge\\
+					n_6 & Q & D_{n_1} & \text{DN} & (n_5) & \curlywedge
+				\end{array}
+			\end{equation*}			
+			
+			So we establish a new rule $\land E_R$ with $n_{\land E_R}^{(R)} = 1$ and $P_{\land E_R}^{(R)} = \{\curlywedge\}$
+			\begin{equation*}
+				\text{Dom}(R_{(\land E_R, (j), \curlywedge)}) = \{\bv{l} \in L^* \mid  C_j(\bv{l}) \in \textbf{PForm}_{\land}\}\\
+			\end{equation*}
+			with new line
+			\begin{equation*}
+				(n, \text{Body}_{\land, R}, D_j(\bv{l}), \land E_R, (j), \curlywedge)
+			\end{equation*}			
+			
+		\end{preformal definition}
+		
+		\begin{preformal definition}[$\land I$]
+			\begin{equation*}
+				\begin{array}{c|c|c|c|c|c}
+					\text{line} & \text{formula} & \text{dependencies} & \text{rule} & \text{citations} & \text{parameters}\\ \hline		
+					n_1 & P & D_{n_1} & \cdots & \cdots & \cdots\\
+					n_2 & Q & D_{n_2} & \cdots & \cdots & \cdots\\
+					n_3 & \lor \lnot P \lnot Q & \{n_3\} & \text{Assume} & () & \lor \lnot P \lnot Q\\
+					n_4 & \lnot P & \{n_4\} & \text{Assume} & () & \lnot P\\
+					n_5 & \curlywedge & D_{n_1} \cup \{n_4\} & \lnot E & (n_1, n_4) & \curlywedge\\
+					n_6 & \implies \lnot P \curlywedge &  D_{n_1} & \implies I & (n_4, n_5) & \curlywedge\\
+					n_7 & \lnot Q & \{n_7\} & \text{Assume} & () & \lnot Q\\
+					n_8 & \curlywedge & D_{n_2} \cup \{n_7\} & \lnot E & (n_2, n_7) & \curlywedge\\
+					n_9 & \implies \lnot Q \curlywedge & D_{n_2} & \implies I & (n_7, n_8) & \curlywedge\\
+					n_{10} & \curlywedge & D_{n_1} \cup D_{n_2} \cup \{n_3\} & \lor E & (n_3, n_6, n_9) & \curlywedge\\
+					n_{11} & \lnot \lor \lnot P \lnot Q & D_{n_1} \cup D_{n_2} & \lnot I & (n_3, n_{10}) & \curlywedge
+				\end{array}
+			\end{equation*}				
+			
+			So we establish a new rule $\land I$ with $n_{\land I}^{(R)} = 2$ and $P_{\land I}^{(R)} = \{\curlywedge\}$ with
+			\begin{equation*}
+				\text{Dom}(R_{(\land I, (j, k), \curlywedge)}) = L^*
+			\end{equation*}
+			with new line
+			\begin{equation*}
+				(n, \land C_j(\bv{l})C_k(\bv{l}), D_j(\bv{l}) \cup D_k(\bv{l}), \land I, (j, k), \curlywedge)
+			\end{equation*}
+		\end{preformal definition}
+			
+		\begin{preformal theorem}[$\exists I$]
+			We let
+			\begin{equation*}
+				\exists x P
+			\end{equation*}
+			be an alias for
+			\begin{equation*}
+				\lnot \forall x \lnot P
+			\end{equation*}
+			
+			Suppose $t\in \textbf{CTerm}$ and $t \in \text{Terms}(P)$ and $x = \text{Fresh}(\text{Vars}(P))$.
+			\begin{equation*}
+				\begin{array}{c|c|c|c|c|c}
+					\text{line} & \text{formula} & \text{dependencies} & \text{rule} & \text{citations} & \text{parameters}\\ \hline
+					n_1 & P & D_{n_1} & \cdots & \cdots & \cdots\\
+					n_2 & \forall x \lnot \text{Gen}_{t, x}(P) & \{n_2\} & \text{Assume} & () & \ \forall x \lnot \text{Gen}_{t, x}(P)\\
+					n_3 & \lnot \text{Rep}_{x, t} \text{Gen}_{t, x}(P) & \{n_2\} & \forall E & (n_2) & \curlywedge\\
+					n_4 & \lnot P & \{n_2\} & \text{DUP}& (n_3) & \curlywedge\\		
+					n_5 & \curlywedge& D_{n_1} \cup \{n_2\} & \lnot E & (n_1, n_4) & \curlywedge\\
+					n_6 & \lnot \forall x \lnot \text{Gen}_{t, x}(P) & D_{n_1} & \lnot E & (n_2, n_5) & \curlywedge\\
+					n_7 & \exists x \text{Gen}_{t, x}P & D_{n_1} & \text{DUP} & (n_6) & \curlywedge				
+				\end{array}
+			\end{equation*}
+			We had three provisos on this proof.
+			Let's explore why the proof would break down if we relax each proviso.
+			First, if $t\not \in \textbf{CTerm}$ then $\text{Gen}_{t, x}(P)$ would not be defined.
+			If we tried to define $\text{Gen}_{t, x}(P)$ to allow generalization of a term which includes free variables then it would be possible for the generalization operation to take a closed formula to an open formula.
+			Our proof structure requires that the formula on each line is closed.
+			What if $t \not \in \text{Terms}(P)$?
+			This means that $\text{Gen}_{t, x}(P) = P$.
+			But we know that $x\not \in \text{Free}(P)$ because $P$ is closed.
+			But then if we look at $\forall x \lnot \text{Gen}_{t, x}(P) = \forall x \lnot P$ on line $n_2$, we see that this is not a strict formula because it exhibits redundant quantification over the variable $x$ (that is $x \not \in \text{Free}(\lnot P)$).
+			We don't strictly require that $x = \text{Fresh}(\text{Var}(P))$. 
+			What we require an $x \not \in \text{Var}(P)$.
+			The $\text{Fresh}$ function is just a convenient way to realize such a variable.
+			What if we had $x\in \text{Var}(P)$? 
+			We know that $P$ is closed, so we must have $x\in \text{Bnd}(P)$.
+			But then when we take $\forall x \lnot \text{Gen}_{t, x}(P)$ that means we would have a formula that exhibits repeated quantification of $x$.
+			So we see that the main purpose of these provisos is to ensure that the formulas we're working with remain within $\textbf{CForm}$.
+			
+			With this proof we can introduce the rule $\exists I$ with $n_{\exists I}^{(R)} = 1$ and $P_{\exists I}^{(R)} = \textbf{CForm}$ with
+			\begin{equation*}
+				\text{Dom}(R_{(\exists I, (j), Q)}) = \{\}			
+			\end{equation*}
+			
+			
+		\end{preformal theorem}
 		
 \end{document}
