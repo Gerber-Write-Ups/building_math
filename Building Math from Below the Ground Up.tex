@@ -484,11 +484,22 @@
 				using parentheses as brackets.
 				
 				Typically $I = [n]$ for some $n \in \N$ in which case we call the tuple an $n$-tuple. 
-				If $\bv{t}$ is a $[0]$-tuple then $\bv{t} = () = \emptyset$, the empty function with domain $\emptyset$.
+				
+				If $I = [0] = \emptyset$ and $\bv{t}$ is an $I$ tuple then $\bv{t}$ is a functional relation with $\text{Dom}(\bv{t}) = \emptyset$.
+				The only relation with domain equal to the $\emptyset$ is $\emptyset$.
+				Suppose $R$ is a relation and $\text{Dom}(R) = \emptyset$.
+				Then consider $\braket{x, y} \in R$.
+				This means $x \in \emptyset$, but there is no object contained in the empty set so therefor there is no ordered pair contained in $R$.
+				So this means there is exactly one $I=[0]=\emptyset$ tuple.
+				We denote this tuple by
+				\begin{equation}
+					\varnothing = () = \emptyset.
+				\end{equation}
+				$\varnothing$ is simply a different font for $\emptyset$, but we will use $\varnothing$ specifically to refer to the unique 0-tuple noting that, as sets, $\varnothing$ and $\emptyset$ happen to be equal because of how we have defined tuple in terms of sets.
 				
 				If we want to emphasize that the elements within the tuple are sets we may call an $I$-tuple an $I$-indexed family.
 			\end{preformal definition}
-			
+
 			\begin{preformal definition}[Set Operations on Tuples]
 				Suppose $\bv{S} = (S_i)_{i\in I}$.
 				We define
@@ -556,7 +567,12 @@
 				\end{equation*}
 				or if $I=[n]$ then
 				\begin{equation*}
-					\bigtimes_{i=1}^n S_i = \bigtimes_{i\in I} S_i = \bigtimes \bv{S}
+					S_1 \times \ldots \times S_n = \bigtimes_{i=1}^n S_i = \bigtimes_{i\in I} S_i = \bigtimes \bv{S}
+				\end{equation*}
+				
+				If $\bv{s} \in S_1 \times \ldots \times S_n$ then we may write
+				\begin{equation*}
+					\bv{s} = (s_1, \ldots, s_n) = s_1\times \ldots \times s_n \in S_1 \times \ldots \times S_n.
 				\end{equation*}
 				
 				If $I=[n]$ and $S_i = S$ for each $i\in [n]$ then we let
@@ -567,6 +583,27 @@
 				Note that there is a natural identification between $S$ and $S^1$ given by $s \mapsto (s)$.
 				Sometimes it will be convenient for us to abuse notation and identify with $S$ with $S^1$ and $s$ with $(s)$.
 				Note that $S^0 = \{()\}$.
+			\end{preformal definition}
+	
+			\begin{preformal definition}[Function Whose Domain is a Cartesian Product]
+				Suppose $\bv{S}$ is an $n$-tuple of sets, suppose $f: \bv{S} \to T$, and suppose 
+				\begin{equation*}
+					\bv{s} = (s_1, \ldots, s_n).
+				\end{equation*}
+				We then write
+				\begin{equation*}
+					f(s_1, \ldots, s_n) = f((s_1, \ldots, s_n))
+				\end{equation*}
+				noting that, on the left, we have elided one otherwise necessary pair of parentheses for better legibility.
+			\end{preformal definition}
+	
+			\begin{preformal definition}[Function Whose Range is a Cartesian Product]
+				Suppose $\bv{S}$ is an $n$-tuple of sets and suppose $f:T \to \bv{S}$.
+				If $t\in T$ and $f(t) = \bv{s} \in \bv{S}$.
+				Then we use the notations
+				\begin{equation*}
+					\bv{s}_i = (f(t))(i) = f(t)(i) = (f(t))_i = f_i(t)
+				\end{equation*}
 			\end{preformal definition}
 	
 			\begin{preformal definition}[Bijection]
@@ -585,7 +622,7 @@
 				\end{align*}
 				$\text{Len}$ is total on $S^*$ and functional because for each $\bv{s} \in S^*$ there is exactly one $n\in \N$ such that $\bv{s}: [n] \to S$.
 				We may also denote $\text{Len}(\bv{s}) = \norm{\bv{s}}$
-				We can see that $\bv{s}:\norm{\bv{s}} \to S$.
+				We can see that $\bv{s}:[\norm{\bv{s}}] \to S$.
 				
 				We will sometimes have use for
 				\begin{equation*}
@@ -777,6 +814,23 @@
 			But by the first freely inductively generated condition we know that $f_i$ is injective so that there is a unique $\bv{n} \in \text{Dom}(f_i) \subset N^{\nu_i}$ such that $n = f_i(\bv{n})$ and by third freely inductively generated condition we know that there is no other $j\in I$ with $j\neq i$ such that $n\in \text{Ran}(f_j)$.
 		\end{preformal theorem}
 	
+		The main reason we care most about inductively generated sets which exhibit unique readability is because these are the sets on which we can define functions using recursion.
+		A recursive function define on an inductively generated set $N$ which exhibits unique readability is a function $h: N \to S$ where $h|_B$ is specified explicitly via a function $h_B: B \to S$ and a rule is specified which allows us to calculate, for each $i\in I$ and $\bv{n} \in \text{Dom}(f_i) \subset N^{\nu_i}$, the value of $h(f_i(\bv{n}))$ given known values $h(n_j)$ for each $j\in [\nu_i]$.
+		For example, the factorial function $\text{Factorial}: \N\to \N$ is defined by
+		\begin{align*}
+			\text{Factorial}(0) =& 1\\
+			\text{Factorial}(n+1) =& (n+1) \times \text{Factorial}(n).
+		\end{align*}
+		Here the base set is the set containing 0 and the only induction function is that \qq{add one} function.
+		We have an intuitive sense that this function is well-defined, however, to prove that such functions can be defined, in general, on structurally inductive sets requires the full power of the recursion theorem below.
+		
+		We can see why unique readability is necessary for recursion. Suppose, for example, that $f_i(\bv{n}) = b \in B$. 
+		Then we have two rules for calculating $h(f_i(\bv{n}))$.
+		On the one hand, we have a rule for computing it from $h(n_j)$ for each $j\in [\nu_i]$, but on the other hand, we can calculate it directly via $h_B(f_i(\bv{n}))$.
+		There is no particular reason that these two computation should agree.
+		The same issue arises if $f_i(\bv{n}) = f_{i'}(\bv{n}')$ for $i'\neq i$ and $\bv{n}' \in \text{Dom}(f_{i'}) \subset N^{\nu_{i'}}$.
+		However, this complication is exactly what is avoided by unique readability.
+	
 		\begin{preformal theorem}[The Structural Recursion Theorem]
 			Suppose $\bv{f}=(f_i)_{i\in I}$ is a $\bv{\nu}$-ary $N$ function family and $N$ is $(B, \bv{f})$ inductively generated and exhibits unique readability. 
 			Suppose that there is a set $S$ and a function $h_B: B \to S$.
@@ -879,7 +933,7 @@
 			For $h_B$ we define $h_B(b) = (b, \emptyset)$ for each $b\in B$.
 			Now consider $i \in I$ and the corresponding $f_i$ and $h_{f_i}$.
 			We must define $h_{f_i}(\bv{s})$ for $\bv{s} \in S^{\nu_i}$.
-			Choose $\bv{n} \in N^{\nu_i}$ such that $n_i = \pi_1(s_i)$ and let $P_i = \pi_2(s_i)$.
+			Choose $\bv{n} \in N^{\nu_i}$ such that $n_i = (s_i)_1$ and let $P_i = (s_i)_2$.
 			We then define $h_f$ by
 			\begin{equation*}
 				h_{f_i}(\bv{s}) = \left(f_i(\bv{n}), \bigcup_{i=1}^{n_f} \left(P_i \cup \{n_i\}\right)\right)
@@ -892,28 +946,32 @@
 				\item{$h(f(\bv{n})) = h_f(h^{(n_f)}(\bv{n})) $.}
 			\end{itemize}
 			
-			We will prove, by induction, that $\pi_1(h(n)) = n$.
-			If $n\in b$ then $\pi_1(h(n)) = \pi_1((b, \emptyset)) = b$ as needed.
-			Now consider $i\in I$, and $\bv{n}\in \text{Dom}(f_i) \subset N^{\nu_i}$ and assume that for each $j\in [\nu_i]$ that $\pi_1(h(n_j)) = n_j$.
+			We will prove, by induction, that $(h(n))_1 = n$.
+			If $n\in b$ then $(h(n))_1 = (b, \emptyset)_1 = b$ as needed.
+			Now consider $i\in I$, and $\bv{n}\in \text{Dom}(f_i) \subset N^{\nu_i}$ and assume that for each $j\in [\nu_i]$ that $(h(n_j))_1 = n_j$.
 			Let 
 			\begin{equation*}
-				s_j = h(n_j) = (\pi_1(h(n_j)), \pi_2(h(n_j))) = (n_i, \pi_2(h(n_j))).
+				s_j = h(n_j) = ((h(n_j))_1, (h(n_j))_2) = (n_j, (h(n_j))_2).
 			\end{equation*}
-			where we've used the induction hypothesis that $\pi_1(h(n_i)) = n_i$.
+			where we've used the induction hypothesis that $(h(n_j))_1 = n_j$.
 			Note that $\bv{s} = h^{(\nu_i)}(\bv{n})$
 			But then
 			\begin{equation*}
-				h(f_i(\bv{n})) = h_{f_i}(h^{(\nu_i)}(\bv{n})) = h_{f_i}(\bv{s}) = \left(f(\bv{n}), \bigcup_{j\in [\nu_i]} (\pi_2(h(n_j)) \cup \{n_j\})\right).
+				h(f_i(\bv{n})) = h_{f_i}(h^{(\nu_i)}(\bv{n})) = h_{f_i}(\bv{s}) = \left(f(\bv{n}), \bigcup_{j\in [\nu_i]} ((h(n_j))_2 \cup \{n_j\})\right).
 			\end{equation*}
-			So we can see that $\pi_1(h(f_i(\bv{n}))) = f(\bv{n})$.
-			This concludes the proof by induction that $\pi_1(h(n)) = n$.
+			So we can see that $(h(f_i(\bv{n})))_1 = f(\bv{n})$.
+			This concludes the proof by induction that $(h(n))_1 = n$.
 			
-			But, consider now $\text{Pred} = \pi_2 \circ h$.
+			But, consider now $\text{Pred}: N \to \mc{P}(N)$ defined by
+			\begin{align*}
+				\text{Pred}: N \to& \mc{P}(N)\\
+				n \mapsto& (h(n))_2
+			\end{align*}
 			We can see from the equation above that for each $i\in I$ and $\bv{n} \in \text{Dom}(f_i) \subset N^{\nu_i}$ that 
 			\begin{align*}
 				\text{Pred}(f_i(\bv{n})) = \bigcup_{j\in [\nu_i]} (\text{Pred}(n_j) \cup \{n_j\})
 			\end{align*}
-			and of course we have that $\text{Pred}(b) = \pi_2(h(b)) = \pi_2((b, \emptyset)) = \emptyset$.
+			and of course we have that $\text{Pred}(b) = (h(b))_2 = (b, \emptyset)_2 = \emptyset$.
 		\end{preformal definition}
 		
 		The induction principle allows us to prove a principle $\phi(n)$ for all $n\in N$ by 
@@ -1101,9 +1159,9 @@
 		Suppose $\ast: A\times A \to A$ is a binary operation.
 		We seek a function $\text{Par}: A^* \to \mc{P}(A)$ which satisfies
 		\begin{itemize}
-			\item{$\text{Par}(()) = \emptyset$}
-			\item{$\text{Par}((a)) = \{a\}$}
-			\item{$\text{Par}(\bv{a}) = \bigcup_{k=1}^{n-1} \{x \ast y \in A: x\in \text{Par}(\bv{a}_{1:k}) \text{ and } y \in \text{Par}(\bv{a}_{k+1:n})\}$}
+			\item{$\text{Par}(\varnothing) = \emptyset$}
+			\item{$\text{Par}(a) = \{a\}$ where $\text{Par}(a)$ is notating $\text{Par}((a))$ with $a\in A$ and $(a) \in A^1$.}
+			\item{$\text{Par}(\bv{a}) = \bigcup_{k=1}^{n-1} \{x \ast y \in A: x\in \text{Par}(\bv{a}_{1:k}) \text{ and } y \in \text{Par}(\bv{a}_{k+1:n})\}$ for $\bv{a} \in A^n$ with $n>1$}
 		\end{itemize}		
 		Since the definition of $\text{Par}$ depends on itself, we see that $\text{Par}$ must be defined using the recursion.
 		
@@ -1117,7 +1175,7 @@
 			\end{equation*}
 			The idea is that $f$ will be the parenthesization function specialised to domain $A^n$ and $n$ is carried along as a tag needed for technical reasons during th recursion construction.
 			
-			Let $h_B(1) = (1, f_1)$ where $f_1((a)) = \{a\}$.
+			Let $h_B(1) = (1, f_1)$ where $f_1(a) = \{a\}$.
 			Now consider $h_{+_1}: D_{+_1} \to S$.
 			In this case
 			\begin{equation*}
@@ -1312,10 +1370,10 @@
 			
 			So, for example, if $a\in A$, $\bv{a} \in A^*$ and $\bv{\alpha}\in (A^*)^*$, then
 			\begin{equation*}
-				\text{Cat}((a, \bv{a}, \bv{\alpha})) = \circledast(\circledcirc((((a)), (\bv{a}), \bv{\alpha}))) = a \bv{a}\bv{\alpha} 
+				\text{Cat}(a, \bv{a}, \bv{\alpha}) = \circledast(\circledcirc(((a)), (\bv{a}), \bv{\alpha})) = a \bv{a}\bv{\alpha} 
 			\end{equation*} 
 			We use juxtaposiiton as a shorthand for the overloaded $\text{Cat}$ operation.
-			Note that when an element $\bv{\alpha} \in (A^*)^*$ stands alone in an expression it may be ambiguous whether we are referring to e.g. $\bv{\alpha}\in (A^*)^*$ or $\text{Cat}((\bv{\alpha})) \in A^*$.
+			Note that when an element $\bv{\alpha} \in (A^*)^*$ stands alone in an expression it may be ambiguous whether we are referring to e.g. $\bv{\alpha}\in (A^*)^*$ or $\text{Cat}(\bv{\alpha}) \in A^*$.
 			Likewise for an element $a\in A$.
 			In such ambiguous cases we will explicitly use the $\text{Cat}$ notation to disambiguate.
 			
@@ -1425,7 +1483,7 @@
 			
 			For example, suppose $\bv{\sigma} = (\bv{s}_0, \bv{s}_1, \bv{s}_2)$ 
 			\begin{equation*}
-				g_4^{(3)}((\bv{s}_0, \bv{s}_1, \bv{s}_2)) = f_4^{(3)}\bv{s}_0\bv{s}_1\bv{s}_2
+				g_4^{(3)}(\bv{s}_0, \bv{s}_1, \bv{s}_2) = f_4^{(3)}\bv{s}_0\bv{s}_1\bv{s}_2
 			\end{equation*}
 			
 			We then define $\textbf{Term}$ to be the $(U, B, \bv{g})$ inductive closure
@@ -1442,113 +1500,107 @@
 		\end{itemize}
 		
 		We want to prove that $\textbf{Term}$ exhibits unique readability which will mean that $t\in \textbf{Term}$ must take exactly one of the forms above.
+		Proving unique readability of $\textbf{Term}$ will allow us to define recursive function on $\textbf{Term}$ which we will require for our syntactic analysis.
 		To do this we require a couple technical results about the string structure of terms.
 		
 		\begin{preformal definition}[List Suffix]
 			If $l$ is a list then for any $1\le i \le \norm{l}$, the list $l_{i:\norm{l}}$ is a suffix for $l$
 		\end{preformal definition}
 		
-		\begin{preformal theorem}[The Suffix of a Term is Always Equal to the concatenation of a List of Terms]
-			In this theorem we use $\cdot$ to be the concatenation defined on $\Sigma^*$ and $\ast$ to be concatenation defined on $(\Sigma^*)^*$. 
-			Note that binary $\cdot: \Sigma^* \times \Sigma^* \to \Sigma^*$ but generalized $\cdot: (\Sigma^*)^* \to \Sigma*$ while binary $\ast: (\Sigma^*)^* \times (\Sigma^*)^* \to (\Sigma^*)^*$.
-			
-			If $t \in \textbf{Term}$ then if $t'$ is a suffix of $t$ then there is some $n \in \N^+$ and $\bv{t} \in \textbf{Term}^n$ such that $t' = \cdot(\bv{t})$.
+		\begin{preformal theorem}[The Suffix of a Term is Always Equal to the concatenation of a List of Terms]			
+			If $t \in \textbf{Term}$ then if $t'$ is a suffix of $t$ then there is some $\nu\in \N^+$ and $\bv{t} \in \textbf{Term}^\nu$ such that $t' = \text{Cat}(\bv{t})$.
 			
 			We prove this by induction on the string length.
-			We prove that for $\ell \in \N^+$, if $t\in \textbf{Term}$ and $\norm{t} = \ell$ then if $t'$ is a suffix of $t$ then there exists $n\in \N^+$ and $\bv{t} \in \textbf{Term}^n$ such that $t' = \cdot(\bv{t})$.
+			We prove that for $\ell \in \N^+$, if $t\in \textbf{Term}$ and $\norm{t} = \ell$ then if $t'$ is a suffix of $t$ then there exists $\nu\in \N^+$ and $\bv{t} \in \textbf{Term}^{\nu}$ such that $t' = \text{Cat}(\bv{t})$.
 			
-			If $\ell=1$ then $t$ is the only suffix of $t$ and it is already a term so we take $\bv{t} = (t) \in \textbf{Term}^1$.
+			If $\ell=1$ then $t$ is the only suffix of $t$ and it is already a term so we take $\bv{t} = (t) \in \textbf{Term}^1$ and $t = \text{Cat}(\bv{t}) = \text{Cat}(t)$.
 			
 			Now suppose the hypothesis holds for all $\ell' < \ell$ and consider
 			\begin{equation*}
-				t = f_n^{(\nu)} \bv{t} = f_n^{(\nu)} \cdot (\cdot(\bv{t}))
+				t = f_n^{(\nu)} \bv{t} = \text{Cat}(f_n^{(\nu)}, \bv{t})
 			\end{equation*}
 			with $\bv{t} \in \textbf{Term}^{\nu}$.
 			
 			Consider a suffix $t' = t_{i:\norm{t}}$.
-			If $i=1$ then $t'=t$ which is a term.
-			Suppose $i>1$. 
+			If $i=1$ then $t' = t = \text{Cat}(t)$ as required.
+			Now suppose $i > 1$.
 			Then there is some $1 \le j \le \nu$ such that
 			\begin{equation*}
-				t' = (\cdot(\bv{t}))_{i-1:\ell} = (t_j)_{i':\norm{t_j}} \cdot(\cdot(\bv{t}_{j+1:\nu}))
+				t' = \text{Cat}(\bv{t})_{i-1:\ell} = \text{Cat}((t_j)_{i':\norm{t_j}}, \bv{t}_{j+1:\nu})
 			\end{equation*}
-			with $1 \le i' \le \norm{t_j}$.
-			The idea is that terms in slots $k<j$ have been eliminated, term $k=j$ has be sliced somewhere between its start and finish, and terms $k>j$ remain unmodified.
+			where $i-1 = \norm{\text{Cat}(\bv{t}_{1:j-1})} + i'$ so $1 \le i' = i - 1 - \norm{\text{Cat}(\bv{t}_{1:j-1})} \le \norm{t_j}$.
+			We note that tuple slice $(t_j)_{i':\norm{t_j}} \in \Sigma^*$ and tuple slice $\bv{t}_{j+1:\nu}\in (\Sigma^*)^*$.
+			In other words, slicing $\bv{t}$ leaves us with a suffix, within $(\Sigma^*)^*$ of the form $\bv{t}_{j+1:\nu}$ succeeding $(t_j)_{i':\norm{t_j}}$, a suffix of the term $t_j$.
+			Terms $\bv{t}_{1:j-1}$ have been removed by the slice.
 			
-			If $i'=1$ then we can see that
+			But consider $(t_j)_{i':\norm{t_j}}$. 
+			This is the suffix of a term, so this means that it is equal to $\text{Cat}(\bv{t}')$ for some $\bv{t'} \in \textbf{Term}^{\nu'}$ for some $\nu' \in \N^+$.
+			But, this means that
 			\begin{equation*}
-				t' = \cdot\left(\bv{t}_{j:\nu}\right)
+				t' = \text{Cat}(\bv{t}', \bv{t}_{j+1:\nu}) = \text{Cat}(\bv{t}'')
 			\end{equation*}
-			as needed.
-			If $i'>1$ then, because $\norm{(t_j)_{i': \norm{t_j}}} < \ell$, we know there is a $\bv{t}' \in \textbf{Term}^{\nu'}$ such that $(t_j)_{i':\norm{t_j}} = \cdot(\bv{t}')$.
-			But then we can see
-			\begin{equation*}
-				t' = \cdot(\bv{t}') \cdot (\cdot(\bv{t}_{j+1:\nu})) = \cdot (\bv{t}' \ast \bv{t}_{j+1:\nu})
-			\end{equation*}
-			with $\bv{t}' \ast \bv{t}_{j+1:\nu} \in \textbf{Term}^{\nu - j + \nu'}$.
+			with $\bv{t}'' = \bv{t}' \circ \bv{t}_{j+1:\nu}$, recalling that $\circ: (\Sigma^*)^* \times (\Sigma^*)^* \to (\Sigma^*)^*$ is binary concatenation on $(\Sigma^*)^*\supset \textbf{Term}^*$.
+			
+			This concludes our proof that if $t'$ is a suffix of $t$ then there is some $\nu\in N^+$ and $\bv{t} \in \textbf{Term}^{\nu}$ such that $t' = \text{Cat}(\bv{t})$.
 		\end{preformal theorem}
 		
-		\begin{preformal theorem}[Equality of a a Tuple of Terms as Strings Implies Equality as a Tuple]
-			Suppose $\bv{t} \in \textbf{Term}^{\nu}$, $\bv{t}'\in \textbf{Term}^{\nu'}$ and $\cdot(\bv{t}') = \cdot(\bv{t})$. 
-			Then $\nu' = \nu$ and $\bv{t}' = \bv{t}$ as tuples, that is $t_i = t'_i$ for each $i \in [\nu]$.
-			
-			We proceed by induction on $\ell^+$, the length of the string.
-			Our induction statement is consider $\ell \in \N^+$.
-			Suppose $\bv{t} \in \textbf{Term}^{\nu}$, $\bv{t}' \in \textbf{Term}^{\nu'}$ and $\cdot(\bv{t}) = \cdot(\bv{t}')$ and $\norm{\cdot(\bv{t})} = \norm{\cdot(\bv{t}')} = \ell$.
-			Then $\bv{t} = \bv{t}'$ as tuples.
-			
-			if $\ell=1$ then $\cdot (\bv{t}) = \cdot (\bv{t}') = t$ so $\bv{t} = \bv{t}' = (t)$.
-			
-			Now suppose the hypothesis holds for $\ell' < \ell$ and consider $\bv{t} \in \textbf{Term}^{\nu}$ and $\bv{t}' \in \textbf{Term}^{\nu'}$.
-			We can write
-			\begin{align*}
-				\cdot(\bv{t}) = t_1 \cdot (\cdot(\bv{t}_{2:\nu})) = t'_1 \cdot (\cdot(\bv{t}'_{2:\nu})) = \cdot(\bv{t}')
-			\end{align*}
-			with length $\ell$.
-			But consider $t_1$ and $t'_1$.
-			Suppose $\norm{t'_1} > \norm{t_1}$.
-			Then we can write $t'_1 = t_1 \cdot (\cdot(\bv{t}''))$ for some $\bv{t}'' \in \textbf{Term}^{\nu''}$ since $\cdot(\bv{t}'')$ is a suffix of $t'_1$.
-			But then 
+		\begin{preformal theorem}[Equality of the Concatenation of a Tuple of Terms Implies Equality of the Tuples]
+			Suppose $\bv{t} \in \textbf{Term}^{\nu}$ and $\bv{t}' \in \textbf{Term}^{\nu'}$ and suppose
 			\begin{equation*}
-				t'_1 \cdot (\cdot(\bv{t}'_{2:\nu})) = \cdot(t_1, \bv{t}'', \bv{t}'_{2:\nu}) = \cdot(t_1, \bv{t}_{2:\nu})
+				\text{Cat}(\bv{t}) = \text{Cat}(\bv{t}').
 			\end{equation*}
-			But this means
+			We will prove that under these conditions $\nu'=\nu$ and $\bv{t}' = \bv{t}$.
+			
+			We proceed by (strong) induction on the length of the string.
+			Our induction statement is the following.
+			Consider $\ell\in \N^+$ and suppose $\norm{\text{Cat}(\bv{t})} = \ell$ with $\bv{t} \in \textbf{Term}^{\nu}$. 
+			Suppose also that $\bv{t}' \in \textbf{Term}^{\nu'}$ and $\text{Cat}(\bv{t}') = \text{Cat}(\bv{t})$.
+			Then $\nu' = \nu$ and $\bv{t}' = \bv{t}$.
+			
+			If $\norm{\text{Cat}(\bv{t})} = 1$ then $\bv{t}$ must contain a single term $t$, and this term must be 0-ary so that $\bv{t} = (f_n^{(0)})$ for some $n$.
+			But if $\text{Cat}(\bv{t}') = f_n^{(0)}$ then $\bv{t}' = (f_n^{(0)}) = \bv{t}$.
+			
+			Now suppose $\norm{\text{Cat}(\bv{t})} = \ell$ and the induction hypothesis holds for any $\bv{s}$ with $\norm{\text{Cat}(\bv{s})} < \ell$.
+			Consider
 			\begin{equation*}
-				\cdot(\bv{t}_{2:\nu}) = \cdot(\bv{t}'', \bv{t}'_{2:\nu})
+				\text{Cat}(\bv{t}) = \text{Cat}(t_1, \bv{t}_{2:\nu}) = \text{Cat}(t'_1, \bv{t}'_{2:\nu'}) = \text{Cat}(\bv{t}').
 			\end{equation*}
-			But this contradicts the induction hypothesis because the length of this string is $<\ell$ but $\bv{t}_{2:\nu} \in \textbf{Term}^{\nu-1}$ but $\bv{t}'' \cdot \bv{t}'_{2:\nu} \in \textbf{Term}^{\nu-1 + \nu''}$.
-			So, by contradiction, $t_1$ and $t_1'$ must have the same length, but this means they are equal as strings.
-			But this then means that
+			Now consider $t_1$ and $t'_1$.
+			Suppose, without loss of generality, that $\norm{t'_1} \ge \norm{t_1}$. 
+			Then
 			\begin{equation*}
-				\cdot(\bv{t}_{2:\nu}) = \cdot(\bv{t}'_{2:\nu})
+				t'_1 = \text{Cat}(t'_1) = \text{Cat}(t_1, (t'_1)_{\norm{t_1}+1:\norm{t'_1}}) = \text{Cat}(t_1, \bv{t}'')
 			\end{equation*}
-			are equal which means $\bv{t}'_{2:\nu} = \bv{t}_{2:\nu}$ as tuples.
-			Sinces $t'_1 = t_1$, this meanse $\bv{t}' = \bv{t}$ as tuples.
+			noting that $(t'_1)_{\norm{t_1}+1:\norm{t'_1}} = \text{Cat}(\bv{t}'')$ with $\bv{t}'' \in \textbf{Term}^{\nu''}$ for some $\nu'' \in \N^+$.
+			This follows because $(t'_1)_{\norm{t_1}+1:\norm{t'_1}}$ is a suffix of $t'_1$ and applyting the previous theorem.
+			But, $\norm{t'_1} < \ell$, so this means the induction hypothesis applies so since $\text{Cat}(t'_1) = \text{Cat}(t_1, \bv{t}'')$ we must have $(t'_1) = (t_1) \circ \bv{t}''$ but $(t'_1)$ only has length 1 within $(\Sigma^*)^*$ so $\bv{t}''$ must have length 0 and we must have $(t'_1) = (t_1)$ which means $t'_1 = t_1$.
+			But, it then follows that
+			\begin{equation*}
+				\text{Cat}(\bv{t}_{2:\nu}) = \text{Cat}(\bv{t}'_{2:\nu'})
+			\end{equation*}
+			from which we conclude, again, by the induction hypothesis, that $\bv{t}_{2:\nu} = \bv{t}'_{2:\nu'}$ so that $\nu' = \nu$ and since $t'_1 = t_1$, we have overall that $\bv{t}' = \bv{t}$ as required.			
 		\end{preformal theorem}
 		
 		\begin{preformal theorem}[$\textbf{Term}$ Exhibits Unique Readability]
 			We now prove that $\textbf{Term}$ exhibits unique readability by demonstrating that is is freely inductively generated.
 			
 			For each $g_n^{\nu}$ the first symbol in the output is $f_n^{(\nu)}$.
-			This means the range of any two $g_n^{|nu}$ and $g_{n'}^{(\nu')}$ are disjoint because their outputs start with unequal function symbols.
-			The ranges are also disjoint from $B = \textbf{Var} \cup \textbf{Const}$ because none of these strings can begin with a function symbol.
+			This means the range of any two $g_n^{\nu}$ and $g_{n'}^{(\nu')}$ are disjoint because their outputs start with unequal function symbols.
+			The ranges are also disjoint from $B = \textbf{Var} \cup \textbf{Const}$ because no $b\in B$ begins with a function symbol.
 			
-			Now we must show that each $g_n^{(\nu)}$ is injective.
-			For this we must show that if
+			Now we must show each $g_n^{(\nu)}$ is injective.
+			Suppose
 			\begin{equation*}
-				f_n^{(\nu)}\bv{t} = f_n^{(\nu)}\bv{t}'
+				g_n^{(\nu)}(\bv{t}) = f_n^{(\nu)}\bv{t} = f_n^{(\nu')} \bv{t}'= g_n^{(\nu')}(\bv{t}')
 			\end{equation*}
-			with $\bv{t}, \bv{t}' \in \textbf{Term}^{\nu}$ then $\bv{t} = \bv{t}'$ with equality regarded in $\textbf{Term}^{\nu}$.
-			But we can see that $\cdot(\bv{t}') = \cdot(\bv{t})$.
-			This means, by the previous theorem, that $\bv{t}' = \bv{t}$ regarded as tuples.
-			
-			Therefore $\textbf{Term}$ is freely inductively generated and, therefore, exhibits unique readability.
+			for $\bv{t}, \bv{t}' \in \textbf{Term}^{\nu}$.
+			But, this means $\text{Cat}(\bv{t}') = \text{Cat}(\bv{t})$ which implies, by the previous theorem, that $\bv{t} = \bv{t}'$ which proves that $g_n^{(\nu)}$ is injective.
 		\end{preformal theorem}
 	
 		\begin{preformal definition}[Atomic Formula]
 			We define
 			\begin{equation*}
-				\textbf{Atom} = \{ \cdot(P_n^{(\nu)}, \bv{t}) \in \Sigma^* \mid \bv{t} \in \textbf{Term}^n \}
+				\textbf{Atom} = \{ P_n^{(\nu)} \bv{t} \in \Sigma^* \mid \bv{t} \in \textbf{Term}^{\nu} \}
 			\end{equation*}
 		\end{preformal definition}
 		
@@ -1583,6 +1635,105 @@
 			
 			We can see again that $\bv{f}$ satisfies the condition so that $\textbf{PForm}$ is freely inductively generated so that it exhibits unique readability.
 		\end{preformal definition}
+		
+		We want to prove that $\textbf{PForm}$ exhibits unique readabilty.
+		To do so we will follow a similar strategy as we did to prove $\textbf{Term}$ exhibits unique readability.
+		
+		\begin{preformal theorem}[Every Suffix of a formula is a list of terms followed by a list of formulas]
+			Suppose $P \in \textbf{PForm}$ and consider $P'$ is a suffix of $P$.
+			We will prove that there exists $\bv{t} \in \textbf{Term}^n$ and $\bv{P} \in \textbf{PForm}^m$ with $n, m \in \mathbb{N}$ such that
+			\begin{equation*}
+				P' = \text{Cat}(\bv{t}, \bv{P})
+			\end{equation*}
+			Note that $\bv{t}$ may be empty.
+			
+			We prove this by induction on the string length $\ell$.
+			We prove that for all $\ell \in \N^+$ that if $P \in \textbf{PForm}$ and $P'$ is a suffix of $P$ then there exists $\bv{t}\in \textbf{Term}^n$ and $\bv{P} \in \textbf{PForm}^m$ with $n, m \in \N$ such that $P' = \text{Cat}(\bv{t}, \bv{P})$.
+			
+			Now suppose $\ell = 1$.
+			The only permissive formulas of length 1 are of the form $P_n^{(0)}$, the 0-ary predicates.
+			The only suffix of such a formula is itself and this is a length-1 sequence of permissive formulas.
+			
+			Now suppose $\norm{P} = \ell > 1$.
+			
+			Now suppose $P$ is atomic so that
+			\begin{equation*}
+				P = P_n^{(\nu)}\bv{t}
+			\end{equation*}
+			with $\bv{t} \in \textbf{Term}^{\nu}$.
+			Then a proper suffix of $P$ is of the form
+			\begin{equation*}
+				P' = \text{Cat}((t_j)_{i:\norm{t_j}}, \bv{t}_{j+1;\nu}) = \text{Cat}(\bv{t}', \bv{t}_{j+1:\nu}) = \text{Cat}(\bv{t}'')
+			\end{equation*}
+			for some $1 \le i \le \norm{t_j}$.
+			This follows because $(t_j)_{i:\norm{t_j}}$ is a suffix of $t_j$ and $\bv{t}'' = \bv{t}'\circ \bv{t}_{j+1:\nu}$.
+			
+			Now suppose $P = \lnot Q$ with $Q \in \textbf{PForm}$.
+			If $P' = P_{2:\norm{P}} = Q$ then we see $P' \in \textbf{PForm}$.
+			If not then $P' = P_{i:\norm{P}} = Q_{i-1:\norm{Q}} = Q'$.
+			But since $Q'$ is a suffix of a formula $Q$ with length $\norm{Q} = \norm{P}-1 = \ell - 1$ the induction hypothesis applies so that $P' = Q' = \text{Cat}(\bv{t}, \bv{P})$ for some $\bv{t} \in \textbf{Term}^n$ and $\bv{P} \in \textbf{PForm}^m$ for some $n, m \in \N$
+			
+			Now suppose $P = \implies QR$ with $Q, R \in \textbf{PForm}$.
+			If $P' = P_{i:\norm{P}}$ and $i>1 + \norm{Q}$ then $P'$ is a suffix of $R'$ so the induction hypothesis applies.
+			Otherwise, if $2\le i \le \norm{Q}+1$ then $P' = Q'R$ where $Q'$ is a suffix of $Q$ so
+			\begin{equation*}
+				P' = \text{Cat}(\bv{t}, \bv{P}, R) = \text{Cat}(\bv{t}, \bv{P}')
+			\end{equation*}
+			with $\bv{P}' = \bv{P} \circ (R)$.
+			
+			Finally, suppose $P = \forall x Q$ with $x\in \textbf{Var}$.
+			If $P' = 2:\norm{P} = x Q$ then we see that $P' = \text{Cat}(\bv{t}, \bv{P})$ with $\bv{t} = (x)$ and $\bv{P} = (Q)$.
+			Otherwise $P'$ is a suffix of $Q'$ so the induction hypothesis applies.
+		\end{preformal theorem}
+		
+		\begin{preformal theorem}[Equality of the concatenation of a tuple of formulas implies equality of the formulas]
+			We prove that for each $\ell \in \N^+$ that for $\bv{z} \in (\textbf{Term} \cup \textbf{PForm})^* = Z^*$ that if $\bv{z}' \in Z^*$ and $\text{Cat}(\bv{z}) = \text{Cat}(\bv{z}')$ then $\bv{z}' = \bv{z}$.
+			
+			If $\ell = 1$ then $\bv{z} = (z)$ with $z \in \textbf{Var} \cup \textbf{Const}$ or $z$ is a 0-ary predicate.
+			In either case, we must have $\bv{z}' = (z)$ also so that $\text{Cat}(\bv{z}') = \text{Cat}(\bv{z})$.
+			
+			Now suppose $\bv{z} \in Z^{\nu}$ and $\bv{z}' \in Z^{\nu'}$ and consider
+			\begin{equation*}
+				\text{Cat}(\bv{z}) = \text{Cat}(z_1, \bv{z}_{2:\nu}) = \text{Cat}(z'_1, \bv{z}_{2:\nu'}) = \text{Cat}(\bv{z}').
+			\end{equation*}
+			Suppose, without loss of generality, that $\norm{z'_1} \ge \norm{z_1}$ so that
+			\begin{equation*}
+				\text{Cat}(z'_1) = \text{Cat}(z_1, x) = \text{Cat}(z_1, \bv{t}, \bv{P}) = \text{Cat}(z_1, \bv{z}'')
+			\end{equation*}
+			with $\bv{t} \in \textbf{Term}^*$ and $\bv{P} \in \textbf{PForm}^*$ and $\bv{z}'' = \bv{t} \circ \bv{P} \in Z^*$.
+			This follows from previous theorems because $x$ is either the suffix of a term (in which case $\bv{P}$ is empty) or $x$ is the suffix of a permissive formula.
+			But $\norm{z'_1} < \ell$ so the induction hypothesis applies. But this means $(z'_1) = (z_1) \circ \bv{z}$.
+			But $(z'_1)$ and $(z_1)$ have length 1 in $Z^*$ so $\bv{z}$ must be empty from which we conclude $z'_1 = z_1$.
+			
+			But this means that
+			\begin{equation*}
+				\text{Cat}(\bv{z}_{2:\nu}) = \text{Cat}(\bv{z}'_{2:\nu'})
+			\end{equation*}
+			but since $\norm{\text{Cat}(\bv{z}_{2:\nu})} < \ell$ the induction hypothesis applies.
+			so we can conclude $\bv{z}'_{2:\nu'} = \bv{z}_{2:\nu}$ and since $z'_1 = z_1$, we can conclude $\bv{z}' = \bv{z}$.
+		\end{preformal theorem}
+		
+		\begin{preformal theorem}[Unique Readability of $\textbf{PForm}$]
+			Suppose $P\in \textbf{PForm}$.
+			
+			Suppose $P \in \textbf{Atom}$. Then $P$ begins with a predicate symbol which means it is not a disjunction (doesn't begin with $\lnot$), implication (doesn't begin with $\implies$), or quantification (doesn't begin with $\forall$).
+			
+			Suppose $P$ begins with $\lnot$ so that $P = \lnot Q = \lnot Q'$. 
+			But we can see that $Q=Q'$ so that $f_{\lnot}$ is injective.
+			A similar argument follows if $P = \forall x Q$.
+			
+			If $P = \implies QR$ and suppose also that $P = \implies Q'R'$.
+			But, the previous theorem applies to $(Q, R)$ tells us that since $QR = Q'R'$ that $(Q, R) = (Q', R')$ so thta $f_{\implies}$ is injective.
+			
+			Now suppose $P$ begins with $\forall x$ so that $P = \forall x Q$ and suppose also $P = \forall x Q'$.
+			Again, similar to the $\lnot$ case, we can see $Q = Q'$ so that $f_x$ is injective.
+			
+			So we can see that $\textbf{PForm}$ is freely inductively generated and therefore exhibits unique readability.
+		\end{preformal theorem}
+		
+		It is a great benefit that $\textbf{PForm}$ exhibits unique readability, because this means we can now make recursive function definitions on $\textbf{PForm}$ which we will proceed to do below.		
+		
+		THIS PARAGRAPH NEEDS TO GO SOMEWHERE ELSE LATER.
 		We use Polish notation throughout, i.e. $\implies PQ$ instead of $P \implies Q$ or $fx_1 x_2 x_3$ instead of $f(x_1, x_2, x_3)$.
 		For human readability, we will often \textit{abbreviate} the polish notation into more standard notation including parentheses.
 		Polish notation will be useful for the metalogical proof whereas the parentheses notation is more useful for human readability and understanding.
@@ -1655,6 +1806,13 @@
 			A closed term still have variables which need to be \qq{plugged in} before that term represents a single specific object.
 			If a formula is open then this means it still has variables that need to be plugged in before it can be considered to be a \qq{complete statement}.
 			From a semantic perspective, a closed formula is one for which we can assign a truth value, whereas an open formula requires that we first plug in closed terms for all variables.
+			
+			We define
+			\begin{align*}
+				\textbf{CTerm} =& \{t \in \textbf{Term} \mid \text{Free}(t) = \emptyset\}\\
+				\textbf{CPForm} =& \{P \in \textbf{PForm} \mid \text{Free}(P) = \emptyset,
+			\end{align*}
+			the sets fo closed terms and permissive formulas.
 		\end{preformal definition}
 		
 		\begin{preformal definition}[Strict Formulas]
@@ -1754,47 +1912,154 @@
 			\end{equation*}			
 			
 			It can be proven by induction that $\text{Rep}_{v, t}(P) \in \textbf{PForm}$ and that $\text{Free}(\text{Rep}_{v, t}(P)) = (\text{Free}(P) \setminus \{v\}) \cup \text{Free}_T(t)$.
-		\end{preformal definition}
+			
+			Note that we will typically only use $\text{Rep}_{v, t}(P)$ in cases when $t$ is closed (so there are never concerns about variable capture) and when $v\not \in \text{Bnd}(P)$ so that there are never concerns about a replacement being blocked.
+			In these cases we always simply have $\text{Rep}_{v, t}(\forall x Q) = \forall x \text{Rep}_{v, t}(Q)$.
+		\end{preformal definition}	
 	
-		\begin{preformal definition}[Closed Terms]
+		THIS TERM GENERALIZATION IS WRONG. WE NEED TO DEFINE THE SET OF ALL GENERALIZATIONS OF A FORMULA AS THE SET OF FORMULAS WHEN YOU DO TERM REPLACEMENT YOU GET THE ORIGINAL FORMULA. THEN WE NEED TO NOTE THERE IS A "MAXIMAL" REPLACEMENT FORMULA THAT REPLACES ALL OCCURENCES OF $t$ BY $x$ THAT IS A GENERALIZATION AND WE NEED TO GIVE THIS A DIFFERENT NAME. THESE TWO THINGS WILL BE NEEDED FOR OUR QUANTIFICATION DEDUCTION RULES.
+		\begin{preformal definition}[Term Generalization]
+			Suppose $P \in \textbf{CPForm}$ and $P' \in \textbf{PForm}$. 
+			Suppose $v\in \textbf{Var}$, $v\not \in \textbf{Bnd}(P)$ and $t\in \textbf{CTerm}$.
+			Now, if 
+			\begin{equation*}
+				\text{Rep}_{v, t}(P') = P
+			\end{equation*}
+			Then we say $P'$ is a $v$ for $t$ generalization of $P$.
+			We define $\text{Gen}_{t, v}: \textbf{CPForm} \to \mc{P}(\textbf{PForm})$ by 
+			\begin{equation*}
+				\text{Gen}_{t, v}(P) = \{P' \in \textbf{PForm} \mid \text{Rep}_{v, t}(P') = P\}
+			\end{equation*}
+			
+			We also define $\text{Gen}_{T;t, v}: \textbf{CTerm} \to \mc{P}(\textbf{Term})$ by
+			\begin{equation*}
+				\text{Gen}_{T; t, v}(s) = \{s'\in \textbf{Term} \mid \text{Rep}_{T; v, t}(s') = s\}
+			\end{equation*}
+		\end{preformal definition}
+		For example, we can see that if $P$ is a 2-ary preposition then 
+		\begin{equation*}
+			\text{Gen}_{t, v}(Ptt) = \{Ptt, Ptv, Pvt, Pvv\}.
+		\end{equation*}
+		
+		We will prove some facts about term generalization.
+		\begin{preformal theorem}[Term Generalization Preserves Bound Variables]
+			Suppose $P' \in \textbf{PForm}$ and $t \in \textbf{CTerm}$.
+			Then consider $P = \text{Rep}_{v, t}(P')$.
+			Because $\text{Var}(t) = \emptyset$, we can see that the variable renaming case to avoid variable capture is never triggered when evaluating $\text{Rep}_{v, t}$.
+			This means $\text{Bnd}(P) = \text{Bnd}(P')$.
+			This means that any $v$ for $t$ generalization $P'\in \text{Gen}_{t, v}(P)$ has the same bound variables as $P$:
+			\begin{equation*}
+				\text{Bnd}(P') = \text{Bnd}(P)
+			\end{equation*}
+		\end{preformal theorem}
+		
+		\begin{preformal definition}[Number of Occurences of $t$]
+			We define $\text{Occur}_{T, t'}: \textbf{Term} \to \N$ by
+			\begin{equation*}
+				\text{Occur}_t'(t) = \begin{cases}
+					0 & \text{if } t \in \textbf{Var} \cup \textbf{Const} \text{ and } t'\neq t\\
+					1 & \text{if } t \in \textbf{Var}\cup \textbf{Const} \text{ and } t' = t\\
+					\sum_{i \in [\nu]} \text{Occur}_{T, t'}(t_i) &\text{if } t = f_n^{(\nu)}\bv{t} 
+				\end{cases}
+			\end{equation*}
+			
+			We then define $\text{Occur}_{t'} : \textbf{PForm} \to \N$ by
+			\begin{equation*}
+				\text{Occur}_{t'}(P) = \begin{cases}
+					\sum_{i \in [\nu]} \text{Occur}_{T, t'}(t_i) & \text{if } P = P_n^{(\nu)} \bv{t}\\
+					\text{Occur}_{t'}Q & \text{if } P = \lnot Q \text{ or} P = \forall x Q\\
+					\text{Occur}_{t'}(Q) + \text{Occur}_{t'}(R) & \text{if } P = \implies QR
+				\end{cases}
+			\end{equation*}
+			
+		\end{preformal definition}
+		
+		\begin{preformal theorem}[The Number of $v$ for $t$ generalizations of a term]
+			Suppose $s, t \in \textbf{CTerm}$, $v\in \textbf{Var}$ and $n = \text{Occur}_{T; t}(s)$.
+			We prove by structural induction on $s\in \textbf{Term}$ that if $s\in \textbf{CTerm}$, then there are $2^n$ elements in $\text{Gen}_{T;t, v}(s)$.
+			
+			Suppose $s\in \textbf{Const}$.
+			If $s\neq t$ then $n=0$ and $\text{Gen}_{T;t, v}(s) = \{s\}$ has just $1=2^0$ element.
+			If $s=t$ then $n=1$ and $\text{Gen}_{T;t, v}(s) = \{t, v\}$ has $2=2^1$ elements.
+			
+			Now suppose $s = f_m^{(\nu)}\bv{t}$.
+			Let $n_i = \text{Occur}_{T; t}(t_i)$ so that $n \sum_{i\in [\nu]} n_i$.
 			We define
 			\begin{equation*}
-				\textbf{CTerm} = \{t\in \textbf{Term} \mid t \text{ is closed}\}
+				G = \bigtimes (\text{Gen}_{T;t , v}(t_i))_{i\in [\nu]}.
 			\end{equation*}
-		\end{preformal definition}
-	
-		\begin{preformal definition}[Term Generalization]
-			For each $t\in \textbf{CTerm}$ and each $v \in \textbf{Var}$, we define
+			Note that $G \subset \textbf{Term}^{\nu}$.
+			By the induction hypothesis, there are $2^{n_i}$ entries in each $\text{Gen}_{T; t, v}(t_i)$.
+			This means that there are 
 			\begin{equation*}
-				\text{Gen}_{t, v}(P): \textbf{PForm} \to \textbf{PForm}.
+				\prod_{i\in [\nu]} 2^{n_i} = 2^{\sum_{i\in [\nu]} n_i} = 2^n
 			\end{equation*}
+			entries in $G$.
+			We state this property of Cartesian products of finite sets but do not prove it.
 			
-			First, for each $s\in \textbf{CTerm}$ and $v\in \textbf{Var}$, we define
+			But now suppose $\bv{t}' \in G$ and consider $s' = f_n^{(\nu)}\bv{t}'$.
+			We can see that $s' \in \text{Gen}_{T;t, v}(t)$.
+			Furthermore, if $\bv{t}'\not \in G$ then $s' \not \in \text{Gen}_{T;t, v}(t)$.
+			But this means there are $2^n$ entries in $\text{Gen}_{T;t, v}(s)$.
+		\end{preformal theorem}
+		
+		\begin{preformal theorem}[The Number of $v$ for $t$ generalizations of a term]
+			Suppose $P \in \textbf{CPForm}$, $t\in \textbf{CTerm}$ and $v \in \textbf{Var}$.
+			Let $n = \text{Occur}_t(P)$.
+			We prove by structural induction on $P\in\textbf{PForm}$ that if $P \in \textbf{CForm}$ then there are $2^n$ elements in $\text{Gen}_{t, v}(P)$.
+			
+			Suppose $P \in \textbf{Atom}$ and $P = P_m^{(\nu)}\bv{t}$ with $\bv{t}\in \textbf{CTerm}$ so that $P \in \textbf{CPForm}$.
+			Let $n_i = \text{Occur}_{T;t}(t_i)$ which means $n = \sum_{i\in [\nu]} n_i$.
+			We let
 			\begin{equation*}
-				\text{Gen}_{T; s, v}(t) = \begin{cases}
-					v & \text{ if } t = s\\
-					t &\text{ if } t\neq x \text{ and }t \in \textbf{Const} \cup \textbf{Var}\\
-					f_n^{(\nu)} \text{Gen}_{T; s, v}^{(\nu)}(\bv{t}) &\text{ if } t\neq s \text{ and } t = f_n^{(\nu)}\bv{t}
+				G = \bigtimes (\text{Gen}_{T;t, v}(t_i))_{i\in [\nu]}.
+			\end{equation*}
+			As in the previous theorem, there are $2^n$ elements in $G$.
+			We can see that $P_m^{(\nu)} \bv{t}' \in \text{Gen}_{t, v}(P_{m}^{(\nu)}\bv{t})$ if and only if $\bv{t}' \in G$ which means there are $2^n$ elements in $\text{Gen}_{t, v}(P)$.
+			
+			If $P = \lnot Q$ then
+			\begin{equation*}
+				\text{Gen}_{t, v}(P) = \{\lnot Q' \in \textbf{PForm} \mid Q' \in \text{Gen}_{t, v}(Q)\}
+			\end{equation*}
+			but, by the induction hypothesis applied to $Q$, this set has $2^n$ elements where $n$ is the number of occurences of $t$ in $P$ which is equal to the number of occurences of $t$ in $Q$.
+			The same argument applies for $P = \forall x Q$.
+			
+			Now suppose $P = \implies QR$.
+			If $P' = \implies Q'R'$ then $P' \in \text{Gen}_{t, v}(P)$ if and only if $Q' \in \text{Gen}_{t, v}(Q)$ and $R' \in \text{Gen}_{t, v}(R)$. 
+			Let $n_Q = \text{Occur}_t(Q)$ and $n_R = \text{Occur}_t(R)$ so that $n = n_Q + n_R$.
+			The induction hypothesis tells us $\text{Gen}_{t, v}(Q)$ has $2^{n_Q}$ elements and $\text{Gen}_{t, v}(R)$ has $2^{n_R}$ elements.
+			There are $2^{n_Q} \times 2^{n_R} = 2^{n_Q + n_R} = 2^n$ ways to pick pairs from these two sets so $\text{Gen}_{t, v}(P)$ has $2^n$ elements.
+		\end{preformal theorem}		
+		
+		The simple intuition here is that if there are $n$ occurences of $t$ in a term or formula then we can either choose to replace or not replace each occurence of $t$ with $v$.
+		This leads to $2^n$ possible combinations of ways to replace the $n$ occurences of $t$ in with $v$.
+		It is easier to define the set $\text{Gen}_{t, v}(P)$ in terms of the replacement operation rather than try to describe the process of replacing one or more specific instances of $t$ with $v$.
+		
+		\begin{preformal definition}[All Term Generalization]
+			Suppose $\bv{P} \in \textbf{CPForm}$, $t\in \textbf{CTerm}$ and $v\in \textbf{Var}$.
+			We define a new formula $P'$ which has all instances of $t$ with $P$ replaced by $v$. 
+			We define it recursively. 
+			First we define $\text{GenAll}_{T;t, v}: \textbf{CTerm} \to \textbf{Term}$ by
+			\begin{equation*}
+				\text{GenAll}_{T;t, v}(s) = \begin{cases}
+					s & \text{if } s\in \textbf{Const} \text{ and } s \neq t\\	
+					v & \text{if } s\in \textbf{Const} \text{ and } s = t\\
+					f_n^{(\nu)} \text{GenAll}_{T;t, v}^{(\nu)}(\bv{t}) & \text{if } s = f_n^{(\nu)}\bv{t}
 				\end{cases}
 			\end{equation*}
 			
-			and then we define
+			Then we define $\text{GenAll}_{t, v}:\textbf{CPForm} \to \textbf{PForm}$ by
 			\begin{equation*}
-				\text{Gen}_{t, v}(P) = \begin{cases}
-					P_n^{(\nu)} \text{Gen}_{t, v}^{(\nu)}(\bv{t}) &\text{ if } P = P_n^{(\nu)}\bv{t}\\
-					\lnot \text{Gen}_{t, v}(Q) &\text{ if } P = \lnot Q\\
-					\implies \text{Gen}_{t, v}(Q) \text{Gen}_{t, v}(R) & \text{ if } P = \implies QR\\
-					\forall x \text{Gen}_{t, v}(Q) &\text{ if } P = \forall x Q \text{ and } v \neq x\\
-					\forall y \text{Gen}_{t, v}(\text{Rep}_{x, y}(Q)) &\text{ if } P = \forall x Q \text{ and } v = x\\
-					& \text{ with } y = \text{Fresh}(\text{Vars}(P) \cup \text{Vars}(v))
+				\text{GenAll}_{t, v}(P) = \begin{cases}
+					P_n^{(\nu)}\text{GenAll}_{T;t, v}^{(\nu)}\bv{t} & \text{if } P = P_n^{(\nu)}\bv{t}\\
+					\lnot \text{GenAll}_{t, v}(Q) &\text{if } P = \lnot Q\\
+					\implies \text{GenAll}_{t, v}(Q)\text{GenAll}_{t, v}(R) &\text{if } P = \implies QR\\
+					\forall x \text{GenAll}_{t, v}(Q) &\text{if } P = \forall x Q
 				\end{cases}
 			\end{equation*}
-			
-			It can be proven by induction that $\text{Gen}_{t, v}(P) \in \textbf{PForm}$ and 
-			\begin{equation*}
-				\text{Free}(\text{Gen}_{t, v}(P)) = \text{Free}(P) \cup \text{Free}_T(v)
-			\end{equation*}
 		\end{preformal definition}
+		It can be proven by induction that $v$ occurs in $\text{GenAll}_{t, v}(P)$ as many times as $t$ occurs in $P$.
+		It can also be proven by induction that $\text{GenAll}_{t, v}(P) \in \text{Gen}_{t, v}(P) \subset \textbf{PForm}$.
 	
 		\begin{preformal definition}[Terms]
 			We now define a function that collects all of the terms present in a term or formula $\text{Terms}: \textbf{PForm} \cup \textbf{Term} \to \mc{P}(\textbf{Term}$.
@@ -2028,7 +2293,7 @@
 			\end{align*}
 			and the new line is
 			\begin{align*}
-				(n, \forall v \text{Gen}_{t, v}(C_j(\bv{l})), D_j(\bv{l}), \forall I, (j), (t, v))
+				(n, \forall v \text{GenAll}_{t, v}(C_j(\bv{l})), D_j(\bv{l}), \forall I, (j), (t, v))
 			\end{align*}
 			
 			Rule $\forall E$
@@ -2326,42 +2591,75 @@
 				\lnot \forall x \lnot P
 			\end{equation*}
 			
-			Suppose $t\in \textbf{CTerm}$ and $t \in \text{Terms}(P)$ and $x = \text{Fresh}(\text{Vars}(P))$.
+			Suppose $t\in \textbf{CTerm}$, $v \not \in \text{Bnd}(P)$, $P' \in \text{Gen}_{t, v}(P)$ and $v\in \text{Free}(P')$.
+			Then $\forall v P' \in \textbf{CForm}$.
 			\begin{equation*}
 				\begin{array}{c|c|c|c|c|c}
 					\text{line} & \text{formula} & \text{dependencies} & \text{rule} & \text{citations} & \text{parameters}\\ \hline
 					n_1 & P & D_{n_1} & \cdots & \cdots & \cdots\\
-					n_2 & \forall x \lnot \text{Gen}_{t, x}(P) & \{n_2\} & \text{Assume} & () & \ \forall x \lnot \text{Gen}_{t, x}(P)\\
-					n_3 & \lnot \text{Rep}_{x, t} \text{Gen}_{t, x}(P) & \{n_2\} & \forall E & (n_2) & \curlywedge\\
+					n_2 & \forall v \lnot P' & \{n_2\} & \text{Assume} & () & \ \forall v \lnot P'\\
+					n_3 & \lnot \text{Rep}_{v, t} P'& \{n_2\} & \forall E & (n_2) & \curlywedge\\
 					n_4 & \lnot P & \{n_2\} & \text{DUP}& (n_3) & \curlywedge\\		
 					n_5 & \curlywedge& D_{n_1} \cup \{n_2\} & \lnot E & (n_1, n_4) & \curlywedge\\
-					n_6 & \lnot \forall x \lnot \text{Gen}_{t, x}(P) & D_{n_1} & \lnot E & (n_2, n_5) & \curlywedge\\
-					n_7 & \exists x \text{Gen}_{t, x}P & D_{n_1} & \text{DUP} & (n_6) & \curlywedge				
+					n_6 & \lnot \forall v \lnot P' & D_{n_1} & \lnot E & (n_2, n_5) & \curlywedge\\
+					n_7 & \exists v P' & D_{n_1} & \text{DUP} & (n_6) & \curlywedge				
 				\end{array}
 			\end{equation*}
-			We had three provisos on this proof.
-			Let's explore why the proof would break down if we relax each proviso.
-			First, if $t\not \in \textbf{CTerm}$ then $\text{Gen}_{t, x}(P)$ would not be defined.
-			If we tried to define $\text{Gen}_{t, x}(P)$ to allow generalization of a term which includes free variables then it would be possible for the generalization operation to take a closed formula to an open formula.
-			Our proof structure requires that the formula on each line is closed.
-			What if $t \not \in \text{Terms}(P)$?
-			This means that $\text{Gen}_{t, x}(P) = P$.
-			But we know that $x\not \in \text{Free}(P)$ because $P$ is closed.
-			But then if we look at $\forall x \lnot \text{Gen}_{t, x}(P) = \forall x \lnot P$ on line $n_2$, we see that this is not a strict formula because it exhibits redundant quantification over the variable $x$ (that is $x \not \in \text{Free}(\lnot P)$).
-			We don't strictly require that $x = \text{Fresh}(\text{Var}(P))$. 
-			What we require an $x \not \in \text{Var}(P)$.
-			The $\text{Fresh}$ function is just a convenient way to realize such a variable.
-			What if we had $x\in \text{Var}(P)$? 
-			We know that $P$ is closed, so we must have $x\in \text{Bnd}(P)$.
-			But then when we take $\forall x \lnot \text{Gen}_{t, x}(P)$ that means we would have a formula that exhibits repeated quantification of $x$.
-			So we see that the main purpose of these provisos is to ensure that the formulas we're working with remain within $\textbf{CForm}$.
+			We had a few provisos on this proof. 
+			First we needed $t\in \textbf{CTerm}$ and $v\not \in \text{Bnd}(P)$ so we could specify $P' \in \text{Gen}_{t, v}(P)$.
+			But, we, futher, require that $v\in \text{Free}(P')$ so that we can quantify $\forall v P'$ and still get a strict (closed) formula.
+			In the proof on line $n_3$ we used that since $P' \in \text{Gen}_{t, v}(P)$ that $\text{Rep}_{v, t}(P') = P$.
 			
-			With this proof we can introduce the rule $\exists I$ with $n_{\exists I}^{(R)} = 1$ and $P_{\exists I}^{(R)} = \textbf{CForm}$ with
+			With this proof we can introduce the rule $\exists I$ with $n_{\exists I}^{(R)} = 1$.
+			We define
 			\begin{equation*}
-				\text{Dom}(R_{(\exists I, (j), Q)}) = \{\}			
+				D_{\exists I} = \{(P', t, v) \in \textbf{CForm} \times \textbf{Term} \times \textbf{Var} \mid v\not \in \text{Bnd}(P') \text{ and } v \in \text{Free}(P')\}
 			\end{equation*}
+			and let $P_{\exists I}^{(R)} = D_{\exists I}$.
+			We then let
+			\begin{equation*}
+				\text{Dom}(R_{(\exists I, (j), (P', t, v))}) = \{\bv{l} \in L^* \mid P' \in \text{Gen}_{t, v}(C_j(\bv{l}))\}			
+			\end{equation*}
+			and the new line is
+			\begin{equation*}
+				(n, \exists v P', D_j, \exists I, (j), (P', t, v))
+			\end{equation*}
+		\end{preformal theorem}
+		
+		\begin{preformal theorem}[$\exists E$]
+			Suppose $t \in \textbf{CTerm}$ and suppose that $t \not \in \text{Terms}(C_d(\bv{\ell}))$ for each $t\in \cup D_{n_2} \cup \{P, Q\}$.
+			\begin{equation*}
+				\begin{array}{c|c|c|c|c|c}
+					\text{line} & \text{formula} & \text{dependencies} & \text{rule} & \text{citations} & \text{parameters}\\ \hline
+					n_1 & \exists v P & D_{n_1} & \cdots & \cdots & \cdots\\
+					n_2 & \implies \text{Rep}_{v, t}(P) Q & D_{n_2} & \cdots & \cdots & \cdots\\
+					n_3 & \lnot \forall v \lnot P & D_{n_1} & \text{Dup} & (n_1) & \curlywedge\\
+					n_4 & \lnot Q & \{n_4\} & \text{Assume} & (n_4) & \lnot Q\\
+					n_5 & \text{Rep}_{v, t}(P) & \{n_5\} & \text{Assume} & (n_5) & \text{Rep}_{v, c}(P)\\
+					n_6 & Q & D_{n_2} \cup \{n_5\} & \implies E & (n_2, n_5) & \curlywedge \\
+					n_7 & \curlywedge & D_{n_2} \cup \{n_4, n_5\} & \lnot E & (n_6, n_4) & \curlywedge\\
+					n_8 & \lnot \text{Rep}_{v, t}(P) & D_{n_2} \cup \{n_4\} & \lnot I & (n_5, n_7) & \curlywedge\\
+					n_9 & \forall v \text{GenAll}_{t, v}(\lnot \text{Rep}_{v, t}(P)) & D_{n_2} \cup \{n_4\} & \forall I & (n_8) & \curlywedge\\
+					n_{10} & \forall v \lnot P & D_{n_2} \cup \{n_4\} & \text{Dup} & (n_9) & \curlywedge\\
+					n_{11} & \curlywedge & D_{n_1} \cup D_{n_2} \cup \{n_4\} & \lnot E & (n_{10}, n_3) & \curlywedge\\
+					n_{12} & \lnot \lnot Q & D_{n_1} \cup D_{n_2} & \lnot I & (n_4, n_{11}) & \curlywedge\\
+					n_{13} & Q & D_{n_1} \cup D_{n_2} & \text{DN} & (n_{12}) & \curlywedge\\
+				\end{array}
+			\end{equation*}
+			On line 10 we used that $\text{GenAll}_{t, v}(\lnot \text{Rep}_{v, t}(P)) = P$ which is true assuming $t\not \in \text{Terms}(P)$.
+			We were allowed to do the $\forall I$ on line $n_9$ because $t$ does not appear in terms of the formulas on any line in $D_{n_2}$ or $n_4$, which is $Q$. 
 			
-			
+			This metaproof allows us to introduce the rule $\exists E$ with $n_{\exists E}^{(R)}=2$ and $P_{\exists I}^{(R)} = \textbf{CTerm}$ with
+			\begin{align*}
+				\text{Dom}(R_{\exists E, (j, k), t}) = \{\bv{\ell} \in L^* \mid &t \not \in \text{Terms}(C_d(\bv{\ell})) \text{ for } d \in D_k(\bv{\ell})\\
+				&\text{and } t \not \in \text{Terms}(\text{Body}_{\exists}(C_j(\bv{\ell})))\\
+				&\text{and } t \not \in \text{Terms}(\text{Con}(C_k(\bv{\ell})))\\
+				&\text{and } \text{Rep}_{\text{QVar}(C_j(\bv{\ell})), t}(\text{Body}_{\exists}(C_j(\bv{\ell}))) = \text{Con}(C_k(\bv{\ell}))\}
+			\end{align*}
+			and the new line is
+			\begin{equation*}
+				(n, \text{Con}(C_k(\bv{\ell}), D_j \cup D_k, \exists E, (j, k), t)
+			\end{equation*}
 		\end{preformal theorem}
 		
 \end{document}
