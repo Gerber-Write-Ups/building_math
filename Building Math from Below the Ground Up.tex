@@ -1,4 +1,4 @@
-\documentclass[12pt]{article}
+\documentclass[oneside, 12pt]{book}
 
 \usepackage{amsmath}
 \usepackage{amsthm}
@@ -77,32 +77,129 @@
 	\maketitle
 	
 
-	\section{Introduction}
+	\chapter{Introduction}
+	\label{ch:intro}
 	
-		\subsection{Overview}
-		
-			All of traditional mathematics can be expressed in terms of mathematical set theory.
-			Set theory is expressed in terms of a formal logic called \gls{fol} which is expressed in the \gls{lfol}.
-			The \gls{lfol} is a written formal language which means that is is composed of an explicitly and clearly defined set of symbols which constitutes the alphabet of that language and similarly explicitly and clearly defined syntax rules which identify \qq{appropriate} ways in which the symbols can be combined to form formulas.\footnote{Authors may refer to formulas as well-formed formulas (WFFs), sentences, or words.}
-			In addition to \gls{lfol}, \gls{fol} includes inference rules which, together, constitute a deductive calculus which allows us to \qq{deduce} new formulas from old formulas such that a chain of valid deductions is considered a proof of the final formula in the chain.
-			\gls{lfol} and the inference rules constitute \gls{fol}.
+		\section{Introduction}
+			The purpose of this monograph is to present a formalization of set theory and, thereby, mathematics.
+			It is known that traditional mathematics can be expressed in terms of mathematical set theory and that statements within set theory can expressed in terms of a first order language and that proofs in set theory can be constructed in the context of a corresponding first order logic.
+			We are interested in formalizing mathematics because, once formalized, the correctness of stated theorems becomes a matter of programmatic rule following/deconstruction rather than a matter of using cleverness and intuition to understand natural language statements.
 			
-			A formal theory within a formal logic begins with a set of axioms which are a subset of the formulas of the formal language.
-			It is then possible, using the inference rules, to derive new formulas from these axioms using the inference rules.
-			The main question we ask about a formal theory is which formulas can be proven from the given axioms?
+			In this document, the formalization of mathematics will involve the development of the first order language and logic system.			
+			We will generically refer to the language as the \gls{lfol} and to the logic system as \gls{fol}.
+			\gls{lfol} will be composed from explicitly and clearly defined symbols constituting the alphabet of the language and syntax rules which identify \qq{appropriate} ways to combine the symbol to form valid formulas.
+			\gls{fol} will include a scheme for constructing proofs.
+			A proof will be a sequence of lines where each line includes a statement from \gls{lfol} together with context about how that proof line was derived and on which previous lines that proof depends.
+			We derive new lines of a proof from old lines using the deduction rules of the \gls{fol}.
+			By examining valid proofs and which statements of \gls{lfol} depend (proof theoretically) on which other statements, we can construct logical theories.
+			A logical theory says that if we assume some set $\Gamma$ of axioms then we can derive, using the deduction rules $R$, a larger set of statements $T_R(\Gamma)$.
+			To develop set theory we will select certain statements within $\gls{lfol}$ to server as our set theory axiom set $\Gamma_{\text{Set}}$.
+			All of mathematics is then the process of determing whether some statement $S$ within \gls{lfol} is in the theory $T(\Gamma_{\text{Set}})$.
+			That is, if there is some proof connecting the axioms $\Gamma_{\text{Set}}$ to $S$ using the deduction rules.
 			
-			One goal of this document is to state the \gls{zf} axioms which underpin mathematical set theory in the \gls{lfol} as well as to define and prove some basic concepts in set and number theory.
-			Though our goal is to formalize basic results in set and number theory, we will find that we are philosophical forced to rely on \textbf{preformal} definitions, understandings, and theorems of basic concepts related to set and number theory.
-			For example, it will be impossible to state or prove basic concepts about \gls{fol} without being able to refer to a preformal understanding of the natural numbers.
-			Yet, even further, we will find that require surprisingly powerful theorems related to structural induction and recursion to do all of the metalogic and metamathematics required to lay out these foundations.
-			That brings use to a second goal of this document which is to explore exactly how much metamathematical machinery is required to lay out the foundations of mathematics.
-			This is part of an exploration into criticisms of the foundations of mathematics as being circular.
-			We will be careful in this document not to conflate \textbf{preformal} with vague or ill-defined.
-			Rather, some of our preformal definitions and theorems will look exactly like rigorous and formal peices of mathematics.
+			The goal of this monograph is to develop \gls{lfol} and \gls{fol} so that we can begin making statements and proofs within set theory.
+			However, this development will be a great labor.
+			One might initially hope that we can lay out \gls{lfol} and \gls{fol} without using any mathematics at all since we are hoping to \textit{use} these structures to setup a foundation for mathematics.
+			Perhaps we could lay out \gls{lfol} and \gls{fol} using only natural language, logic, and other patently obvious concepts so that there is no fear of circularity in this foundations project.
+			However, we will find that this is entirely impossible.
+			\gls{lfol} and \gls{fol} will depend heavily on what we will refer to as \textbf{preformal} mathematical concepts.
+			The simplest example is that our alphabet for \gls{lfol} will include an infinite number of predicate and function symbols which will be enumerated both by an index number $n$ and an arity $\nu$.
+			Such a labeling scheme presupposes an understanding of the natural, or counting, numbers.
+			This tells us that for a person to understand \gls{lfol} they must already understand the counting numbers even though we hope to eventually \textbf{formally} define the natural numbers $\N$ using formal statements written in \gls{lfol} as an object within set theory.
+			The counting numbers are one of the simplest preformal concepts we will find necessary for our development. 
+			The  most sophisticated preformal concepts we will require are structural induction and recursion.
+			We will find that the syntax of \gls{lfol} is very naturally expressed using structural induction and we will also find the need, when developing \gls{lfol} and \gls{fol} to make structurally recursive definitions leaning on the structural inductive construction of \gls{lfol}.
+			We will go through a very technical and rigorous, yet still preformal, investigation of these concepts so that we can proceed with our development of \gls{lfol} and \gls{fol}.
 			
-			We will begin with an exposition of basic preformal mathematical concepts including objects, sets, set operations, relations and functions.
-			We will then proceed into a technical, but still preformal, exposition around structural induction and recursion.
+			This treatment, then, addresses an interesting philosophical question related to circularity within the foundations of mathematics.
+			The question is how much \textbf{preformal} mathematical machinery is necessary to develop \textbf{formal} mathematics.
+			As mentioned in the previous paragraph, one would hope the set of preformal mathematics needed is small but, as we will see, there are actually a large number of preformal mathematical definitions and theorems we will require.
+			I will also note that just because we discuss a preformal concept does \textbf{not} mean the discussion is not rigorous or technically difficult. 
+			The preformal proof, for example, of the structural recursion theorem will look very much like a rigorous and non-trivial mathematical proof.
+			
+		\section{A Note on Syntax and Semantics}
+			
+			Two critical pillars within formal logic are syntax and semantics.
+			Syntax encapsulates the formal rules described above regarding the alphabet of a formal language, the syntactic rules for combining symbols into formulas, and the inference rules for deriving new formulas from old.
+			In short, syntax describes the \qq{rules of the game} of formal logic.
+			Semantics is, crudely, the assigning of meaning to the symbols of the language.
+			In its simplest form, semantics is the assigning of truth values to formulas.
+			
+			Let's consider an example.
+			Suppose we would like to formalize the statement: \qq{If $m$ is a natural number and $m$ is odd then $2\times m$ is odd}.
+			In \gls{lfol} this expression might be formalized as
+			\begin{equation*}
+				\forall m\implies \in m \mathbb{N} \land Om O\times 2 m
+			\end{equation*}
+			using prefix notation or
+			\begin{equation*}
+				\forall m ( (m \in \N \land O(m)) \implies O(2\times m))
+			\end{equation*}
+			using infix notation.
+			While infix notation is better for human readability, we will prefer prefix notation in most cases in this monograph because making making proofs about \gls{lfol} will be easier if we using prefix notation.
+			
+			The smallest element in our formal language is the \textit{term}.
+			A term is one of three things: (1) a concrete object such as the number \qq{2}, (2) a variable into which concrete objects can be \qq{plugged in} such as \qq{$m$}, or (3) an $n$-ary function of other terms such as \qq{$\div m 2$}.
+			The terms in the above expression are
+			\begin{equation*}
+				m, \N, m, \times 2 m, 2, m
+			\end{equation*}
+			Above I've included every term in the formula as it appears from left to right including repetitions of the same term.
+			Note that the first occurence of $m$ to the right of $\forall$ is not serving the syntactic role of a term but is rather part of the \qq{for all} quantification.
+			The only variable which appears is \qq{$m$}.
+			We see that \qq{$2$} and \qq{$\mathbb{N}$} appear as constants.
+			We see that \qq{$\times$} appears as a 2-ary function with arguments \qq{$m$} and \qq{2} which are a variable and constant, respectively.
+			
+			The next larger element in our formal language is the \textit{atomic formula}.
+			An atomic formula is the combination of an $n$-ary predicate symbol and $n$ terms.
+			We have two predicate symbols in the above formula: \qq{$\in$} is a 2-ary predicate and \qq{$O$} is a 1-ary predicate symbol.
+			The atomic formulas are then
+			\begin{align*}
+				&\in m \mathbb{N}\\
+				&Om\\
+				&O\times 2 m
+			\end{align*}
+			
+			Finally, the next larger object in our language is the formula.
+			Atomic formulas themselves are already formulas, but we can form larger, more complex, formulas by stringing together smaller formulas with connectives such as \qq{$\land$} and \qq{$\implies$} or quantifying with \qq{$\forall$}.
+			The formulas in the above expression are
+			\begin{align*}
+				&\forall m\implies \in m \mathbb{N} \land Om O\times 2 m\\
+				&\implies \in m \mathbb{N} \land Om O\times 2 m\\
+				&\in m\mathbb{N} \land Om\\
+				&\in m \mathbb{N}\\
+				&Om\\
+				&O\times 2 m
+			\end{align*}
+			
+			The preceding discussion within this section has been a purely syntactic analysis of the formula in question.
+			That is, we broke the formula down into smaller parts within the formal language according to the syntax rules of the language.
+			In the following sections we will learn that the formula given above is indeed a valid formula within \gls{lfol}.
+			
+			Semantics enters the discussion when we give an \textit{interpretation} to the various expressions above.
+			For example, when we \textit{interpret} the symbol \qq{2} as the number 2, the expression \qq{$\times 2 m$} as the multiplication of the number \qq{2} with the variable \qq{$m$}, or the predicate \qq{$Om$} to mean that the variable $m$ is odd, we are imposing semantics onto the expression.
+			We also are making a semantic interpretation any time we impose or deduce a truth value for a given formula.
+			For example, on all of the usual interpretations, we would assign a value of \qq{false} to the formula above because twice an odd number is \textit{not} an odd number.
+			While we require semantics to assign a truth value to a statement such as the one above, we only require syntax and the deduction rules to search for a formal proof of such a statement and, in fact, for the expression above, we would be able to provide a proof for the negation of that expression given the set theory axioms and definitions of the corresponding predicates and terms.
+			
+			This document leans towards a game formalism philosophical approach to formal logic.
+			Game formalism is a philosophical view on the foundations of mathematics which holds that it is possible to describe set theory and, by extension, all of mathematics, using only syntactic manipulations within \gls{lfol} and \gls{fol}.
+			Or, more conservatively, at the very least, game formalism asks the question of how far one can get using such an approach.
+			To that end, I would like it to be clear that all definitions and arguments should be self-contained within purely syntactic analyses.
+			At a few times, I may make reference to semantic ideas, but this will only be to motivate and give intuition for syntactic definitions and manipulations.
+			Such references should be disposable with respect to the main focus of this work.
+			One could, instead, proceed by dropping semantics entirely from the narrative.
+			In such an approach, some definitions may appear unmotivated, at least at first, but that is not, technically, a problem for the game formalist.
+			
+			\section{Overview}
+	
+			We will begin in Chapter \ref{ch:preformalbasic} with an exposition of basic preformal mathematical concepts including objects, sets, set operations, relations and functions.
+			In Chapter \ref{ch:preformalinduction}, we will then proceed into a technical, but still preformal, exposition around structural induction and recursion.
 			We will see that structural induction and recursion are essential to development of \gls{lfol} and \gls{fol}.
+			This chapter will conclude with a section on sequences or lists and their manipluations.
+			
+			
+			
 			After a description of sequences of objects and their manipulations, we will be ready to lay out the syntax rules of \gls{lfol}.			
 			
 			Once the syntax of \gls{lfol} is carefully described, we will be ready to introduce the idea of a logical system consisting of axioms and deduction rules used to syntactically prove theorem of the logical theory.
@@ -113,90 +210,18 @@
 			With all of these preliminaries handled, we will finally be ready to introduce set theory as a specific theoretical instantiation within \gls{fol}.
 			Set theory will be \gls{fol} consisting of symbols necessary to describe sets together with the famous \gls{zf} axioms.
 		
-		\subsection{A Note on Syntax and Semantics}
-			
-			Two critical pillars within formal logic are syntax and semantics.
-			Syntax encapsulates the formal rules described above regarding the alphabet of a formal language, the syntactic rules for combining symbols into formulas, and the inference rules for deriving new formulas from old.
-			In short, syntax describes the \qq{rules of the game} of formal logic.
-			Semantics is, crudely, the assigning of meaning to the symbols of the language.
-			In its simplest form, semantics is the assigning of truth values to formulas.
-			
-			Let's consider an example.
-			Suppose we would like to formalize the statement: \qq{If $m$ is a natural number and $m$ is odd then $m \div 2$ is a natural number}.
-			In \gls{lfol} this expression might be formalized as\footnote{Here we use prefix notation so that $\in m \mathbb{N}$ formalizes that $m$ is contained in $\mathbb{N}$. This would be expressed in infix notation as $m\in \mathbb{N}$.}
-			\begin{equation*}
-				\forall m((\in m \mathbb{N} \land Om) \implies \in \div m 2 \mathbb{N})
-			\end{equation*}
-			
-			The smallest element in our formal language is the \textit{term}.
-			A term is one of three things: (1) a concrete object such as the number \qq{2}, (2) a variable into which concrete objects can be \qq{plugged in} such as \qq{$m$}, or (3) an $n$-ary function of other terms such as \qq{$\div m 2$}.
-			In fact, below we will express a concrete object as a 0-ary function.
-			The terms in the above expression are
-			\begin{align*}
-				&m\\
-				&\mathbb{N}\\
-				&m\\
-				&\div m 2\\
-				&m\\
-				&2\\
-				&\mathbb{N}
-			\end{align*}
-			Above I've included every term in the formula as it appears from left to right including repetitions of the same term.
-			The only variable which appears is \qq{$m$}.
-			We see that \qq{$2$} and \qq{$\mathbb{N}$} appear as 0-ary functions or constants.
-			We see that \qq{$\div$} appears as a 2-ary function with arguments \qq{$m$} and \qq{2} which are a variable and 0-ary function, respectively.
-			
-			The next larger element in our formal language is the \textit{atomic formula}.
-			An atomic formula is the combination of an $n$-ary predicate symbol and $n$ terms.
-			We have two predicate symbols in the above formula: \qq{$\in$} is a 2-ary predicate and \qq{$O$} is a 1-ary predicate symbol.
-			The atomic formulas are then
-			\begin{align*}
-				&\in m \mathbb{N}\\
-				&On\\
-				&\in \div m 2 \mathbb{N}
-			\end{align*}
-			
-			Finally, the next larger object in our language is the formula.
-			Atomic formulas themselves are already formulas, but we can form larger, more complex, formulas by stringing together smaller formulas with connectives such as \qq{$\land$} and \qq{$\implies$} or quantifying with \qq{$\forall$}.
-			The formulas in the above expression are
-			\begin{align*}
-				&\forall m((\in m \mathbb{N} \land O m) \implies \in \div m 2 \mathbb{N})\\
-				&(\in m\mathbb{N}\land Om) \implies \in \div m 2 \mathbb{N}\\
-				&(\in m\mathbb{N} \land Om)\\
-				&\in m \mathbb{N}\\
-				&Om\\
-				&\in \div m 2 \mathbb{N}
-			\end{align*}
-			
-			The preceding discussion within this section has been a purely syntactic analysis of the formula in question.
-			That is, we broke the formula down into smaller parts within the formal language according to the syntax rules of the language.
-			In the following sections we will learn that the formula given above is indeed a valid formula within \gls{lfol}.
-			
-			Semantics enters the discussion when we give an \textit{interpretation} to the various expressions above.
-			For example, when we \textit{interpret} the symbol \qq{2} as the number 2, the expression \qq{$\div m 2$} as the division of the variable \qq{$m$} by the number \qq{2}, or the predicate \qq{$Om$} to mean that the variable $m$ is odd, we imposing semantics onto the expression.
-			We also are making a semantic interpretation any time we impose or deduce a truth value for a given formula.
-			For example, on all of the usual interpretations, we would assign a value of \qq{false} to the formula above because the odd natural numbers are, in fact, not divisible by 2.
-			
-			This document leans towards a game formalism philosophical approach to formal logic.
-			Game formalism is a philosophical view on the foundations of mathematics which holds that it is possible to describe set theory and, by extension, all of mathematics, using only syntactic manipulations within \gls{lfol} and \gls{fol}.
-			Or, more conservatively, at the very least, game formalism asks the question of how far one can get using such an approach.
-			To that end, I would like it to be clear that all definitions and arguments should be self-contained within purely syntactic analyses.
-			At a few times, I may make reference to semantic ideas, but this will only be to motivate and give intuition for syntactic definitions and manipulations.
-			Such references should be disposable with respect to the main focus of this work.
-			One could, instead, proceed by dropping semantics entirely from the narrative.
-			In such an approach, some definitions may appear unmotivated, at least at first, but that is not, technically, a problem for the game formalist.
-		
-	\section{Basic Preformal Concepts}
-		One goal of this work is to carefully define \gls{lfol} and \gls{fol} so that we can eventually formally describe \gls{zf} set theory with \gls{fol} to serve as a foundation for the formalization of much of modern mathematics.
+	\chapter{Basic Preformal Concepts}
+		\label{ch:preformalbasic}
+		One goal of this work is to carefully define \gls{lfol} and \gls{fol} so that we can eventually formally describe set theory with \gls{fol} to serve as a foundation for the formalization of much of modern mathematics.
 		
 		However, we will not be able to perform this task starting from nothing.
-		Indeed, to create this foundation for formal mathematics, we will find ourselves relying on \textbf{preformal} conceptions of various simple mathematical constructs such as the natural, or \qq{counting}, numbers.
+		Indeed, to create this foundation for formal mathematics, we will find ourselves relying on \textbf{preformal} conceptions of various simple mathematical constructs such as the natural numbers.
 		
 		In one sense, the definitions and proofs which appear about preformal concepts should be thought of like definitions of English words which are understood by speakers and listeners of the language.
 		However, some definitions and proof we will encounter will be technical and will closely or exactly mirror their formal counterparts within formal mathematics.
 		From this we take the understanding that we actually require some surprisingly powerful preformal concepts to lay out the foundations for formal mathematics.
 		
-		\subsection{Preformal Logic}
+		\section{Preformal Logic}
 	
 			\begin{preformal definition}[Logic]
 				To build up our formal system of logic we will indeed require a preformal system of logic.
@@ -224,7 +249,7 @@
 				We of course also always have that $x = x$.
 			\end{preformal definition}		
 		
-		\subsection{Preformal Set Theory}
+		\section{Preformal Set Theory}
 		
 			\begin{preformal definition}[Set]
 				A set is an object which contains other objects.
@@ -269,7 +294,7 @@
 			\end{preformal definition}
 			
 			\begin{preformal definition}[Subset Specification]
-				Suppose $S$ is a set and $\phi(s)$ is a logical expression that depends on a \textbf{logical variable} $s$. 		
+				Suppose $S$ is a set and $\phi(s)$ is a logical expression that depends on a logical variable $s$. 		
 				We can then extract a subset of $S$ by picking out all of the elements $s\in S$ such that $\phi(s)$.
 				
 				This specification set is denoted by
@@ -282,7 +307,7 @@
 				Suppose also we have a logical function $f(\bv{t})$ that results in a new logical object depending on the list of logical objects inserted into $\bv{t}$. 
 				We can then perform a more sophisticated type of specification given by
 				\begin{align*}
-					\{f(\bv{t})\in S \mid \phi(\bv{t})\} = \{s\in S \mid \text{ there exists } \bv{t} \text{ such that } s = \bv{t} \text{ and } \phi(\bv{t})\}
+					\{f(\bv{t})\in S \mid \phi(\bv{t})\} = \{s\in S \mid \text{ there exists } \bv{t} \text{ such that } s = f(\bv{t}) \text{ and } \phi(\bv{t})\}
 				\end{align*}
 			\end{preformal definition}
 			
@@ -641,7 +666,8 @@
 				Indeed, there is always a unique $\bv{y}$ for each $\bv{x}$ satisfying $y_i = f(x_i)$ which means $f^{(n)}$ is a total and functional relation which means we can regard it as a function.
 			\end{preformal definition}
 	
-	\section{Preformal Structural Induction and Recursion}
+	\chapter{Preformal Structural Induction and Recursion}
+	\label{ch:preformalinduction}
 
 		We now proceed into the study of preformal structural induction and recursion.
 	
@@ -1262,124 +1288,124 @@
 			This concludes our proof that binary associativity implies generalized associativity.
 		\end{preformal theorem}
 		
-	\section{List Operations}
-		\begin{preformal definition}[List Concatenation]
-			We define $\ast: S^* \times S^* \to S^*$ by
-			\begin{align*}
-				\ast(\bv{s}, \bv{t}) = \bv{s} \ast \bv{t}
-			\end{align*}
-			with
-			\begin{align*}
-				\norm{\bv{s} \ast \bv{t}} = \norm{\bv{s}} + \norm{\bv{t}}
-			\end{align*}
-			and for $1 \le i \le \norm{\bv{s}\cdot \bv{t}}$
-			\begin{align*}
-				(\bv{s}\ast \bv{t})_i = \begin{cases}
-					s_i &\text{ if } i \le \norm{\bv{s}}\\
-					t_{i - \norm{\bv{s}}} &\text{ if } \norm{\bv{s}} + 1 \le i \le \norm{\bv{s}\cdot \bv{t}}.
-				\end{cases}
-			\end{align*}
-			If $\bv{s} = \bv{t} = ()$ then $\bv{s} \ast \bv{t} = ()$.
-			
-			We will use juxtaposition to indicate concatenation.
-			That is,
-			\begin{equation*}
-				\bv{s}\bv{t} = \bv{s} \ast \bv{t}
-			\end{equation*}
-		\end{preformal definition}
-
-		\begin{preformal theorem}[List Concatenation is Binary Associative]
-			Suppose $\bv{a}, \bv{b}, \bv{c} \in S^*$
-			We wish to show
-			\begin{equation*}
-				\bv{a}(\bv{b}\bv{c}) = (\bv{a}\bv{b})\bv{c}
-			\end{equation*}
-			
-			We have that
-			\begin{align*}
-				\norm{\bv{a}(\bv{b}\bv{c})} = \norm{\bv{a}} + \norm{\bv{b}\bv{c}} = \norm{\bv{a}} + \norm{\bv{b}} + \norm{\bv{c}} = \norm{\bv{a}\bv{b}} + \norm{\bv{c}} = \norm{\bv{a}\bv{b}\bv{c}}.
-			\end{align*}
-			Note that this follows by binary associativity of addition on $\N$ which we assume as granted as a preformal concept.
-			
-			We will show that $(\bv{a}(\bv{b}\bv{c}))_i = ((\bv{a}\bv{b})\bv{c})_i$ for all $i$ with $1 \le i \le \norm{\bv{a}} + \norm{\bv{b}} + \norm{\bv{c}}$.
+		\section{List Operations}
+			\begin{preformal definition}[List Concatenation]
+				We define $\ast: S^* \times S^* \to S^*$ by
+				\begin{align*}
+					\ast(\bv{s}, \bv{t}) = \bv{s} \ast \bv{t}
+				\end{align*}
+				with
+				\begin{align*}
+					\norm{\bv{s} \ast \bv{t}} = \norm{\bv{s}} + \norm{\bv{t}}
+				\end{align*}
+				and for $1 \le i \le \norm{\bv{s}\cdot \bv{t}}$
+				\begin{align*}
+					(\bv{s}\ast \bv{t})_i = \begin{cases}
+						s_i &\text{ if } i \le \norm{\bv{s}}\\
+						t_{i - \norm{\bv{s}}} &\text{ if } \norm{\bv{s}} + 1 \le i \le \norm{\bv{s}\cdot \bv{t}}.
+					\end{cases}
+				\end{align*}
+				If $\bv{s} = \bv{t} = ()$ then $\bv{s} \ast \bv{t} = ()$.
+				
+				We will use juxtaposition to indicate concatenation.
+				That is,
+				\begin{equation*}
+					\bv{s}\bv{t} = \bv{s} \ast \bv{t}
+				\end{equation*}
+			\end{preformal definition}
 	
-			First suppose $1 \le i \le \norm{\bv{a}}$.
-			Then 
-			\begin{equation*}
-				(\bv{a}(\bv{b}\bv{c}))_i = a_i
-			\end{equation*}
-			but 
-			\begin{equation*}
-				((\bv{a}\bv{b})\bv{c})_i = (\bv{a}\bv{b})_i = a_i
-			\end{equation*}
-			
-			Now suppose $\norm{\bv{a}} + 1 \le i \le \norm{\bv{a}} + \norm{\bv{b}}$.
-			Then 
-			\begin{equation*}
-				(\bv{a}(\bv{b}\bv{c})) = (\bv{b}\bv{c})_{i-\norm{\bv{a}}} = b_{i-\norm{\bv{a}}}
-			\end{equation*}
-			but
-			\begin{equation*}
-				((\bv{a}\bv{b})\bv{c})_i = (\bv{a}\bv{b})_i = b_{i-\norm{\bv{a}}}
-			\end{equation*}
-			
-			Now suppose $\norm{\bv{a}} + \norm{\bv{b}}+1 \le i \le \norm{\bv{a}} + \norm{\bv{b}} + \norm{\bv{c}}$.
-			Then
-			\begin{equation*}
-				(\bv{a}(\bv{b}\bv{c}))_i = (\bv{b}\bv{c})_{i-\norm{\bv{a}}} = c_{i-\norm{\bv{a}} - \norm{\bv{b}}}
-			\end{equation*}
-			but
-			\begin{equation*}
-				((\bv{a}\bv{b})\bv{c})_i = c_{i-\norm{\bv{a}\bv{c}}} = c_{i-\norm{\bv{a}} - \norm{\bv{b}}}.
-			\end{equation*}
-			
-			Note if $\bv{a}, \bv{b}, \bv{c} = ()$ then $\bv{a}(\bv{b}\bv{c}) = (\bv{a}(\bv{b}\bv{c})) = ()$.
-			
-			This all proves that $\bv{a}(\bv{b}\bv{c}) = (\bv{a}\bv{b})\bv{c}$.
-		\end{preformal theorem}
-
-		\begin{preformal theorem}[List Concatenation Exhibits Generalized Associativity]
-			We proved above that if any binary operation exhibits binary associativity then it exhibits generalized associativity.
-			Since list concatenation exhibits binary associativity it must exhibit generalized associativity.
-			
-			Suppose $\bv{\alpha} \in (A^*)^*$.
-			We have $\text{Par}(\bv{\alpha})$ is the set of all parenthesizations on the entries of $\bv{\alpha}$, but, because of generalized associativity, we know that $\text{Par}(\bv{\alpha})$ is a singleton which we will denote $\circledast(\bv{\alpha})$.
-			We examine the following operations
-			\begin{itemize}
-				\item{$\ast: A^* \times A^* \to A^*$, this is the standard binary concatenation operation defined above.}
-				\item{$\circledast: (A^*)^* \to A^*$, this is the generalized concatenation oepration which takes a list of lists and returns a list that is the result of concatenating all the input lists}
-				\item{$\circ: (A^*)^* \times (A^*)^* \to (A^*)^*$ this is standard list concatenation but acting on lists of lists}
-				\item{$\circledcirc: ((A^*)^*)^* \to (A^*)^*$ this operation takes a list of lists of lists and returns a list of lists. We only use it here to define an overloaded concatenation operation which allows us to concatenate objects from multiple layers of this heirarchy.}
-			\end{itemize}
-			
-			Let $D = (A^*)^* \cup A^* \cup \Sigma$.
-			We define a function $\text{Normalize}: D^* \to ((A^*)^*)^*$
-			\begin{align*}
-				\text{Normalize}(\bv{d})_i = \begin{cases}
-					d_i &\text{ if } d_i \in (A^*)^*\\
-					(d_i) & \text{ if } d_i \in A^*\\
-					((d_i)) & \text{ if } d_i \in A
-				\end{cases}
-			\end{align*}
-			for each $i\in [\norm{\bv{d}}]$.
-			We then define an overloaded concatenation operation which allows us to concatenate arbitary elements whether they are in $A$, $A^*$, or $(A^*)^*$.
-			We define $\text{Cat}: D^* \to A^*$ by 
-			\begin{equation*}
-				\text{Cat}(\bv{d}) = \circledast(\circledcirc(\text{Normalize}(\bv{d})))
-			\end{equation*}
-			
-			So, for example, if $a\in A$, $\bv{a} \in A^*$ and $\bv{\alpha}\in (A^*)^*$, then
-			\begin{equation*}
-				\text{Cat}(a, \bv{a}, \bv{\alpha}) = \circledast(\circledcirc(((a)), (\bv{a}), \bv{\alpha})) = a \bv{a}\bv{\alpha} 
-			\end{equation*} 
-			We use juxtaposiiton as a shorthand for the overloaded $\text{Cat}$ operation.
-			Note that when an element $\bv{\alpha} \in (A^*)^*$ stands alone in an expression it may be ambiguous whether we are referring to e.g. $\bv{\alpha}\in (A^*)^*$ or $\text{Cat}(\bv{\alpha}) \in A^*$.
-			Likewise for an element $a\in A$.
-			In such ambiguous cases we will explicitly use the $\text{Cat}$ notation to disambiguate.
-			
-		\end{preformal theorem}
+			\begin{preformal theorem}[List Concatenation is Binary Associative]
+				Suppose $\bv{a}, \bv{b}, \bv{c} \in S^*$
+				We wish to show
+				\begin{equation*}
+					\bv{a}(\bv{b}\bv{c}) = (\bv{a}\bv{b})\bv{c}
+				\end{equation*}
+				
+				We have that
+				\begin{align*}
+					\norm{\bv{a}(\bv{b}\bv{c})} = \norm{\bv{a}} + \norm{\bv{b}\bv{c}} = \norm{\bv{a}} + \norm{\bv{b}} + \norm{\bv{c}} = \norm{\bv{a}\bv{b}} + \norm{\bv{c}} = \norm{\bv{a}\bv{b}\bv{c}}.
+				\end{align*}
+				Note that this follows by binary associativity of addition on $\N$ which we assume as granted as a preformal concept.
+				
+				We will show that $(\bv{a}(\bv{b}\bv{c}))_i = ((\bv{a}\bv{b})\bv{c})_i$ for all $i$ with $1 \le i \le \norm{\bv{a}} + \norm{\bv{b}} + \norm{\bv{c}}$.
+		
+				First suppose $1 \le i \le \norm{\bv{a}}$.
+				Then 
+				\begin{equation*}
+					(\bv{a}(\bv{b}\bv{c}))_i = a_i
+				\end{equation*}
+				but 
+				\begin{equation*}
+					((\bv{a}\bv{b})\bv{c})_i = (\bv{a}\bv{b})_i = a_i
+				\end{equation*}
+				
+				Now suppose $\norm{\bv{a}} + 1 \le i \le \norm{\bv{a}} + \norm{\bv{b}}$.
+				Then 
+				\begin{equation*}
+					(\bv{a}(\bv{b}\bv{c})) = (\bv{b}\bv{c})_{i-\norm{\bv{a}}} = b_{i-\norm{\bv{a}}}
+				\end{equation*}
+				but
+				\begin{equation*}
+					((\bv{a}\bv{b})\bv{c})_i = (\bv{a}\bv{b})_i = b_{i-\norm{\bv{a}}}
+				\end{equation*}
+				
+				Now suppose $\norm{\bv{a}} + \norm{\bv{b}}+1 \le i \le \norm{\bv{a}} + \norm{\bv{b}} + \norm{\bv{c}}$.
+				Then
+				\begin{equation*}
+					(\bv{a}(\bv{b}\bv{c}))_i = (\bv{b}\bv{c})_{i-\norm{\bv{a}}} = c_{i-\norm{\bv{a}} - \norm{\bv{b}}}
+				\end{equation*}
+				but
+				\begin{equation*}
+					((\bv{a}\bv{b})\bv{c})_i = c_{i-\norm{\bv{a}\bv{c}}} = c_{i-\norm{\bv{a}} - \norm{\bv{b}}}.
+				\end{equation*}
+				
+				Note if $\bv{a}, \bv{b}, \bv{c} = ()$ then $\bv{a}(\bv{b}\bv{c}) = (\bv{a}(\bv{b}\bv{c})) = ()$.
+				
+				This all proves that $\bv{a}(\bv{b}\bv{c}) = (\bv{a}\bv{b})\bv{c}$.
+			\end{preformal theorem}
 	
-	\section{Language of First Order Logic}
+			\begin{preformal theorem}[List Concatenation Exhibits Generalized Associativity]
+				We proved above that if any binary operation exhibits binary associativity then it exhibits generalized associativity.
+				Since list concatenation exhibits binary associativity it must exhibit generalized associativity.
+				
+				Suppose $\bv{\alpha} \in (A^*)^*$.
+				We have $\text{Par}(\bv{\alpha})$ is the set of all parenthesizations on the entries of $\bv{\alpha}$, but, because of generalized associativity, we know that $\text{Par}(\bv{\alpha})$ is a singleton which we will denote $\circledast(\bv{\alpha})$.
+				We examine the following operations
+				\begin{itemize}
+					\item{$\ast: A^* \times A^* \to A^*$, this is the standard binary concatenation operation defined above.}
+					\item{$\circledast: (A^*)^* \to A^*$, this is the generalized concatenation oepration which takes a list of lists and returns a list that is the result of concatenating all the input lists}
+					\item{$\circ: (A^*)^* \times (A^*)^* \to (A^*)^*$ this is standard list concatenation but acting on lists of lists}
+					\item{$\circledcirc: ((A^*)^*)^* \to (A^*)^*$ this operation takes a list of lists of lists and returns a list of lists. We only use it here to define an overloaded concatenation operation which allows us to concatenate objects from multiple layers of this heirarchy.}
+				\end{itemize}
+				
+				Let $D = (A^*)^* \cup A^* \cup \Sigma$.
+				We define a function $\text{Normalize}: D^* \to ((A^*)^*)^*$
+				\begin{align*}
+					\text{Normalize}(\bv{d})_i = \begin{cases}
+						d_i &\text{ if } d_i \in (A^*)^*\\
+						(d_i) & \text{ if } d_i \in A^*\\
+						((d_i)) & \text{ if } d_i \in A
+					\end{cases}
+				\end{align*}
+				for each $i\in [\norm{\bv{d}}]$.
+				We then define an overloaded concatenation operation which allows us to concatenate arbitary elements whether they are in $A$, $A^*$, or $(A^*)^*$.
+				We define $\text{Cat}: D^* \to A^*$ by 
+				\begin{equation*}
+					\text{Cat}(\bv{d}) = \circledast(\circledcirc(\text{Normalize}(\bv{d})))
+				\end{equation*}
+				
+				So, for example, if $a\in A$, $\bv{a} \in A^*$ and $\bv{\alpha}\in (A^*)^*$, then
+				\begin{equation*}
+					\text{Cat}(a, \bv{a}, \bv{\alpha}) = \circledast(\circledcirc(((a)), (\bv{a}), \bv{\alpha})) = a \bv{a}\bv{\alpha} 
+				\end{equation*} 
+				We use juxtaposiiton as a shorthand for the overloaded $\text{Cat}$ operation.
+				Note that when an element $\bv{\alpha} \in (A^*)^*$ stands alone in an expression it may be ambiguous whether we are referring to e.g. $\bv{\alpha}\in (A^*)^*$ or $\text{Cat}(\bv{\alpha}) \in A^*$.
+				Likewise for an element $a\in A$.
+				In such ambiguous cases we will explicitly use the $\text{Cat}$ notation to disambiguate.
+				
+			\end{preformal theorem}
+	
+	\chapter{Language of First Order Logic}
 	
 		We now have the required preformal concepts to begin developing  \gls{lfol}.
 		\gls{lfol} is a formal language which, here, means a set of symbols and syntax rules that allows us to form those symbols into valid strings of symbols.
@@ -2130,7 +2156,7 @@
 			\end{align*}			
 		\end{preformal definition}
 	
-	\section{Natural Deduction}
+	\chapter{Natural Deduction}
 		natural deduction is the process of deriving new lines, under logical rules, from old.
 		
 		\begin{preformal definition}[Line of Proof]
