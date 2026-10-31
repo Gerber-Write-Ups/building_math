@@ -191,7 +191,7 @@
 			One could, instead, proceed by dropping semantics entirely from the narrative.
 			In such an approach, some definitions may appear unmotivated, at least at first, but that is not, technically, a problem for the game formalist.
 			
-			\section{Overview}
+		\section{Overview}
 	
 			We will begin in Chapter \ref{ch:preformalbasic} with an exposition of basic preformal mathematical concepts including objects, sets, set operations, relations and functions.
 			In Chapter \ref{ch:preformalinduction}, we will then proceed into a technical, but still preformal, exposition around structural induction and recursion.
@@ -828,7 +828,6 @@
 			\end{equation*}
 			In particular, recall that this definition allows $N^{\nu_i} \not \subset D_i$
 		\section{Structural Induction}
-			
 			\subsection{$\bv{f}$ Induction}
 				
 				\begin{preformal definition}[$\bv{f}$-Inductive]
@@ -896,324 +895,208 @@
 				Later we will prove a strong version of the induction theorem.
 				When necessary we will refer to Theorem \ref{thm:inductiontheorem} as the weak induction theorem to distinguish to the forthcoming strong induction theorem.
 				
-				\subsection{The Inductive Base Set $B_{\bv{f}}$}
-				
-					\begin{preformal theorem}[$\emptyset$ is always closed under a $\nu$-ary $U$ function with $\nu> 0$]
-						Suppose $f$ is a $\nu$-ary $U$ function with $\nu>0$.
-						Then consider $f|_{\emptyset^{\nu}}$.
-						We know from Theorem \ref{thm:repeated cartesian products of emptyset} that $\emptyset^{\nu} = \emptyset$ so we have $f|_{\emptyset^{\nu}} = f|_{\emptyset} = \emptyset$.
-						So we have
-						\begin{equation*}
-							\text{Ran}(f|_{\emptyset^{\nu}}) = \emptyset \subset \emptyset
-						\end{equation*}
-						which tells us that $\emptyset$ is closed under $f$.
-					\end{preformal theorem}
-				
-					\begin{preformal theorem}[Set closure under a 0-ary $U$ function]
-						\label{thm:set closure under 0-ary U function}
-						Suppose $f$ is a 0-ary $U$ function with non-empty domain $\text{Dom}(f) \subset U^0$.
-						We know from \ref{thm:repeated cartesian products of emptyset} that $U^0 = \{\varnothing\}$ so we have that $\text{Dom}(f) = U^0 = \{\varnothing\}$ and $f(\varnothing) \in U$.
-						Now, when taking the $U$ function restriction of $f$ to $N$ we restrict $f$ to $N^0 = \{\varnothing\} = U^0$.
-						So
-						\begin{equation*}
-							\text{Ran}(f|_{N^0}) = \text{Ran}(f) = \{f(\varnothing)\}.
-						\end{equation*}
-						This means that if $N$ is closed under $f$, we must have that $\{f(\varnothing)\} \subset N$, or, rather, that $f(\varnothing) \in N$.
-					\end{preformal theorem}
-				
-					\begin{preformal definition}[$\bv{f}$ inductive base set]
-						Suppose $N$ is $\bv{f}$ inductive.
-						We define the $\bv{f}$ inductive base set $B_{\bv{f}}$ by
-						\begin{equation*}
-							B_{\bv{f}} = \{f_i(\varnothing) \in U \mid \nu_i = 0 \text{ and } \text{Dom}(f_i) \neq \emptyset\}.
-						\end{equation*}
-					\end{preformal definition}				
-				
-					\begin{preformal theorem}[$B_{\bv{f}}$ is always a subset of a $\bv{f}$ inductive set]
-						Suppose $N$ if $\bv{f}$ inductive.
-						From Theorem \ref{thm:set closure under 0-ary U function} we can see that, since $N$ is closed under $\bv{f}$ that we must have
-						\begin{equation*}
-							B_{\bv{f}} \subset N
-						\end{equation*}
-					\end{preformal theorem}
-					
-					We have actually taken a unique approach to inductive definitions.
-					The standard definition of a set being inductive is that the set contains an explicitly specified base set $B$ and then the set is closed under function $f_i$ with positive (non-zero) arity.
-					Under this standard approach all definitions and proofs involving induction are split into two cases.
-					A base case which is related elements of the base set $B$ and an inductive step which is related to the construction functions $f_i$.
-					However, in our approach, we unify the two cases by allowing 0-ary construction functions.
-					The previous definition and theorem tell us that the set $B_{\bv{f}}$, the union of the range of all of the (non-empty) 0-ary functions, corresponds to the standard induction base set $B$.
-				
-					\subsection{Minimally $\bv{f}$ inductive sets}
-					
-					We are deeply interested in \textit{minimally} $\bv{f}$ inductive sets because those are the sets for which the induction theorem, Theorem \ref{thm:inductiontheorem} which we will use to great effect below, applies.
-					The induction theorem does not apply to sets which are \textit{merely} $\bv{f}$ inductive and not \textit{minimally} $\bv{f}$ inductive.
-					In this section we will explore the distinction between minimally $\bv{f}$ inductive and $\bv{f}$ inductive sets.
-					
-					A set $N'$ which is \text{merely} inductive contains the range of each of its construction $f_i$ for each $i\in I$:
+			\subsection{The Inductive Base Set $B_{\bv{f}}$}
+			
+				\begin{preformal theorem}[$\emptyset$ is always closed under a $\nu$-ary $U$ function with $\nu> 0$]
+					Suppose $f$ is a $\nu$-ary $U$ function with $\nu>0$.
+					Then consider $f|_{\emptyset^{\nu}}$.
+					We know from Theorem \ref{thm:repeated cartesian products of emptyset} that $\emptyset^{\nu} = \emptyset$ so we have $f|_{\emptyset^{\nu}} = f|_{\emptyset} = \emptyset$.
+					So we have
 					\begin{equation*}
-						\bigcup_{i\in I} \text{Ran}(f_i|_{N^{\nu_i}}) \subset N.
+						\text{Ran}(f|_{\emptyset^{\nu}}) = \emptyset \subset \emptyset
 					\end{equation*}
-					However, $N'$ may contain \textit{extraneous} elements.
-					That is, elements which are not necessary to gaurantee that the set is inductive.
-					We will consider two pathological examples to demonstrate the concept of extraneous elements.
-					
-					The simplest way to add an extraneous element to an inductive set such that the new set is still inductive is to add an element which is not in the domain of $f_i$ for any $i\in I$.
-					Consider
-					\begin{align*}
-						U =& \{a, b\}\\
-						f_0 =& \{\braket{(), a}\}\\
-						f_1 =& \{\braket{(a), b}\}\\
-						\bv{f} =& (f_0, f_1)
-					\end{align*}
-					We can see that $f_0$ is a 0-ary $U$ function and maps $()$ to $a$ and $f_1$ is 1-ary $U$ function and maps $a$ to $b$.
-					With these definitions we can see that $N = \{a, b\}$ is $\bv{f}$ inductive.
-					Indeed, $N$ is minimally $\bv{f}$ inductive since $f_0$ and $f_1$ are also $N$ function families and removing either $a$ or $b$ breaks closure under either $f_0$ or $f_1$.
-					
-					But now consider $N' = \{a, b, c\}$ with $c\neq a$ and $c \neq b$.
-					We can see that $N'$ is still closed under $\bv{f}$.
-					This follows because $c\not \in \text{Dom}(f_0)$ and $c\not \in \text{Dom}(f_1)$, so adding it doesn't impact the closure condition under either of these functions.
-					But, $N'$ is \textbf{not} minimally $\bv{f}$ inductive because $N$ is a proper $\bv{f}$ inductive subset of $N'$.
-					This is the sense in which $c$ is an extraneous element.
-					
-					Adding an element which is not contained in the domain of $f_i$ for any $i$ is the simplest way to add extraneous elements to a $\bv{f}$ inductive set and still maintain that the resulting set is $\bv{f}$ inductive. 
-					But, there are more complicated ways to add extraneous elements to a $\bv{f}$ inductive set and still have the set be $\bv{f}$ inductive.			
-					Consider the following pathological example.
+					which tells us that $\emptyset$ is closed under $f$.
+				\end{preformal theorem}
+			
+				\begin{preformal theorem}[Set closure under a 0-ary $U$ function]
+					\label{thm:set closure under 0-ary U function}
+					Suppose $f$ is a 0-ary $U$ function with non-empty domain $\text{Dom}(f) \subset U^0$.
+					We know from \ref{thm:repeated cartesian products of emptyset} that $U^0 = \{\varnothing\}$ so we have that $\text{Dom}(f) = U^0 = \{\varnothing\}$ and $f(\varnothing) \in U$.
+					Now, when taking the $U$ function restriction of $f$ to $N$ we restrict $f$ to $N^0 = \{\varnothing\} = U^0$.
+					So
+					\begin{equation*}
+						\text{Ran}(f|_{N^0}) = \text{Ran}(f) = \{f(\varnothing)\}.
+					\end{equation*}
+					This means that if $N$ is closed under $f$, we must have that $\{f(\varnothing)\} \subset N$, or, rather, that $f(\varnothing) \in N$.
+				\end{preformal theorem}
+			
+				\begin{preformal definition}[$\bv{f}$ inductive base set]
+					Suppose $N$ is $\bv{f}$ inductive.
+					We define the $\bv{f}$ inductive base set $B_{\bv{f}}$ by
+					\begin{equation*}
+						B_{\bv{f}} = \{f_i(\varnothing) \in U \mid \nu_i = 0 \text{ and } \text{Dom}(f_i) \neq \emptyset\}.
+					\end{equation*}
+				\end{preformal definition}				
+			
+				\begin{preformal theorem}[$B_{\bv{f}}$ is always a subset of a $\bv{f}$ inductive set]
+					Suppose $N$ if $\bv{f}$ inductive.
+					From Theorem \ref{thm:set closure under 0-ary U function} we can see that, since $N$ is closed under $\bv{f}$ that we must have
+					\begin{equation*}
+						B_{\bv{f}} \subset N
+					\end{equation*}
+				\end{preformal theorem}
+				
+				We have actually taken a unique approach to inductive definitions.
+				The standard definition of a set being inductive is that the set contains an explicitly specified base set $B$ and then the set is closed under function $f_i$ with positive (non-zero) arity.
+				Under this standard approach all definitions and proofs involving induction are split into two cases.
+				A base case which is related elements of the base set $B$ and an inductive step which is related to the construction functions $f_i$.
+				However, in our approach, we unify the two cases by allowing 0-ary construction functions.
+				The previous definition and theorem tell us that the set $B_{\bv{f}}$, the union of the range of all of the (non-empty) 0-ary functions, corresponds to the standard induction base set $B$.
+				We can of course convert a specified base set $B$ into a corresponding family of 0-ary $U$ functions.
+			
+			\subsection{Minimally $\bv{f}$ inductive sets}
+				
+				We are deeply interested in \textit{minimally} $\bv{f}$ inductive sets because those are the sets for which the induction theorem, Theorem \ref{thm:inductiontheorem} which we will use to great effect below, applies.
+				The induction theorem does not apply to sets which are \textit{merely} $\bv{f}$ inductive and not \textit{minimally} $\bv{f}$ inductive.
+				In this section we will explore the distinction between minimally $\bv{f}$ inductive and $\bv{f}$ inductive sets.
+				
+				A set $N'$ which is \text{merely} inductive contains the range of each of its construction $f_i$ for each $i\in I$:
+				\begin{equation*}
+					\bigcup_{i\in I} \text{Ran}(f_i|_{N^{\nu_i}}) \subset N.
+				\end{equation*}
+				However, $N'$ may contain \textit{extraneous} elements.
+				That is, elements which are not necessary to gaurantee that the set is inductive.
+				We will consider two pathological examples to demonstrate the concept of extraneous elements.
+				
+				The simplest way to add an extraneous element to an inductive set such that the new set is still inductive is to add an element which is not in the domain of $f_i$ for any $i\in I$.
+				Consider
+				\begin{align*}
+					U =& \{a, b\}\\
+					f_0 =& \{\braket{(), a}\}\\
+					f_1 =& \{\braket{(a), b}\}\\
+					\bv{f} =& (f_0, f_1)
+				\end{align*}
+				We can see that $f_0$ is a 0-ary $U$ function and maps $()$ to $a$ and $f_1$ is 1-ary $U$ function and maps $a$ to $b$.
+				With these definitions we can see that $N = \{a, b\}$ is $\bv{f}$ inductive.
+				Indeed, $N$ is minimally $\bv{f}$ inductive since $f_0$ and $f_1$ are also $N$ function families and removing either $a$ or $b$ breaks closure under either $f_0$ or $f_1$.
+				
+				But now consider $N' = \{a, b, c\}$ with $c\neq a$ and $c \neq b$.
+				We can see that $N'$ is still closed under $\bv{f}$.
+				This follows because $c\not \in \text{Dom}(f_0)$ and $c\not \in \text{Dom}(f_1)$, so adding it doesn't impact the closure condition under either of these functions.
+				But, $N'$ is \textbf{not} minimally $\bv{f}$ inductive because $N$ is a proper $\bv{f}$ inductive subset of $N'$.
+				This is the sense in which $c$ is an extraneous element.
+				
+				Adding an element which is not contained in the domain of $f_i$ for any $i$ is the simplest way to add extraneous elements to a $\bv{f}$ inductive set and still maintain that the resulting set is $\bv{f}$ inductive. 
+				But, there are more complicated ways to add extraneous elements to a $\bv{f}$ inductive set and still have the set be $\bv{f}$ inductive.			
+				Consider the following pathological example.
+				Let
+				\begin{align*}
+					U =& \{a, b, c\}\\
+					f_0 =& \{\braket{(), a}\}\\
+					f_1 =& \{\braket{(b), c}\}\\
+					f_2 =& \{\braket{(c), b}\}\\
+					\bv{f} =& (f_0, f_1, f_2)
+				\end{align*}
+				We can see that $f_0$ is a 0-ary $U$ function and $f_1$ and $f_2$ are 1-ary $U$ functions.				
+				Consider, then, the set
+				\begin{equation*}
+					N' = \{a, b, c\}
+				\end{equation*}
+				We can see that $N'$ is $\bv{f}$ inductive because the range of $f_0$, $f_1$, and $f_2$ are all contained in $N'$.
+				Note that $a\in B_{\bv{f}}$ but that $b$ and $c$ exist in infinite cycle
+				\begin{equation*}
+					c = f_1(b) = f_1(f_2(c)) = f_1(\ldots f_2(c)\ldots)
+				\end{equation*}
+				but this cycle never connects to $B_{\bv{f}} = \{a\}$.
+				This motivates us to ask if $N=B_{\bv{f}} = \{a\}$ alone is $\bv{f}$ inductive.
+				Indeed, in this case $N$ is $\bv{f}$ inductive.
+				The domains of $f_1$ and $f_2$ are disjoint from $N$ so it is ok that their ranges are excluded.
+				So we see that $N'$ is again \textbf{not} minimally $\bv{f}$ inductive because $N$ is a proper $\bv{f}$ inductive subset of $N'$.
+				In this case, the elements $b$ and $c$ were extraneous because there is no chain of construction functions linking $b$ or $c$ down to $B_{\bv{f}}$.
+				Note, however, that we require both $b, c \in N'$ for $N'$ to be inductive. 
+				Both sets $\{a, b\}$ (excluding $c$) and $\{a, c\}$ (excluding $b$) fail to be $\bv{f}$ inductive.
+				This example has given us another way that a set of elements can be included within an inductive set but still be extraneous.
+				Thinking more about this example reveals that if $\bv{f}$ contained no 0-ary functions then $\emptyset$ would actually be minimally $\bv{f}$ inductive.
+				Indeed, if $B_{\bv{f}} = \emptyset$ then $\emptyset$ is always minimally $\bv{f}$ inductive since $\emptyset$ is closed under any $\nu$-ary $U$ function with $\nu>0$.
+				
+				A set $N$ is $\bv{f}$ inductive if
+				\begin{equation*}
+					\bigcup_{i\in I} \text{Ran}(f_i|_{N^{\nu_i}}) \subset N.
+				\end{equation*}
+				One might wonder if the opposite containment
+				\begin{equation*}
+					N \subset \bigcup_{i\in I} \text{Ran}(f_i|_{N^{\nu_i}})
+				\end{equation*}
+				so that
+				\begin{equation*}
+					N = \bigcup_{i\in I} \text{Ran}(f_i|_{N^{\nu_i}})
+				\end{equation*}
+				means that $N$ is minimally $\bv{f}$ inductive.
+				That is, does requiring that each element in $N$ be in the range of some construction function guarantee that there are no extraneous elements?
+				The answer is no because that second example above with $N' = \{a, b, c\}$ satisfied this set inclusion but, as we saw, this set was not minimally $\bv{f}$ inductive.
+				The condition that a $\bv{f}$ inductive set is a subset of the range of all of its construction functions turns out to be too weak to characterize that $N$ has no proper inductive subset.
+				However, while the condition that a $\bv{f}$ inductive set being equal to the range of all of its construction functions is not a sufficient condition for the set to be minimally $\bv{f}$ inductive, it is a necessary condition.
+				
+				\begin{preformal theorem}[A minimally $\bv{f}$ inductive set is equal to the range of its construction functions]
+					Suppose $N$ is minimally $\bv{f}$ inductive.
 					Let
-					\begin{align*}
-						U =& \{a, b, c\}\\
-						f_0 =& \{\braket{(), a}\}\\
-						f_1 =& \{\braket{(b), c}\}\\
-						f_2 =& \{\braket{(c), b}\}\\
-						\bv{f} =& (f_0, f_1, f_2)
-					\end{align*}
-					We can see that $f_0$ is a 0-ary $U$ function and $f_1$ and $f_2$ are 1-ary $U$ functions.				
-					Consider, then, the set
 					\begin{equation*}
-						N' = \{a, b, c\}
+						C = \bigcup_{i\in I} \text{Ran}(f_i|_{N^{\nu_i}}).
 					\end{equation*}
-					We can see that $N'$ is $\bv{f}$ inductive because the range of $f_0$, $f_1$, and $f_2$ are all contained in $N'$.
-					Note that $a\in B_{\bv{f}}$ but that $b$ and $c$ exist in infinite cycle
+					Because $N$ is $\bv{f}$ inductive we know $C \subset N$.
+					Let
 					\begin{equation*}
-						c = f_1(b) = f_1(f_2(c)) = f_1(\ldots f_2(c)\ldots)
+						C' = \bigcup_{i\in I} \text{Ran}(f_i|_{C^{\nu_i}}) \subset \bigcup_{i\in I} \text{Ran}(f_i|_{N^{\nu_i}}) \subset C
 					\end{equation*}
-					but this cycle never connects to $B_{\bv{f}} = \{a\}$.
-					This motivates us to ask if $N=B_{\bv{f}} = \{a\}$ alone is $\bv{f}$ inductive.
-					Indeed, in this case $N$ is $\bv{f}$ inductive.
-					The domains of $f_1$ and $f_2$ are disjoint from $N$ so it is ok that their ranges are excluded.
-					So we see that $N'$ is again \textbf{not} minimally $\bv{f}$ inductive because $N$ is a proper $\bv{f}$ inductive subset of $N'$.
-					In this case, the elements $b$ and $c$ were extraneous because there is no chain of construction functions linking $b$ or $c$ down to $B_{\bv{f}}$.
-					Note, however, that we require both $b, c \in N'$ for $N'$ to be inductive. 
-					Both sets $\{a, b\}$ (excluding $c$) and $\{a, c\}$ (excluding $b$) fail to be $\bv{f}$ inductive.
-					This example has given us another way that a set of elements can be included within an inductive set but still be extraneous.
-					Thinking more about this example reveals that if $\bv{f}$ contained no 0-ary functions then $\emptyset$ would actually be minimally $\bv{f}$ inductive.
-					Indeed, if $B_{\bv{f}} = \emptyset$ then $\emptyset$ is always minimally $\bv{f}$ inductive since $\emptyset$ is closed under any $\nu$-ary $U$ function with $\nu>0$.
-					
-					A set $N$ is $\bv{f}$ inductive if
+					where the first subset relation follows because $C\subset N$ and the second follows because $\bigcup_{i\in I}\text{Ran}(f_i|_{N^{\nu_i}}) = C$.
+					But 
 					\begin{equation*}
-						\bigcup_{i\in I} \text{Ran}(f_i|_{N^{\nu_i}}) \subset N.
+						\bigcup_{i\in I} \text{Ran}(f_i|_{C^{\nu_i}}) \subset C
 					\end{equation*}
-					One might wonder if the opposite containment
-					\begin{equation*}
-						N \subset \bigcup_{i\in I} \text{Ran}(f_i|_{N^{\nu_i}})
-					\end{equation*}
-					so that
-					\begin{equation*}
-						N = \bigcup_{i\in I} \text{Ran}(f_i|_{N^{\nu_i}})
-					\end{equation*}
-					means that $N$ is minimally $\bv{f}$ inductive.
-					That is, does requiring that each element in $N$ be in the range of some construction function guarantee that there are no extraneous elements?
-					The answer is no because that second example above with $N' = \{a, b, c\}$ satisfied this set inclusion but, as we saw, this set was not minimally $\bv{f}$ inductive.
-					The condition that a $\bv{f}$ inductive set is a subset of the range of all of its construction functions turns out to be too weak to characterize that $N$ has no proper inductive subset.
-					However, while the condition that a $\bv{f}$ inductive set being equal to the range of all of its construction functions is not a sufficient condition for the set to be minimally $\bv{f}$ inductive, it is a necessary condition.
-					
-					\begin{preformal theorem}[A minimally $\bv{f}$ inductive set is equal to the range of its construction functions]
-						Suppose $N$ is minimally $\bv{f}$ inductive.
-						Let
-						\begin{equation*}
-							C = \bigcup_{i\in I} \text{Ran}(f_i|_{N^{\nu_i}}).
-						\end{equation*}
-						Because $N$ is $\bv{f}$ inductive we know $C \subset N$.
-						Let
-						\begin{equation*}
-							C' = \bigcup_{i\in I} \text{Ran}(f_i|_{C^{\nu_i}}) \subset \bigcup_{i\in I} \text{Ran}(f_i|_{N^{\nu_i}}) \subset C
-						\end{equation*}
-						where the first subset relation follows because $C\subset N$ and the second follows because $\bigcup_{i\in I}\text{Ran}(f_i|_{N^{\nu_i}}) = C$.
-						But 
-						\begin{equation*}
-							\bigcup_{i\in I} \text{Ran}(f_i|_{C^{\nu_i}}) \subset C
-						\end{equation*}
-						means that $C$ is closed under $\bv{f}$ which means that $C$ is $\bv{f}$ inductive.
-						But since $C\subset N$, $C$ is $\bv{f}$ inductive, and $N$ is minimally $\bv{f}$ inductive, we must have $N=C$.
-					\end{preformal theorem}
-					
-				\subsection{The $\bv{f}$ Inductive Closure}
+					means that $C$ is closed under $\bv{f}$ which means that $C$ is $\bv{f}$ inductive.
+					But since $C\subset N$, $C$ is $\bv{f}$ inductive, and $N$ is minimally $\bv{f}$ inductive, we must have $N=C$.
+				\end{preformal theorem}
 				
-					\begin{preformal definition}[The $\bv{f}$ inductive closure]
-						Suppose $N$ is $\bv{f}$ inductive.
-						We denote the $\bv{f}$ inductive closure of $N$ by $\bar{N}$ and define it by
-						\begin{equation*}
-							\bar{N} = \bigcap \{N' \in \mc{P}(N) \mid N' \text{ is } \bv{f} \text{ inductive}\}
-						\end{equation*}
-					\end{preformal definition}
-					
-					\begin{preformal theorem}[The $\bv{f}$ inductive closure is $\bv{f}$ inductive]
-						\label{thm:inductive closure is inductive}
-						Suppose $N$ is $\bv{f}$ inductive.
-						Let
-						\begin{equation*}
-							\bv{N} = \{N' \in \mc{P}(N) \mid N' \text{ is } \bv{f} \text{ inductive}\}
-						\end{equation*}
-						so that $\bar{N} = \bigcap \bv{N}$.
-						
-						We know that $N'$ is $\bv{f}$ inductive for each $N'\in \bv{N}$ which means $N'$ is closed under $\bv{f}$.
-						But Theorem \ref{thm:closurepreservedunderintersection} tell us that closure under a $U$ function is preserved under intersection, so this means $\bar{N}$ is also closed under $\bv{f}$ so that $\bar{N}$ itself is $\bv{f}$ inductive.
-					\end{preformal theorem}
-				
-					\begin{preformal theorem}[The $\bv{f}$ inductive closure is minimally $\bv{f}$ inductive]
-						\label{thm:inductive closure is minimally inductive}
-						Suppose $N$ is $\bv{f}$ inductive.
-						We know from Theorem \ref{thm:inductive closure is inductive} that $\bar{N}$ is $\bv{f}$ inductive.
-						
-						Now suppose $N' \subset \bar{N}$ is $\bv{f}$ inductive.
-						But, $\bar{N}$ is the intersection of all $\bv{f}$ inductive sets so we must have $\bar{N} \subset N'$ from which we conclude $N' = \bar{N}$ so that $\bar{N}$ is minimally $\bv{f}$ inductive.
-					\end{preformal theorem}
-				
-					\begin{preformal theorem}[There always exists a minimally $\bv{f}$ inductive set]
-							Suppose $\bv{f}$ is a $U$ function family. 
-							We know that $U$ is $\bv{f}$ inductive.
-							But, from Theorem \ref{thm:inductive closure is minimally inductive}, we know $\bar{U}$ is minimally $\bv{f}$ inductive.
-					\end{preformal theorem}
-					
-					\begin{preformal theorem}[There exists at most one minimally $\bv{f}$ inductive set]
-						Suppose $M$ and $N$ are both minimally $\bv{f}$ inductive.
-						Consider $M\cap N \subset M$.
-						Both $M$ and $N$ are closed under $\bv{f}$, so, since closure is preserved under intersection, $M \cap N$ must be closed under $\bv{f}$ which means $M \cap N$ is $\bv{f}$ inductive.
-						But, since $M \cap N\subset M$ is $\bv{f}$ inductive and $M$ is minimally $\bv{f}$ inductive, we must have $M\cap N = M$.
-						But $M\cap N = M$ means $M \subset N$.
-						However, since $M\subset N$ is $\bv{f}$ inductive and $N$ is minimally $\bv{f}$ inductive, we must have $M = N$.
-					\end{preformal theorem}
-					
-					\begin{preformal theorem}[There is exactly one minimally $\bv{f}$ inductive set]
-						The previous theorems establish that the existence and uniqueness of the minimally $\bv{f}$ inductive set.
-					\end{preformal theorem}
-				
-					
-				\begin{preformal definition}[The $(B, \bv{f})$ inductive closure]
-					Suppose $\bv{f}$ is a $U$ function family and $B$ is a set.
-					Suppose $N$ is $(B, \bv{f})$ inductive.
-					We define $\bar{N}$, the $(B, \bv{f})$ inductive closure of $N$ by 
+			\subsection{The $\bv{f}$ Inductive Closure}
+				\begin{preformal definition}[The $\bv{f}$ inductive closure]
+					Suppose $N$ is $\bv{f}$ inductive.
+					We denote the $\bv{f}$ inductive closure of $N$ by $\bar{N}$ and define it by
 					\begin{equation*}
-						\bar{N} = \bigcap \{N' \in  \mc{P}(N) \mid N' \text{ is } (B, \bv{f}) \text{ inductive}\}
+						\bar{N} = \bigcap \{N' \in \mc{P}(N) \mid N' \text{ is } \bv{f} \text{ inductive}\}
 					\end{equation*}
 				\end{preformal definition}
 				
-				\begin{preformal definition}[Minimally $(B, \bv{f})$ inductive]
-					Suppose $N$ is $(B, \bv{f})$ inductive and $N = \bar{N}$.
-					Then we say $N$ is minimally $(B, \bv{f})$ inductive.
-				\end{preformal definition}			
-				
-				\begin{preformal theorem}[Any $(B, \bv{f})$ inductive subset of a minimally $(B, \bv{f})$ inductive set is equal to the total set]
-					\label{thm:inductivesubsetofminimallyinductivesetequalswholeset}
-					Suppose $N$ is minimally $(B, \bv{f})$ inductive and $M\subset N$ is $(B, \bv{f})$ inductive.
-					Since $N$ is minimally $(B, \bv{f})$ inductive we have $N = \bar{N}$ but since $M$ is $(B, \bv{f})$ inductive we have $\bar{N} \subset M$ so that $N \subset M$.
-					This means $M = N$.
-				\end{preformal theorem}
-				Theorem \ref{thm:inductivesubsetofminimallyinductivesetequalswholeset} is essentially the induction theorem.
-				Suppose $N$ is minimally $(B, \bv{f})$ inductive and we are studying a set $M \subset N$, for example the set $M\subset N$ which satisfies some special property.
-				If we are able to show that $M$ is $(B, \bv{f})$ inductive then we know that $M=N$ and, therefore, that the special property applies to all of $N$.
-				In practice, we will perform induction using Theorem \ref{thm:inductiontheorem}, the induction theorem, below.
-				\begin{preformal theorem}[The induction theorem]
-					Suppose $N$ is minimally $(B, \bv{f})$ inductive and suppose $\phi(n)$ is a logical statement which depends on an element $n\in N$.
-					Then consider the set
+				\begin{preformal theorem}[The $\bv{f}$ inductive closure is $\bv{f}$ inductive]
+					\label{thm:inductive closure is inductive}
+					Suppose $N$ is $\bv{f}$ inductive.
+					Let
 					\begin{equation*}
-						N' = \{n \in N \mid \phi(n)\}.
+						\bv{N} = \{N' \in \mc{P}(N) \mid N' \text{ is } \bv{f} \text{ inductive}\}
 					\end{equation*}
-					If we can show $N'$ is $(B, \bv{f})$ inductive then, by Theorem \ref{thm:inductivesubsetofminimallyinductivesetequalswholeset}, we would know that $N' = N$ and therefore $\phi(n)$ holds for each $n\in N$.
+					so that $\bar{N} = \bigcap \bv{N}$.
 					
-					Suppose the following two conditions hold:
-					\begin{enumerate}
-						\item{(Base Case) $\phi(n)$ holds for each $n\in B$}
-						\item{(Induction Step) for each $i\in I$ and $\bv{n} \in D_i\subset N^{\nu_i}$ we can prove that if $\phi(n_j)$ holds for each $j\in [\nu_i]$  then $\phi(f_i(\bv{n}))$ holds}
-					\end{enumerate}
-					The first condition tells us that $B \subset M$ and the second condition tells us that $M$ is closed under $\bv{f}$ meaning $M$ is $(B, \bv{f})$ inductive and therefore $M=N$.
-					
-					The induction theorem says that if $N$ is minimally $(B, \bv{f})$ inductive and we can establish the base case and the induction step for a logical statement $\phi(n)$, then we know that $\phi(n)$ holds for each $n\in N$.
-				\end{preformal theorem}
-				
-
-
-			\subsection{Inductive Closure and Minimally Inductive}
-				We now prove a few facts about and explore the $(B, \bv{f})$ inductive closure and minimally $(B, \bv{f})$ inductive sets.
-				
-				\begin{preformal theorem}[The $(B, \bv{f})$ inductive closure is $(B, \bv{f})$ inductive]
-					\label{thm:inductiveclosureisinductive}
-					Let 
-					\begin{equation*}
-						\bv{N} = \{N' \in \mc{P}(N) \mid N' \text{ is } (B, \bv{f}) \text{ inductive}\}
-					\end{equation*}
-					so that
-					\begin{equation*}
-						\bar{N} = \bigcap \bv{N}.
-					\end{equation*}
-					Since each $N' \in \bv{N}$ is $(B, \bv{f})$ inductive we have that $B \subset N$ which means that $B \subset \bar{N}$.
-					By Theorem \ref{thm:closurepreservedunderintersection} we know that closure under a function is preserved under intersections so, since each $N' \in \bv{N}$ is closed under $\bv{f}$, we have that $\bar{N}$ is also closed under $\bv{f}$.
-					Since $B\subset \bar{N}$ and $\bar{N}$ is closed under $\bv{f}$, we have that $\bar{N}$ is $(B, \bv{f})$ inductive.
-				\end{preformal theorem}
-				
-				\begin{preformal theorem}[The $(B, \bv{f})$ inductive closure is minimally $(B, \bv{f})$ inductive]
-					\label{thm:inductiveclosureisminimallyinductive}
-					Consider $\bar{\bar{N}} \subset \bar{N}\subset N$.
-					But, by Theorem \ref{thm:inductiveclosureisinductive}, since $\bar{\bar{N}}$ is a $(B, \bv{f})$ inductive closure, it is $(B, \bv{f})$ inductive.
-					But, $\bar{N}$ is the intersection of all $(B, \bv{f})$ inductive subsets of $N$, so this means $\bar{N} \subset \bar{\bar{N}}$.
-					But this gives us that $\bar{N} = \bar{\bar{N}}$ which means $\bar{N}$ is minimally $(B, \bv{f})$ inductive.
-				\end{preformal theorem}
-				
-				\begin{preformal theorem}[Minimally $(B, \bv{f})$ inductive implies $(B, \bv{f})$ inductive]
-					\label{thm:minimallyinductiveimpliesinductive}
-					If $N$ is minimally $(B, \bv{f})$ inductive then $N = \bar{N}$, but by Theorem \ref{thm:inductiveclosureisinductive}, we know that $\bar{N}$ is $(B, \bv{f})$ inductive.
+					We know that $N'$ is $\bv{f}$ inductive for each $N'\in \bv{N}$ which means $N'$ is closed under $\bv{f}$.
+					But Theorem \ref{thm:closurepreservedunderintersection} tell us that closure under a $U$ function is preserved under intersection, so this means $\bar{N}$ is also closed under $\bv{f}$ so that $\bar{N}$ itself is $\bv{f}$ inductive.
 				\end{preformal theorem}
 			
-				\begin{preformal theorem}[There exists at least one minimally $(B, \bv{f})$ inductive set]
-					\label{thm:minimalinductiveexistence}
-					We have that $\bv{f}$ is a $U$ function family. 
-					Recall that $U$ is closed under $\bv{f}$.
-					Consider, then, the set $N = U \cup B$.
-					We can see this set is $B\subset N$ and that $N$ is closed under $\bv{f}$.
-					We can then take $\bar{N}$ and see that it is minimally $(B, \bv{f})$ inductive.
+				\begin{preformal theorem}[The $\bv{f}$ inductive closure is minimally $\bv{f}$ inductive]
+					\label{thm:inductive closure is minimally inductive}
+					Suppose $N$ is $\bv{f}$ inductive.
+					We know from Theorem \ref{thm:inductive closure is inductive} that $\bar{N}$ is $\bv{f}$ inductive.
+					
+					Now suppose $N' \subset \bar{N}$ is $\bv{f}$ inductive.
+					But, $\bar{N}$ is the intersection of all $\bv{f}$ inductive sets so we must have $\bar{N} \subset N'$ from which we conclude $N' = \bar{N}$ so that $\bar{N}$ is minimally $\bv{f}$ inductive.
+				\end{preformal theorem}
+			
+				\begin{preformal theorem}[There always exists a minimally $\bv{f}$ inductive set]
+						Suppose $\bv{f}$ is a $U$ function family. 
+						We know that $U$ is $\bv{f}$ inductive.
+						But, from Theorem \ref{thm:inductive closure is minimally inductive}, we know $\bar{U}$ is minimally $\bv{f}$ inductive.
 				\end{preformal theorem}
 				
-				\begin{preformal theorem}[There exists at most one minimally $(B, \bv{f})$ inductive set]				
-					Suppose $M$ and $N$ are both minimally $(B, \bv{f})$ inductive.
+				\begin{preformal theorem}[There exists at most one minimally $\bv{f}$ inductive set]
+					Suppose $M$ and $N$ are both minimally $\bv{f}$ inductive.
 					Consider $M\cap N \subset M$.
-					Since $B \subset M$ and $B \subset N$ we have $B \subset M \cap N$.
-					Since $M$ and $N$ are both closed under $\bv{f}$ and, by Theorem \ref{thm:closurepreservedunderintersection} closure is preserved under intersection, we have that $M\cap N$ is also closed under $\bv{f}$.
-					But this means $M\cap N \subset M$ is $(B, \bv{f})$ inductive.
-					But, since $M$ is \textit{minimally} $(B, \bv{f})$ inductive, we must have, by Theorem \ref{thm:inductivesubsetofminimallyinductivesetequalswholeset} that 
-					\begin{equation*}
-						M \cap N = M
-					\end{equation*}
-					But, if $M\cap N = M$ this means that $M \subset N$.
-					But, $M$ is $(B, \bv{f})$ inductive and $N$ is \textit{minimally} $(B, \bv{f})$ inductive which means, since $M\subset N$, we must have $M=N$.
-				\end{preformal theorem}
-			
-				\begin{preformal theorem}[Minimally $(B, \bv{f})$ inductive function restriction]
-					\label{thm:inductivefunctionrestriction}
-					Recall that if $N$ is closed under $\nu$-ary $U$ function $f$ then
-					\begin{equation*}
-						\text{Ran}(f|_{N^{\nu}}) \subset N.
-					\end{equation*}
-					We can see that if $N$ is closed under $f$ then $N$ is closed under $f|_{N^{\nu}}$.
-					This means that if $N$ is $(B, \bv{f})$ inductive then $N$ is $(B, \bv{f}|_N)$ inductive.
-					Likewise, it also means that if $N$ is minimally $(B, \bv{f})$ inductive then it is minimally $(B, \bv{f}|_N)$ inductive since any $(B, \bv{f})$ inductive subset of $N$ is also $(B, \bv{f}|_N)$ inductive.
+					Both $M$ and $N$ are closed under $\bv{f}$, so, since closure is preserved under intersection, $M \cap N$ must be closed under $\bv{f}$ which means $M \cap N$ is $\bv{f}$ inductive.
+					But, since $M \cap N\subset M$ is $\bv{f}$ inductive and $M$ is minimally $\bv{f}$ inductive, we must have $M\cap N = M$.
+					But $M\cap N = M$ means $M \subset N$.
+					However, since $M\subset N$ is $\bv{f}$ inductive and $N$ is minimally $\bv{f}$ inductive, we must have $M = N$.
 				\end{preformal theorem}
 				
-				Because of Theorem \ref{thm:inductivefunctionrestriction}, we will take license to assume, unless otherwise stated, that if we are talking about a set $N$ which is minimally $(B, \bv{f})$ inductive then we will assume that $\bv{f}$ is an $N$ function family.
-				If we assume only that $\bv{f}$ is a $U$ function family with $N\subset B \cup U$ then it will be necessary to always specify $\bv{f}|_N$ or $f_i|_{N^{\nu_i}}$.
-				It is more concise to suppose that $\bv{f}$ is an $N$ function family and dispense with the unnecessary possibility of a superset $U$ on which the $f_i$ are defined.
-				The uniqueness of the minimally $(B, \bv{f})$ inductive set gives us further reason to disregard any larger universe superset $U$ because there might in fact be another $U'$ and $\bv{f}'$ such that the unique minimal $(B, \bv{f})$ inductive set is equal to that unique minimal $(B, \bv{f}')$ inductive set.
-				So we see that we are incentivized to drop references to the universal superset $U$ and focus instead on the distilled minimal $(B, \bv{f})$ inductive set and consider $\bv{f}$ to already be restricted to the minimal $(B, \bv{f})$ inductive set.
-			
+				\begin{preformal theorem}[There is exactly one minimally $\bv{f}$ inductive set]
+					The previous theorems establish that the existence and uniqueness of the minimally $\bv{f}$ inductive set.
+				\end{preformal theorem}
+					
 			\subsection{Unique Readability}
 				
 				\begin{preformal theorem}[Each element of a minimally $(B, \bv{f})$ inductive set is either in $B$ or the range of a $f_i$ for some $i\in I$]
@@ -1299,110 +1182,110 @@
 					But by the first freely generated condition we know that $f_i$ is injective so that there is a unique $\bv{n} \in \text{Dom}(f_i) \subset N^{\nu_i}$ such that $n = f_i(\bv{n})$ and by third freely generated condition we know that there is no other $j\in I$ with $j\neq i$ such that $n\in \text{Ran}(f_j)$.
 				\end{preformal theorem}
 			
-			\section{Structural Recursion}
-			
-				We care about minimally $(B, \bv{f})$ inductive sets which exhibit unique readability because, as we will see below, these are exactly the sets on which we can define functions using recursion.
-				A recursive function defined on a minimally $(B, \bv{f})$ inductive set $N$ which exhibits unique readability is a function $h: N \to S$ where $h|_B$ is specified explicitly via a function $h_B: B \to S$ and a rule is specified which allows us to calculate, for each $i\in I$ and $\bv{n} \in \text{Dom}(f_i) \subset N^{\nu_i}$, the value of $h(f_i(\bv{n}))$ given known values $h(n_j)$ for each $j\in [\nu_i]$.
-				For example, the factorial function $\text{Factorial}: \N\to \N$ is defined by
-				\begin{align*}
-					\text{Factorial}(0) =& 1\\
-					\text{Factorial}(n+1) =& (n+1) \times \text{Factorial}(n).
-				\end{align*}
-				Here we have define a recursive function on $\N$ with base set $B = \{0\}$ and a singular construction function $\bv{f} = (f_{+_1})$ where $+_1(n) = n+1$.
-				We can see that we have explicitly specified the value of $\text{Factorial}$ on $B$ by specifying $\text{Factorial}(0) = 1$ and we can see that $\text{Factorial}(+_1(n)) = \text{Factorial}(n+1)$ is defined in terms of $\text{Factorial}(n)$.
-				This is the essence of a recursive function definition.
-	
-				We have an intuitive sense that this function is well-defined, however, to prove that such functions can be defined, in general, on structurally inductive sets requires the full power of the recursion theorem below.
-				We can see why unique readability is necessary for recursion. Suppose, for example, that $f_i(\bv{n}) = b \in B$. 
-				Then we have two rules for calculating $h(f_i(\bv{n}))$.
-				On the one hand, we have a rule for computing it from $h(n_j)$ for each $j\in [\nu_i]$, but on the other hand, we can calculate it directly via $h_B(f_i(\bv{n}))$.
-				There is no particular reason that these two computation should agree.
-				The same issue arises if $f_i(\bv{n}) = f_{i'}(\bv{n}')$ for $i'\neq i$ and $\bv{n}' \in \text{Dom}(f_{i'}) \subset N^{\nu_{i'}}$.
-				However, this complication is exactly what is avoided by unique readability.
-			
-				\begin{preformal theorem}[The Structural Recursion Theorem]
-					Suppose $N$ exhibits $(B, \bv{f})$ unique readability.
-					Suppose that there is a set $S$ and a function $h_B: B \to S$.
-					Suppose also that for each $i \in I$ there is a function $h_{f_i}: S^{\nu_i} \to S$.
-					
-					Under these conditions, the structural recursion theorem states that there is a unique function $h: N \to S$ which satisfies
-					\begin{itemize}
-						\item{$h|_B = h_B$}
-						\item{For each $i\in I$ and for each $\bv{n} \in \text{Dom}(f_i) \subset N^{\nu_i}$, we have that $h(f_i(\bv{n})) = h_{f_i}(h^{(\nu_i)}(\bv{n}))$.}
-					\end{itemize}
-					
-					We define
-					\begin{align*}
-						\mc{H} = \{&H \in \mc{P}(N\times S) \mid H \text{ is functional and }\\
-						&H|_B = h_B \text{ and}\\
-						&\text{for all } i \in I \text{ and } \bv{n} \in \text{Dom}(f_i) \subset  N^{\nu_i},\\
-						&\text{that if } f_i(\bv{n}) \in \text{Dom}(H) \text{ then }\\
-						&n_j \in \text{Dom}(H) \text{ for each } j \in [\nu_i] \text{ and }\\
-						&H(f_i(\bv{n})) = h_{f_i}(H^{(\nu_i)}(\bv{n}))\}
-					\end{align*}
-					and take
-					\begin{equation*}
-						h = \bigcup \mc{H}.
-					\end{equation*}
-					
-					We now must prove $h$ is total on $N$, functional, satisifes the desired properties, and is unique.
-					
-					We first prove that if $H_1, H_2 \in \mc{H}$ then $H_1$ and $H_2$ agree on their common domain $D = \text{Dom}(H_1) \cap \text{Dom}(H_2)$.
-					We prove this by induction on $N$.
-					Specifically, we prove that if $n\in D$ then $H_1(n) = H_2(n)$.
-					For the base case if $n\in B$ we know that $H_1(n) = H_2(n) = h_B(n)$.
-					For the induction case we consider $i\in I$ and $\bv{n} \in \text{Dom}(f_i)\subset  N^{\nu_i}$.
-					We assume for each $j\in [\nu_i]$ that if $n_j \in D$ that $H_1(n_j) = H_2(n_j)$.
-					If $f_i(\bv{n}) \not \in D$ then there is nothing to prove.
-					If $f_i(\bv{n}) \in D$ then we know $n_j \in D$ for each $j \in [\nu_i]$. 
-					But we know that $H_1$ and $H_2$ agree on each $n_j$.
-					But we also know that
-					\begin{equation*}
-						H_1(f_i(\bv{n})) = h_{f_i}(H_1^{(\nu_i)}(\bv{n})) = h_{f_i}(H_2^{(\nu_i)}(\bv{n})) = H_2(f_i(\bv{n}))
-					\end{equation*}
-					where the middle equality follows because $H_1$ and $H_2$ agree on the $n_j$ and the outer equalities follow from the condition that $H_1, H_2 \in \mc{H}$.
-					But, since all pairs $H_1, H_2 \in \mc{H}$ agree on their common domains, this means $h = \bigcup \mc{H}$ is functional.
-					
-					We prove by induction that $h$ is total.
-					We know that $H|_B = h_B$ for each $H \in B$ so this means $h|_B = h_B$.
-					Now consider $i\in I$ and $\bv{n} \in \text{Dom}(f_i) \subset  N^{\nu_i}$ and assume that $n_j \in \text{Dom}(h)$ for each $j \in [\nu_i]$.
-					We must show that $f_i(\bv{n}) \in \text{Dom}(h)$.
-					Because $n_j \in \text{Dom}(h)$, this means there is an $H_j \in \mc{H}$ with $n_j \in \text{Dom}(H_j)$.
-					Consider the set 
-					\begin{align*}
-						H = \bigcup_{j\in [\nu_i]} H_j.
-					\end{align*}
-					We have that $n_j \in \text{Dom}(H)$ for each $j \in [\nu_i]$.
-					We know that $H|_B = h_B$.
-					Now suppose $f_{i'}(\bv{n}') \in \text{Dom}(H)$ for some $i' \in I$ and $\bv{n}' \in N^{\nu_{i'}}$.
-					This means there is some $j' \in [\nu_i]$ such that $f_{i'}(\bv{n}') \in \text{Dom}(H_{j'})$.
-					But since $H_{j'} \in \mc{H}$ this means $n'_j\in \text{Dom}(H_{j'})$ for each $j \in [\nu_{i'}]$ which means these same elements are also in $H$.
-					Because $f_{i'}(\bv{n}') \in H_{j'}$, we have that $H_{j'}(f_{i'}(\bv{n}')) = h_{f_i}(H_{j'}^{(\nu_{i'})}(\bv{n}'))$.
-					But this also means $H(f_{i'}(\bv{n}')) = h_{f_i}(H^{(\nu_{i'})}(\bv{n}'))$.
-					All of this means $H \in \mc{H}$.
-					But, now, consider
-					\begin{equation*}
-						H' = H \cup \{\braket{f_i(\bv{n}), h_{f_i}(H^{(\nu_i)}(\bv{n}))}\}
-					\end{equation*}
-					By unique readability we know $f_i(\bv{n}) \not \in B$ so $H'|_B = h_B$ still.
-					We also know that there is no other $j \in I$ such that $f_i(\bv{n}) \in \text{Ran}(f_{j})$ and there is no other $\bv{n}' \in \text{Dom}(f_i) \subset N^{\nu_i}$ such that $f_i(\bv{n}) = f_i(\bv{n}')$.
-					This means that the conditions on $f_i(\bv{n})$ within $H \in \mc{H}$ are satisfied.
-					This means $H' \in \mc{H}$.
-					But this also means that $f_i(\bv{n}) \in \text{Dom}(h)$.
-					
-					We know that each $H\in \mc{H}$ has $H|_B = h_B$ so we know $h|_B = h_B$.
-					We also know that each $H \in \mc{H}$ satisfies the recursive condition on $\mc{H}$.
-					But this means $h$ also satisfies that condition which means $h \in \mc{H}$ and that for each $i \in I$ and $\bv{n} \in \text{Dom}(f_i) \subset N^{\nu_i}$ that
-					\begin{equation*}
-						h(f_i(\bv{n})) = h_{f_i}(h^{(\nu_i)}(\bv{n})).
-					\end{equation*}
-					So we see that $h$ satisfies both recursion conditions.
-					
-					Now suppose $h': N \to S$ satisifes $h'|_B = h_B$ and the recursive condition.
-					Then $h'\in \mc{H}$ which means $h = h'$ since $h, h' \in \mc{H}$ and they have the same domain, namely $N$.
-				\end{preformal theorem}
+		\section{Structural Recursion}
+		
+			We care about minimally $(B, \bv{f})$ inductive sets which exhibit unique readability because, as we will see below, these are exactly the sets on which we can define functions using recursion.
+			A recursive function defined on a minimally $(B, \bv{f})$ inductive set $N$ which exhibits unique readability is a function $h: N \to S$ where $h|_B$ is specified explicitly via a function $h_B: B \to S$ and a rule is specified which allows us to calculate, for each $i\in I$ and $\bv{n} \in \text{Dom}(f_i) \subset N^{\nu_i}$, the value of $h(f_i(\bv{n}))$ given known values $h(n_j)$ for each $j\in [\nu_i]$.
+			For example, the factorial function $\text{Factorial}: \N\to \N$ is defined by
+			\begin{align*}
+				\text{Factorial}(0) =& 1\\
+				\text{Factorial}(n+1) =& (n+1) \times \text{Factorial}(n).
+			\end{align*}
+			Here we have define a recursive function on $\N$ with base set $B = \{0\}$ and a singular construction function $\bv{f} = (f_{+_1})$ where $+_1(n) = n+1$.
+			We can see that we have explicitly specified the value of $\text{Factorial}$ on $B$ by specifying $\text{Factorial}(0) = 1$ and we can see that $\text{Factorial}(+_1(n)) = \text{Factorial}(n+1)$ is defined in terms of $\text{Factorial}(n)$.
+			This is the essence of a recursive function definition.
+
+			We have an intuitive sense that this function is well-defined, however, to prove that such functions can be defined, in general, on structurally inductive sets requires the full power of the recursion theorem below.
+			We can see why unique readability is necessary for recursion. Suppose, for example, that $f_i(\bv{n}) = b \in B$. 
+			Then we have two rules for calculating $h(f_i(\bv{n}))$.
+			On the one hand, we have a rule for computing it from $h(n_j)$ for each $j\in [\nu_i]$, but on the other hand, we can calculate it directly via $h_B(f_i(\bv{n}))$.
+			There is no particular reason that these two computation should agree.
+			The same issue arises if $f_i(\bv{n}) = f_{i'}(\bv{n}')$ for $i'\neq i$ and $\bv{n}' \in \text{Dom}(f_{i'}) \subset N^{\nu_{i'}}$.
+			However, this complication is exactly what is avoided by unique readability.
+		
+			\begin{preformal theorem}[The Structural Recursion Theorem]
+				Suppose $N$ exhibits $(B, \bv{f})$ unique readability.
+				Suppose that there is a set $S$ and a function $h_B: B \to S$.
+				Suppose also that for each $i \in I$ there is a function $h_{f_i}: S^{\nu_i} \to S$.
 				
-			\section{Strong Structural Induction and Recursion}
+				Under these conditions, the structural recursion theorem states that there is a unique function $h: N \to S$ which satisfies
+				\begin{itemize}
+					\item{$h|_B = h_B$}
+					\item{For each $i\in I$ and for each $\bv{n} \in \text{Dom}(f_i) \subset N^{\nu_i}$, we have that $h(f_i(\bv{n})) = h_{f_i}(h^{(\nu_i)}(\bv{n}))$.}
+				\end{itemize}
+				
+				We define
+				\begin{align*}
+					\mc{H} = \{&H \in \mc{P}(N\times S) \mid H \text{ is functional and }\\
+					&H|_B = h_B \text{ and}\\
+					&\text{for all } i \in I \text{ and } \bv{n} \in \text{Dom}(f_i) \subset  N^{\nu_i},\\
+					&\text{that if } f_i(\bv{n}) \in \text{Dom}(H) \text{ then }\\
+					&n_j \in \text{Dom}(H) \text{ for each } j \in [\nu_i] \text{ and }\\
+					&H(f_i(\bv{n})) = h_{f_i}(H^{(\nu_i)}(\bv{n}))\}
+				\end{align*}
+				and take
+				\begin{equation*}
+					h = \bigcup \mc{H}.
+				\end{equation*}
+				
+				We now must prove $h$ is total on $N$, functional, satisifes the desired properties, and is unique.
+				
+				We first prove that if $H_1, H_2 \in \mc{H}$ then $H_1$ and $H_2$ agree on their common domain $D = \text{Dom}(H_1) \cap \text{Dom}(H_2)$.
+				We prove this by induction on $N$.
+				Specifically, we prove that if $n\in D$ then $H_1(n) = H_2(n)$.
+				For the base case if $n\in B$ we know that $H_1(n) = H_2(n) = h_B(n)$.
+				For the induction case we consider $i\in I$ and $\bv{n} \in \text{Dom}(f_i)\subset  N^{\nu_i}$.
+				We assume for each $j\in [\nu_i]$ that if $n_j \in D$ that $H_1(n_j) = H_2(n_j)$.
+				If $f_i(\bv{n}) \not \in D$ then there is nothing to prove.
+				If $f_i(\bv{n}) \in D$ then we know $n_j \in D$ for each $j \in [\nu_i]$. 
+				But we know that $H_1$ and $H_2$ agree on each $n_j$.
+				But we also know that
+				\begin{equation*}
+					H_1(f_i(\bv{n})) = h_{f_i}(H_1^{(\nu_i)}(\bv{n})) = h_{f_i}(H_2^{(\nu_i)}(\bv{n})) = H_2(f_i(\bv{n}))
+				\end{equation*}
+				where the middle equality follows because $H_1$ and $H_2$ agree on the $n_j$ and the outer equalities follow from the condition that $H_1, H_2 \in \mc{H}$.
+				But, since all pairs $H_1, H_2 \in \mc{H}$ agree on their common domains, this means $h = \bigcup \mc{H}$ is functional.
+				
+				We prove by induction that $h$ is total.
+				We know that $H|_B = h_B$ for each $H \in B$ so this means $h|_B = h_B$.
+				Now consider $i\in I$ and $\bv{n} \in \text{Dom}(f_i) \subset  N^{\nu_i}$ and assume that $n_j \in \text{Dom}(h)$ for each $j \in [\nu_i]$.
+				We must show that $f_i(\bv{n}) \in \text{Dom}(h)$.
+				Because $n_j \in \text{Dom}(h)$, this means there is an $H_j \in \mc{H}$ with $n_j \in \text{Dom}(H_j)$.
+				Consider the set 
+				\begin{align*}
+					H = \bigcup_{j\in [\nu_i]} H_j.
+				\end{align*}
+				We have that $n_j \in \text{Dom}(H)$ for each $j \in [\nu_i]$.
+				We know that $H|_B = h_B$.
+				Now suppose $f_{i'}(\bv{n}') \in \text{Dom}(H)$ for some $i' \in I$ and $\bv{n}' \in N^{\nu_{i'}}$.
+				This means there is some $j' \in [\nu_i]$ such that $f_{i'}(\bv{n}') \in \text{Dom}(H_{j'})$.
+				But since $H_{j'} \in \mc{H}$ this means $n'_j\in \text{Dom}(H_{j'})$ for each $j \in [\nu_{i'}]$ which means these same elements are also in $H$.
+				Because $f_{i'}(\bv{n}') \in H_{j'}$, we have that $H_{j'}(f_{i'}(\bv{n}')) = h_{f_i}(H_{j'}^{(\nu_{i'})}(\bv{n}'))$.
+				But this also means $H(f_{i'}(\bv{n}')) = h_{f_i}(H^{(\nu_{i'})}(\bv{n}'))$.
+				All of this means $H \in \mc{H}$.
+				But, now, consider
+				\begin{equation*}
+					H' = H \cup \{\braket{f_i(\bv{n}), h_{f_i}(H^{(\nu_i)}(\bv{n}))}\}
+				\end{equation*}
+				By unique readability we know $f_i(\bv{n}) \not \in B$ so $H'|_B = h_B$ still.
+				We also know that there is no other $j \in I$ such that $f_i(\bv{n}) \in \text{Ran}(f_{j})$ and there is no other $\bv{n}' \in \text{Dom}(f_i) \subset N^{\nu_i}$ such that $f_i(\bv{n}) = f_i(\bv{n}')$.
+				This means that the conditions on $f_i(\bv{n})$ within $H \in \mc{H}$ are satisfied.
+				This means $H' \in \mc{H}$.
+				But this also means that $f_i(\bv{n}) \in \text{Dom}(h)$.
+				
+				We know that each $H\in \mc{H}$ has $H|_B = h_B$ so we know $h|_B = h_B$.
+				We also know that each $H \in \mc{H}$ satisfies the recursive condition on $\mc{H}$.
+				But this means $h$ also satisfies that condition which means $h \in \mc{H}$ and that for each $i \in I$ and $\bv{n} \in \text{Dom}(f_i) \subset N^{\nu_i}$ that
+				\begin{equation*}
+					h(f_i(\bv{n})) = h_{f_i}(h^{(\nu_i)}(\bv{n})).
+				\end{equation*}
+				So we see that $h$ satisfies both recursion conditions.
+				
+				Now suppose $h': N \to S$ satisifes $h'|_B = h_B$ and the recursive condition.
+				Then $h'\in \mc{H}$ which means $h = h'$ since $h, h' \in \mc{H}$ and they have the same domain, namely $N$.
+			\end{preformal theorem}
+			
+		\section{Strong Structural Induction and Recursion}
 			
 			We now works towards stating and proving the strong induction and recursion theorem.
 			First, we make our first use of the (weak) recursion theorem to define the set of predecessor of an element $n\in N$.
