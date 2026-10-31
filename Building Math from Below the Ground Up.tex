@@ -263,8 +263,9 @@
 			\end{preformal definition}
 			
 			\begin{preformal definition}[Subset]
-				If $S$ and $T$ are sets and all elements that are contained in $S$ are also contained in $T$ then we say $S$ is a subset of $T$ and we denote this by $S \subset T$.
-				This can also be more rigorously by specifying that $S\subset T$ if for all $x\in S$ we have that $x\in T$.
+				If $S$ and $T$ are sets and $x\in S$ eimplies $x\in T$ then we say $S$ is a subset of $T$ and denote this by $S \subset T$.
+				
+				If $S\subset T$ but $S \neq T$ then we say $S$ is a proper subset of $T$.
 			\end{preformal definition}
 			
 			\begin{preformal definition}[Set Equality]
@@ -525,20 +526,7 @@
 				Often $I = [n]$ for some $n \in \N$ in which case we call the tuple an $n$-tuple. 
 				If we want to emphasize that the elements of a tuple are sets then we may call the $I$-tuple an $I$-indexed family or $I$-collection.
 			\end{preformal definition}
-		
-			\begin{preformal definition}[The Empty Tuple]
-				Suppose $\bv{t}$ is a $\emptyset$-tuple.
-				Then $\bv{t}$ is a functional relation with $\text{Dom}(\bv{t}) = \emptyset$.
-				But if $\text{Dom}(\bv{t}) = \emptyset$ then there are no ordered pairs $\braket{x, y} \in \bv{t}$ since there is no $x\in \emptyset$.
-				This means that if $\text{Dom}(\bv{t}) = \emptyset$ then $\bv{t} = \emptyset$, the empty relation.
-				So, there is a unique $\emptyset$-tuple.
-				We denote this tuple by
-				\begin{equation*}
-					\varnothing = ().
-				\end{equation*}
-				$\varnothing$ is simply a different font for $\emptyset$ and we note that, set theoretically, $\varnothing = \emptyset$. However, we will use the notation $\varnothing$ to emphasize the fact that we are considering the object as a tuple.
-				Note also that $[0] = \emptyset$ so an $\emptyset$-tuple is the same as a $0$-tuple.
-			\end{preformal definition}
+	
 
 			\begin{preformal definition}[Set Operations on Tuples]
 				Suppose $\bv{S} = (S_i)_{i\in I}$.
@@ -614,6 +602,10 @@
 				Note that there is a natural identification between $S$ and $S^1$ given by $s \mapsto (s)$.
 				Sometimes it will be convenient for us to abuse notation and identify $S$ with $S^1$.
 				Note that $S^0 = \{\varnothing\}$, the set containing only the empty tuple.
+				Finally, note that
+				\begin{equation*}
+					S^n = S^{[n]} = \text{Func}([n], S).
+				\end{equation*}
 			\end{preformal definition}
 	
 			\begin{preformal definition}[Function Whose Domain is a Cartesian Product]
@@ -683,6 +675,100 @@
 				the set of non-empty lists.
 			\end{preformal definition}
 	
+			\subsection{Aside on Empty Relations and Tuples}
+				We have need to use some edge case properties of empty Cartesian products, relations, functions, and tuples.
+				
+				\begin{preformal theorem}[Cartesian products with the empty set]
+					Consider $X \times Y$. 
+					$\braket{x, y} \in X \times Y$ if $x\in X$ and $y\in Y$.
+					If $X = \emptyset$ then $x\not \in X = \emptyset$ so
+					\begin{equation*}
+						\emptyset \times Y = \emptyset.
+					\end{equation*}
+					If $Y = \emptyset$ then $y\not \in Y = \emptyset$ so
+					\begin{equation*}
+						X \times \emptyset = \emptyset.
+					\end{equation*}
+					We also have that
+					\begin{equation*}
+						\emptyset \times \emptyset = \emptyset.
+					\end{equation*}
+				\end{preformal theorem}
+				
+				\begin{preformal theorem}[The empty relation]
+					\label{thm:empty relation}
+					Suppose $X$ and $Y$ are sets.
+					We have
+					\begin{align*}
+						\emptyset \subset& X \times \emptyset = \emptyset\\
+						\emptyset \subset& \emptyset \times Y = \emptyset\\
+						\emptyset \subset& \emptyset \times \emptyset = \emptyset\\										
+					\end{align*}
+					So $\emptyset$ is a relation between $X$ and $\emptyset$, between $\emptyset$ and $Y$, and between $\emptyset$ and $\emptyset$.
+					We have
+					\begin{equation*}
+						\text{Dom}(\emptyset) = \text{Ran}(\emptyset) = \emptyset
+					\end{equation*}
+					Since $\text{Dom}(\emptyset) = \emptyset$ and $\text{Ran}(\emptyset) = \emptyset \subset Y$ for all $Y$, we have that
+					\begin{equation*}
+						\emptyset: \emptyset \to Y
+					\end{equation*}
+					for all $Y$.
+					Recall
+					\begin{equation*}
+						\text{Func}(X, Y) = Y^X = \{f \in \mc{P}(X \times Y) \mid f: X \to Y\}
+					\end{equation*}
+					If either $X$ or $Y$ is empty we see $X\times Y = \emptyset$ so $\mc{P}(X\times Y) = \{\emptyset\}$.
+					If $X = \emptyset$, we know from above that $\emptyset: \emptyset \to Y$ so 
+					\begin{equation*}
+						\text{Func}(\emptyset, Y) = Y^{\emptyset} = \{\emptyset\}
+					\end{equation*}
+					for all $Y$.
+					But, suppose $Y$ is empty but $X$ is non-empty.
+					$\text{Dom}(\emptyset) = \emptyset \not = X$ so this means $\emptyset$ is not a function from $X$ to $\emptyset$ so that
+					\begin{equation*}
+						\text{Func}(X, \emptyset) = \emptyset^X = \emptyset
+					\end{equation*}
+					if $X$ is non-empty.
+					
+					So there is one function with empty domain, but if the domain is non-empty there are zero functions with empty range.
+				\end{preformal theorem}
+				
+				\begin{preformal definition}[The Empty Tuple]
+					Suppose $\bv{t}$ is a $\emptyset$-tuple which means $\bv{t}$ is a functional relation with $\text{Dom}(\bv{t}) = \emptyset$.
+					From Theorem \ref{thm:empty relation}, we know the empty relation, $\emptyset$, is the unique functional relation with domain equal to the emptyset.
+					This means we must have 
+					\begin{equation*}
+						\bv{t} = \emptyset
+					\end{equation*}
+					When we are thinking of a tuple as being equal to $\emptyset$, we denote this by
+					\begin{equation*}
+						\bv{t} = \varnothing = ().
+					\end{equation*}
+					$\varnothing$ is simply a different font for $\emptyset$ and it is also the case that $\varnothing = \emptyset$, however, we still use $\varnothing$ to emphasize the fact that we are thinking of $\varnothing$ as being an $\emptyset$-tuple.
+					Note also that $[0] = \emptyset$ so an $\emptyset$-tuple is the same as a $0$-tuple.
+				\end{preformal definition}
+	
+				\begin{preformal theorem}[Repeated Cartesian products of $\emptyset$]
+					\label{thm:repeated cartesian products of emptyset}
+					Theorem \ref{thm:empty relation} tells us that
+					\begin{align*}
+						\text{Func}(\emptyset, Y) =& Y^{\emptyset} = \{\varnothing\} = \{()\}\\
+						\text{Func}(X, \emptyset) =& \emptyset^X = \emptyset
+					\end{align*}
+					for all $Y$ and non-empty $X$.
+					Let $X=[\nu]$ with $\nu \in \N$.
+					If $\nu > 0$ then $X$ is non-empty so we have $\emptyset^{\nu} = \emptyset$.
+					But if $\nu=0$ then $X = \emptyset$ so $\emptyset^{\nu} = \emptyset^0 = \{\varnothing\}$.
+					From this we establish
+					\begin{equation*}
+						\emptyset^{\nu} = \begin{cases}
+							\{\varnothing\} &\text{if } \nu=0\\
+							\emptyset & \text{if } \nu > 0.
+						\end{cases}
+					\end{equation*}
+				\end{preformal theorem}	
+	
 	\chapter{Preformal Structural Induction and Recursion}
 	\label{ch:preformalinduction}
 		In Chapter \ref{ch:preformalbasic} we gave numerous preformal definitions and theorems for mathematical concepts related to sets, numbers, functions, and tuples.
@@ -691,18 +777,37 @@
 		\section{$U$ Functions}
 		
 			\begin{preformal definition}[$U$ Function]
-				Suppose $U$ is a set, $\nu\in \N^+$, $D\subset U^{\nu}$, and $f: D \to U$.
+				Suppose $U$ is a set, $\nu\in \N$, $D\subset U^{\nu}$, and $f: D \to U$.
 				Then we say $f$ is a $\nu$-ary $U$ function.
-				Note that we exclude $0$-ary functions from the definition.
+				In other words, $f$ is a $\nu$-ary $U$ function if $\text{Dom}(f) \subset U^\nu$ and $\text{Ran}(f) \subset U$.
+			\end{preformal definition}
+			Note that we allow $0$-ary functions in the definition of a $U$ function.
+			Recall that $U^0 = \{\varnothing\}$, the set containing only the empty tuple.
+			So a $0$-ary $U$ function is of the form $f = \{\braket{\varnothing, u}\}$ with $u\in U$ so that $f(\varnothing) = u$.
+			We can identify a $0$-ary $U$ function $f$ with the element $u\in U$ such that $f(\varnothing) = u$.
+			
+			\begin{preformal definition}[Closed Under a  $U$ Function]
+				Suppose $f$ is a $\nu$-ary $U$ function and $N$ is a set.
+				If $\text{Ran}(f|_{(N)^{\nu}}) \subset N$ then we say $N$ is closed under $f$.
 			\end{preformal definition}
 		
-			\begin{preformal definition}[Closed Under a  $U$ Function]
-				Suppose $f$ is a $\nu$-ary $U$ function.
-				If $\text{Ran}(f|_{(U')^{\nu}}) \subset U'$ then we say $U'$ is closed under $f$.
-			\end{preformal definition}
+			\begin{preformal theorem}[Closure is preserved under intersections]
+				\label{thm:closurepreservedunderintersection}
+				Suppose $f$ is a $\nu$-ary $U$ function and $\bv{N}$ is a set of sets and each $N \in \bv{N}$ is closed under $f$.
+				We can see that
+				\begin{equation*}
+					\text{Ran}\left(f|_{\left(\bigcap \bv{N}\right)^{\nu}}\right) \subset \text{Ran}\left(f|_{N^{\nu}}\right) \subset N
+				\end{equation*}
+				for each $N \in \bv{N}$ because $\bigcap \bv{N} \subset N$.
+				But this means
+				\begin{equation*}
+					\text{Ran}\left(f|_{\left(\bigcap \bv{N}\right)^{\nu}}\right)  \subset \bigcap \bv{N}
+				\end{equation*}
+				which means $\bigcap \bv{N}$ is closed under $f$.
+			\end{preformal theorem}		
 		
 			\begin{preformal definition}[$U$ Function Family]
-				Suppose $I$ is a set and $\bv{\nu} = (\nu_i)_{i\in I}$ is an $I$-tuple with $\nu_i \in \N^+$ for each $i\in I$.
+				Suppose $I$ is a set and $\bv{\nu} = (\nu_i)_{i\in I}$ is an $I$-tuple with $\nu_i \in \N$ for each $i\in I$.
 				Suppose $U$ is a set and $\bv{D} = (D_i)_{i\in I}$ is an $I$-tuple with $D_i \subset U^{\nu_i}$ for each $i\in I$.
 				Finally, suppose $\bv{f} = (f_i)_{i\in I}$ is an $I$ tuple with $f_i:D_i \to U$ for each $i\in I$.
 				Then we say $\bv{f}$ is a $\bv{\nu}$-ary $U$ function family.
@@ -710,55 +815,290 @@
 			
 			\begin{preformal definition}[Closed Under a $U$ Function Family]
 				Suppose $\bv{f} = (f_i)_{i\in I}$ is a $U$ function family.
-				We say $U'$ is closed under $\bv{f}$ if $U'$ is closed under $f_i$ for each $i\in I$.
+				We say $N$ is closed under $\bv{f}$ if $N$ is closed under $f_i$ for each $i\in I$.
 			\end{preformal definition}
 			
 			\begin{preformal definition}[$U$ Function Family Restriction]
 				Suppose $\bv{f}$ is a $\bv{\nu}$-ary $U$ function family.
-				Then we define the $I$-tuple $\bv{f}|_{U'} = (f_i|_{(U')^{\nu_i}})_{i\in I}$.
+				Then we define the $I$-tuple $\bv{f}|_{N} = (f_i|_{(N)^{\nu_i}})_{i\in I}$.
 			\end{preformal definition}
 			Recall that, by our definition of relation/function restrictions, that 
 			\begin{equation*}
-				\text{Dom}(f_i|_{(U')^{\nu_i}}) = \text{Dom}(f_i) \cap (U')^{\nu_i} = D_i \cap (U')^{\nu_i}.
+				\text{Dom}(f_i|_{(N)^{\nu_i}}) = \text{Dom}(f_i) \cap (N)^{\nu_i} = D_i \cap (N)^{\nu_i}.
 			\end{equation*}
-			In particular, recall that this definition allows $(U')^{\nu_i} \not \subset D_i$
-			
-			\begin{preformal theorem}[Closure is preserved under intersections]
-				\label{thm:closurepreservedunderintersection}
-				Suppose $f$ is a $\nu$-ary $U$ function and $\bv{U}'$ is a set of sets and each $U' \in U$ is closed under $f$.
-				We can see that
-				\begin{equation*}
-					\text{Ran}\left(f|_{\left(\bigcap \bv{U}'\right)^{\nu}}\right) \subset \text{Ran}\left(f|_{(U')^{\nu}}\right) \subset U'
-				\end{equation*}
-				for each $U' \in \bv{U}'$ because $\bigcap \bv{U}' \subset U'$.
-				But this means
-				\begin{equation*}
-					\text{Ran}\left(f|_{\left(\bigcap \bv{U}'\right)^{\nu}}\right)  \subset \bigcap \bv{U}'
-				\end{equation*}
-				which means $\bigcap \bv{U}'$ is closed under $f$.
-			\end{preformal theorem}
-			
+			In particular, recall that this definition allows $N^{\nu_i} \not \subset D_i$
 		\section{Structural Induction}
 			
-			\subsection{$(B, \bv{f})$ Induction}
+			\subsection{$\bv{f}$ Induction}
 				
-				\begin{preformal definition}[$(B, \bv{f})$-Inductive]
-					Suppose $\bv{f}$ is a $U$ function family and $B$ is a set.
-					A set $N$ is called $(B, \bv{f})$ inductive if it satisfies
-					\begin{itemize}
-						\item{$B\subset N$ and}
-						\item{$N$ is closed under $\bv{f}$.}
-					\end{itemize}
-					We can capture this by saying $N$ is $(B, \bv{f})$ inductive if
+				\begin{preformal definition}[$\bv{f}$-Inductive]
+					Suppose $\bv{f}$ is a $U$ function family and $N$ is closed under $\bv{f}$.
+					Then we say $N$ is $\bv{f}$ inductive.
+					This is equivalent to
 					\begin{equation*}
-						B \cup \bigcup_{i\in I} \text{Ran}(f_i|_{N^{\nu_i}}) \subset N.
+						\bigcup_{i\in I} \text{Ran}(f_i|_{N^{\nu_i}}) \subset N
 					\end{equation*}
 				\end{preformal definition}
-				If $B\subset U$ then $U$ is $(B, \bv{f})$ inductive since $U$ is closed under $\bv{f}$ since $U$ is the target of $f_i$ for each $i\in I$.
+				Note that $U$ is $\bv{f}$ inductive since $U$ is equal to the target of $f_i$ for each $i\in I$.
 				
 				The prototypical example of an inductive set is that natural numbers.
-				We can take $U = \N$, $B = \{0\}$ and $\bv{f} = (f_{+_1})$ where $f_{+_1}: \N \to \N$ is defined by $f_{+_1}(n) = n+1$.
+				We can take $U = \N$, $\bv{f} = (f_0, f_{+_1})$ where $f_0$ is a 0-ary function with $f_0(\varnothing) = 0$ and $f_{+_1}$ is a 1-ary function with $f_{+_1}(n) = n + 1$.
 				
+				\begin{preformal definition}[Minimally $\bv{f}$ inductive]
+					Suppose $\bv{f}$ is a $U$ function family and $N$ is $\bv{f}$ inductive.
+					If the only $\bv{f}$ inductive subset of $N$ is $N$ then we say $N$ is minimally $\bv{f}$ inductive.
+				\end{preformal definition}
+				If $N$ is minimally $\bv{f}$ inductive then $N$ has no proper subset which is $\bv{f}$ inductive.
+				If $N$ is minimally $\bv{f}$ inductive and $M \subset N$ is $\bv{f}$ inductive then $M = N$.
+				
+				In fact, the last statement is essentially the induction principle. 
+				Suppose we are studying a set $M\subset N$ which, for example, satisfies some special property. If we can demonstrate that $M$ is $\bv{f}$ inductive then, because $N$ is minimally $\bv{f}$ inductive, we know that $M=N$.
+				in this case, this means that the special property characterizing $M$ applies to all of $N$.
+				In practice, we will apply the induction principle in the form in the following theorem, Theorem.
+				
+				\begin{preformal theorem}[The Induction Theorem]
+					\label{thm:inductiontheorem}					
+					Suppose $N$ is minimally $\bv{f}$ inductive and suppose $\phi(n)$ is a logical statement parametrized by elements $n\in N$.
+					The induction theorem states that if $\phi$ is preserved by $f_i$ for each $i\in I$ then $\phi(n)$ holds for each $n\in N$.
+					$\phi$ being preserved by $f_i$ means that for each $\bv{n} \in \text{Dom}(f_i|_{N^{\nu_i}})$ that if $\phi(n_j)$ holds for each $j\in [\nu_i]$ that $\phi(f_i(\bv{n}))$ also holds.
+					
+					We now prove the induction theorem.
+					Define the set
+					\begin{equation*}
+						M = \{n\in N \mid \phi(n)\}.
+					\end{equation*}
+					Suppose that have proven for each $i\in I$ and for each $\bv{n} \in \text{Dom}(f_i|_{N^{\nu_i}})$ that if $\phi(n_j)$ holds for each $j\in [\nu_i]$ then $\phi(f_i(\bv{n}))$ holds.
+					The condition that $\phi(n_j)$ holds for each $j\in [\nu_i]$ means that $n_j \in M$ for each $j\in [\nu_i]$ but this means $\bv{n} \in M^{\nu_i}$.
+					Since we also have that $\bv{n} \in \text{Dom}(f_i|_{N^{\nu_i}})$ this means that 
+					\begin{align*}
+						\bv{n} \in \text{Dom}(f_i|_{N^{\nu_i}}) \cap M^{\nu_i} =& \text{Dom}(f_i) \cap N^{\nu_i} \cap M^{\nu_i}\\
+						=& \text{Dom}(f_i) \cap M^{\nu_i}\\
+						=& \text{Dom}(f_i|_{M^{\nu_i}})
+					\end{align*}
+					where the first equality follows from the definition of $f_i$ restricted to $N^{\nu_i}$, the second equality follows because $M\subset N$, and the third equality follows from the definition of $f_i$ restricted to $M^{\nu_i}$.
+					But, we are assuming that we have proven that $\phi(f_i(\bv{n}))$ holds which means $f_i(\bv{n}) \in M$.
+					So we have proven that $f_i(\bv{n}) \in M$ for each $\bv{n} \in \text{Dom}(f_i|_{M^{\nu_i}})$.
+					This means that
+					\begin{equation*}
+						\text{Ran}(f_i|_{M^{\nu_i}}) \subset M
+					\end{equation*}
+					which means that $M$ is closed under $\bv{f}$ and is therefore $\bv{f}$ inductive.
+					However, because $N$ is \textit{minimally} $\bv{f}$ inductive and $M\subset N$ is $\bv{f}$ inductive, we must have that $M=N$.
+					But this means that $\phi(n)$ holds for each $n\in N=M$.	
+				\end{preformal theorem}
+				
+				The induction theorem is powerful because it allows us to prove a property $\phi$ on all of $N$ by proving only that $\phi$ is preserved by each construction function $f_i$.
+				This is often much more tractable than, for example, trying to prove directly that $\phi(n)$ holds for each $n\in N$.
+				We need only prove a statement for $f_i$ for each $i\in I$ and $I$ is a much smaller set than $N$.
+				For example, for $\N$, $I$ contains two elements, $f_0$ and $f_{+_1}$ whereas $\N$ contains an infinite number of elements.
+				
+				In the work that follows we will use Theorem \ref{thm:inductiontheorem} repeatedly.
+				Later we will prove a strong version of the induction theorem.
+				When necessary we will refer to Theorem \ref{thm:inductiontheorem} as the weak induction theorem to distinguish to the forthcoming strong induction theorem.
+				
+				\subsection{The Inductive Base Set $B_{\bv{f}}$}
+				
+					\begin{preformal theorem}[$\emptyset$ is always closed under a $\nu$-ary $U$ function with $\nu> 0$]
+						Suppose $f$ is a $\nu$-ary $U$ function with $\nu>0$.
+						Then consider $f|_{\emptyset^{\nu}}$.
+						We know from Theorem \ref{thm:repeated cartesian products of emptyset} that $\emptyset^{\nu} = \emptyset$ so we have $f|_{\emptyset^{\nu}} = f|_{\emptyset} = \emptyset$.
+						So we have
+						\begin{equation*}
+							\text{Ran}(f|_{\emptyset^{\nu}}) = \emptyset \subset \emptyset
+						\end{equation*}
+						which tells us that $\emptyset$ is closed under $f$.
+					\end{preformal theorem}
+				
+					\begin{preformal theorem}[Set closure under a 0-ary $U$ function]
+						\label{thm:set closure under 0-ary U function}
+						Suppose $f$ is a 0-ary $U$ function with non-empty domain $\text{Dom}(f) \subset U^0$.
+						We know from \ref{thm:repeated cartesian products of emptyset} that $U^0 = \{\varnothing\}$ so we have that $\text{Dom}(f) = U^0 = \{\varnothing\}$ and $f(\varnothing) \in U$.
+						Now, when taking the $U$ function restriction of $f$ to $N$ we restrict $f$ to $N^0 = \{\varnothing\} = U^0$.
+						So
+						\begin{equation*}
+							\text{Ran}(f|_{N^0}) = \text{Ran}(f) = \{f(\varnothing)\}.
+						\end{equation*}
+						This means that if $N$ is closed under $f$, we must have that $\{f(\varnothing)\} \subset N$, or, rather, that $f(\varnothing) \in N$.
+					\end{preformal theorem}
+				
+					\begin{preformal definition}[$\bv{f}$ inductive base set]
+						Suppose $N$ is $\bv{f}$ inductive.
+						We define the $\bv{f}$ inductive base set $B_{\bv{f}}$ by
+						\begin{equation*}
+							B_{\bv{f}} = \{f_i(\varnothing) \in U \mid \nu_i = 0 \text{ and } \text{Dom}(f_i) \neq \emptyset\}.
+						\end{equation*}
+					\end{preformal definition}				
+				
+					\begin{preformal theorem}[$B_{\bv{f}}$ is always a subset of a $\bv{f}$ inductive set]
+						Suppose $N$ if $\bv{f}$ inductive.
+						From Theorem \ref{thm:set closure under 0-ary U function} we can see that, since $N$ is closed under $\bv{f}$ that we must have
+						\begin{equation*}
+							B_{\bv{f}} \subset N
+						\end{equation*}
+					\end{preformal theorem}
+					
+					We have actually taken a unique approach to inductive definitions.
+					The standard definition of a set being inductive is that the set contains an explicitly specified base set $B$ and then the set is closed under function $f_i$ with positive (non-zero) arity.
+					Under this standard approach all definitions and proofs involving induction are split into two cases.
+					A base case which is related elements of the base set $B$ and an inductive step which is related to the construction functions $f_i$.
+					However, in our approach, we unify the two cases by allowing 0-ary construction functions.
+					The previous definition and theorem tell us that the set $B_{\bv{f}}$, the union of the range of all of the (non-empty) 0-ary functions, corresponds to the standard induction base set $B$.
+				
+					\subsection{Minimally $\bv{f}$ inductive sets}
+					
+					We are deeply interested in \textit{minimally} $\bv{f}$ inductive sets because those are the sets for which the induction theorem, Theorem \ref{thm:inductiontheorem} which we will use to great effect below, applies.
+					The induction theorem does not apply to sets which are \textit{merely} $\bv{f}$ inductive and not \textit{minimally} $\bv{f}$ inductive.
+					In this section we will explore the distinction between minimally $\bv{f}$ inductive and $\bv{f}$ inductive sets.
+					
+					A set $N'$ which is \text{merely} inductive contains the range of each of its construction $f_i$ for each $i\in I$:
+					\begin{equation*}
+						\bigcup_{i\in I} \text{Ran}(f_i|_{N^{\nu_i}}) \subset N.
+					\end{equation*}
+					However, $N'$ may contain \textit{extraneous} elements.
+					That is, elements which are not necessary to gaurantee that the set is inductive.
+					We will consider two pathological examples to demonstrate the concept of extraneous elements.
+					
+					The simplest way to add an extraneous element to an inductive set such that the new set is still inductive is to add an element which is not in the domain of $f_i$ for any $i\in I$.
+					Consider
+					\begin{align*}
+						U =& \{a, b\}\\
+						f_0 =& \{\braket{(), a}\}\\
+						f_1 =& \{\braket{(a), b}\}\\
+						\bv{f} =& (f_0, f_1)
+					\end{align*}
+					We can see that $f_0$ is a 0-ary $U$ function and maps $()$ to $a$ and $f_1$ is 1-ary $U$ function and maps $a$ to $b$.
+					With these definitions we can see that $N = \{a, b\}$ is $\bv{f}$ inductive.
+					Indeed, $N$ is minimally $\bv{f}$ inductive since $f_0$ and $f_1$ are also $N$ function families and removing either $a$ or $b$ breaks closure under either $f_0$ or $f_1$.
+					
+					But now consider $N' = \{a, b, c\}$ with $c\neq a$ and $c \neq b$.
+					We can see that $N'$ is still closed under $\bv{f}$.
+					This follows because $c\not \in \text{Dom}(f_0)$ and $c\not \in \text{Dom}(f_1)$, so adding it doesn't impact the closure condition under either of these functions.
+					But, $N'$ is \textbf{not} minimally $\bv{f}$ inductive because $N$ is a proper $\bv{f}$ inductive subset of $N'$.
+					This is the sense in which $c$ is an extraneous element.
+					
+					Adding an element which is not contained in the domain of $f_i$ for any $i$ is the simplest way to add extraneous elements to a $\bv{f}$ inductive set and still maintain that the resulting set is $\bv{f}$ inductive. 
+					But, there are more complicated ways to add extraneous elements to a $\bv{f}$ inductive set and still have the set be $\bv{f}$ inductive.			
+					Consider the following pathological example.
+					Let
+					\begin{align*}
+						U =& \{a, b, c\}\\
+						f_0 =& \{\braket{(), a}\}\\
+						f_1 =& \{\braket{(b), c}\}\\
+						f_2 =& \{\braket{(c), b}\}\\
+						\bv{f} =& (f_0, f_1, f_2)
+					\end{align*}
+					We can see that $f_0$ is a 0-ary $U$ function and $f_1$ and $f_2$ are 1-ary $U$ functions.				
+					Consider, then, the set
+					\begin{equation*}
+						N' = \{a, b, c\}
+					\end{equation*}
+					We can see that $N'$ is $\bv{f}$ inductive because the range of $f_0$, $f_1$, and $f_2$ are all contained in $N'$.
+					Note that $a\in B_{\bv{f}}$ but that $b$ and $c$ exist in infinite cycle
+					\begin{equation*}
+						c = f_1(b) = f_1(f_2(c)) = f_1(\ldots f_2(c)\ldots)
+					\end{equation*}
+					but this cycle never connects to $B_{\bv{f}} = \{a\}$.
+					This motivates us to ask if $N=B_{\bv{f}} = \{a\}$ alone is $\bv{f}$ inductive.
+					Indeed, in this case $N$ is $\bv{f}$ inductive.
+					The domains of $f_1$ and $f_2$ are disjoint from $N$ so it is ok that their ranges are excluded.
+					So we see that $N'$ is again \textbf{not} minimally $\bv{f}$ inductive because $N$ is a proper $\bv{f}$ inductive subset of $N'$.
+					In this case, the elements $b$ and $c$ were extraneous because there is no chain of construction functions linking $b$ or $c$ down to $B_{\bv{f}}$.
+					Note, however, that we require both $b, c \in N'$ for $N'$ to be inductive. 
+					Both sets $\{a, b\}$ (excluding $c$) and $\{a, c\}$ (excluding $b$) fail to be $\bv{f}$ inductive.
+					This example has given us another way that a set of elements can be included within an inductive set but still be extraneous.
+					Thinking more about this example reveals that if $\bv{f}$ contained no 0-ary functions then $\emptyset$ would actually be minimally $\bv{f}$ inductive.
+					Indeed, if $B_{\bv{f}} = \emptyset$ then $\emptyset$ is always minimally $\bv{f}$ inductive since $\emptyset$ is closed under any $\nu$-ary $U$ function with $\nu>0$.
+					
+					A set $N$ is $\bv{f}$ inductive if
+					\begin{equation*}
+						\bigcup_{i\in I} \text{Ran}(f_i|_{N^{\nu_i}}) \subset N.
+					\end{equation*}
+					One might wonder if the opposite containment
+					\begin{equation*}
+						N \subset \bigcup_{i\in I} \text{Ran}(f_i|_{N^{\nu_i}})
+					\end{equation*}
+					so that
+					\begin{equation*}
+						N = \bigcup_{i\in I} \text{Ran}(f_i|_{N^{\nu_i}})
+					\end{equation*}
+					means that $N$ is minimally $\bv{f}$ inductive.
+					That is, does requiring that each element in $N$ be in the range of some construction function guarantee that there are no extraneous elements?
+					The answer is no because that second example above with $N' = \{a, b, c\}$ satisfied this set inclusion but, as we saw, this set was not minimally $\bv{f}$ inductive.
+					The condition that a $\bv{f}$ inductive set is a subset of the range of all of its construction functions turns out to be too weak to characterize that $N$ has no proper inductive subset.
+					However, while the condition that a $\bv{f}$ inductive set being equal to the range of all of its construction functions is not a sufficient condition for the set to be minimally $\bv{f}$ inductive, it is a necessary condition.
+					
+					\begin{preformal theorem}[A minimally $\bv{f}$ inductive set is equal to the range of its construction functions]
+						Suppose $N$ is minimally $\bv{f}$ inductive.
+						Let
+						\begin{equation*}
+							C = \bigcup_{i\in I} \text{Ran}(f_i|_{N^{\nu_i}}).
+						\end{equation*}
+						Because $N$ is $\bv{f}$ inductive we know $C \subset N$.
+						Let
+						\begin{equation*}
+							C' = \bigcup_{i\in I} \text{Ran}(f_i|_{C^{\nu_i}}) \subset \bigcup_{i\in I} \text{Ran}(f_i|_{N^{\nu_i}}) \subset C
+						\end{equation*}
+						where the first subset relation follows because $C\subset N$ and the second follows because $\bigcup_{i\in I}\text{Ran}(f_i|_{N^{\nu_i}}) = C$.
+						But 
+						\begin{equation*}
+							\bigcup_{i\in I} \text{Ran}(f_i|_{C^{\nu_i}}) \subset C
+						\end{equation*}
+						means that $C$ is closed under $\bv{f}$ which means that $C$ is $\bv{f}$ inductive.
+						But since $C\subset N$, $C$ is $\bv{f}$ inductive, and $N$ is minimally $\bv{f}$ inductive, we must have $N=C$.
+					\end{preformal theorem}
+					
+				\subsection{The $\bv{f}$ Inductive Closure}
+				
+					\begin{preformal definition}[The $\bv{f}$ inductive closure]
+						Suppose $N$ is $\bv{f}$ inductive.
+						We denote the $\bv{f}$ inductive closure of $N$ by $\bar{N}$ and define it by
+						\begin{equation*}
+							\bar{N} = \bigcap \{N' \in \mc{P}(N) \mid N' \text{ is } \bv{f} \text{ inductive}\}
+						\end{equation*}
+					\end{preformal definition}
+					
+					\begin{preformal theorem}[The $\bv{f}$ inductive closure is $\bv{f}$ inductive]
+						\label{thm:inductive closure is inductive}
+						Suppose $N$ is $\bv{f}$ inductive.
+						Let
+						\begin{equation*}
+							\bv{N} = \{N' \in \mc{P}(N) \mid N' \text{ is } \bv{f} \text{ inductive}\}
+						\end{equation*}
+						so that $\bar{N} = \bigcap \bv{N}$.
+						
+						We know that $N'$ is $\bv{f}$ inductive for each $N'\in \bv{N}$ which means $N'$ is closed under $\bv{f}$.
+						But Theorem \ref{thm:closurepreservedunderintersection} tell us that closure under a $U$ function is preserved under intersection, so this means $\bar{N}$ is also closed under $\bv{f}$ so that $\bar{N}$ itself is $\bv{f}$ inductive.
+					\end{preformal theorem}
+				
+					\begin{preformal theorem}[The $\bv{f}$ inductive closure is minimally $\bv{f}$ inductive]
+						\label{thm:inductive closure is minimally inductive}
+						Suppose $N$ is $\bv{f}$ inductive.
+						We know from Theorem \ref{thm:inductive closure is inductive} that $\bar{N}$ is $\bv{f}$ inductive.
+						
+						Now suppose $N' \subset \bar{N}$ is $\bv{f}$ inductive.
+						But, $\bar{N}$ is the intersection of all $\bv{f}$ inductive sets so we must have $\bar{N} \subset N'$ from which we conclude $N' = \bar{N}$ so that $\bar{N}$ is minimally $\bv{f}$ inductive.
+					\end{preformal theorem}
+				
+					\begin{preformal theorem}[There always exists a minimally $\bv{f}$ inductive set]
+							Suppose $\bv{f}$ is a $U$ function family. 
+							We know that $U$ is $\bv{f}$ inductive.
+							But, from Theorem \ref{thm:inductive closure is minimally inductive}, we know $\bar{U}$ is minimally $\bv{f}$ inductive.
+					\end{preformal theorem}
+					
+					\begin{preformal theorem}[There exists at most one minimally $\bv{f}$ inductive set]
+						Suppose $M$ and $N$ are both minimally $\bv{f}$ inductive.
+						Consider $M\cap N \subset M$.
+						Both $M$ and $N$ are closed under $\bv{f}$, so, since closure is preserved under intersection, $M \cap N$ must be closed under $\bv{f}$ which means $M \cap N$ is $\bv{f}$ inductive.
+						But, since $M \cap N\subset M$ is $\bv{f}$ inductive and $M$ is minimally $\bv{f}$ inductive, we must have $M\cap N = M$.
+						But $M\cap N = M$ means $M \subset N$.
+						However, since $M\subset N$ is $\bv{f}$ inductive and $N$ is minimally $\bv{f}$ inductive, we must have $M = N$.
+					\end{preformal theorem}
+					
+					\begin{preformal theorem}[There is exactly one minimally $\bv{f}$ inductive set]
+						The previous theorems establish that the existence and uniqueness of the minimally $\bv{f}$ inductive set.
+					\end{preformal theorem}
+				
+					
 				\begin{preformal definition}[The $(B, \bv{f})$ inductive closure]
 					Suppose $\bv{f}$ is a $U$ function family and $B$ is a set.
 					Suppose $N$ is $(B, \bv{f})$ inductive.
@@ -784,7 +1124,6 @@
 				If we are able to show that $M$ is $(B, \bv{f})$ inductive then we know that $M=N$ and, therefore, that the special property applies to all of $N$.
 				In practice, we will perform induction using Theorem \ref{thm:inductiontheorem}, the induction theorem, below.
 				\begin{preformal theorem}[The induction theorem]
-					\label{thm:inductiontheorem}
 					Suppose $N$ is minimally $(B, \bv{f})$ inductive and suppose $\phi(n)$ is a logical statement which depends on an element $n\in N$.
 					Then consider the set
 					\begin{equation*}
@@ -802,14 +1141,7 @@
 					The induction theorem says that if $N$ is minimally $(B, \bv{f})$ inductive and we can establish the base case and the induction step for a logical statement $\phi(n)$, then we know that $\phi(n)$ holds for each $n\in N$.
 				\end{preformal theorem}
 				
-				The induction theorem is powerful because it allows us to prove a property $\phi$ on all of $N$ by proving $\phi$ for $B$ and then proving that $\phi$ is preserved under $\bv{f}$.
-				But this is an extremely powerful proof technique because often $B$ is much smaller than $N$, so it is easier to prove $\phi$ on $B$ than to prove it on all of $N$ and proving that $\phi$ is preserved under $\bv{f}$ is, in some sense, a \textit{local} consideration with $N$.
-				That is, we need only prove that locally within that $\phi$ is preserved under $\bv{f}$.
-				We need not consider arbitrary elements with $N$, rather, we are only concerned with the \textit{local} relationship between $f_i(\bv{n})$ and $n_j$ for $j\in [\nu_i]$.
-				
-				In the work that follows we will use Theorem \ref{thm:inductiontheorem} repeatedly.
-				Later we will prove a strong version of the induction theorem.
-				When necessary we will refer to Theorem \ref{thm:inductiontheorem} as the weak induction theorem to distinguish to the forthcoming strong induction theorem.
+
 
 			\subsection{Inductive Closure and Minimally Inductive}
 				We now prove a few facts about and explore the $(B, \bv{f})$ inductive closure and minimally $(B, \bv{f})$ inductive sets.
@@ -842,69 +1174,6 @@
 					If $N$ is minimally $(B, \bv{f})$ inductive then $N = \bar{N}$, but by Theorem \ref{thm:inductiveclosureisinductive}, we know that $\bar{N}$ is $(B, \bv{f})$ inductive.
 				\end{preformal theorem}
 			
-				We are deeply interested in \textit{minimally} $(B, \bv{f})$ inductive sets because those are the sets for which Theorems \ref{thm:inductivesubsetofminimallyinductivesetequalswholeset} and \ref{thm:inductiontheorem}, which we will use to great effect below, apply.
-				These induction theorems do not apply to sets which are \textit{merely} $(B, \bv{f})$ inductive and not \textit{minimally} $(B, \bv{f})$ inductive.
-				In this section we will explore the distinction between minimally $(B, \bv{f})$ inductive and $(B, \bv{f})$ inductive sets.
-			
-				A set which is \textit{merely} inductive contains the base set $B$ and is closed under $\bv{f}$, however, it may contain \textit{extraneous} elements.
-				That is, elements which are not necessary to guarantee that the set is inductive.
-				We will consider two pathological examples to demonstrate the concept of extraneous elements.
-				The simplest way to add an extraneous element to an inductive set $N$ is to add an element which is not in the domain of $f_i$ for any $i\in I$.
-				Consider
-				\begin{align*}
-					B =& \{a\}\\
-					U =& \{a, b\}\\
-					f =& \{\braket{a, b}\}
-				\end{align*}
-				We can see that $f(a) = b$, $\text{Dom}(f) = \{a\} = D \subset U$ and $\text{Ran}(f) = \{b\} \subset U$ so that $f: D \to U$ so that $\bv{f} = (f)$ is a $U$ function family.
-				We can see that the set $N = \{a, b\}$ is $(B, \bv{f})$ inductive.
-				Indeed, $N$ is in fact minimally $(B, \bv{f})$ inductive.
-				Consider then the set $N' = \{a, b, c\}$.
-				$N'$ is still closed under $f$ because, since $c\not \in \text{Dom}(f)$, it doesn't impact the closure condition.
-				But $N'$ is \textbf{not} minimally $(B, \bv{f})$ inductive because $N$ is a proper subset of $N'$ which is $(B, \bv{f})$ inductive.
-				This is the sense in which $c$ is an extraneous element.
-							
-				Adding an element which is not contained in the domain of $f_i$ for any $i$
-				is the simplest way to add extraneous elements to an inductive set and still maintain an inductive set. 
-				But, there are more complicated ways to add extraneous elements to an inductive set and still have the set be inductive.			
-				Consider the following pathological example.
-				Let
-				\begin{align*}
-					B =& \{a\}\\
-					U =& \{b, c\}\\
-					f_1 =& \{\braket{b, c}\}\\
-					f_2 =& \{\braket{c, b}\}\\
-				\end{align*}
-				We can see that $f_1(b) = c$ and $f_2(c) = b$ and that the domain and range of $f_1$ and $f_2$ are each subsets of $U$.
-				This means $\bv{f} = (f_1, f_2)$ is a $U$ function family.
-				Consider, then, the set
-				\begin{equation*}
-					N' = \{a, b, c\}
-				\end{equation*}
-				We can see that $N'$ is $(B, \bv{f})$ inductive because $B\subset N'$ and $N'$ is closed under $f_1$ and $f_2$.
-				However, we can see that $b$ and $c$ never connect down to the base set $B$.
-				$b$ and $c$ live in a closed functional cycle \textit{away} from the base set $B$.
-				This leads us to consider the set $N = B = \{a\}$.
-				Actually we can see that $B\subset N$ and also that $N$ is trivially closed under $f_1$ and $f_2$ because $N$ is actualy disjoint from the domain of these two functions.
-				This means that $N$ is $(B, \bv{f})$ inductive yet $N\subset N'$.
-				This means that $N'$ cannot be minimally $(B, \bv{f})$ inductive and, indeed, $N$ is actually minimally $(B, \bv{f})$ inductive.
-				So, even though $N'$ is $(B, \bv{f})$ inductive, we can see that $b$ and $c$ are extraneous in the sense that they can be remove while still leaving behind a $(B, \bv{f})$ inductive set.
-				However, note that removing either $b$ or $c$ alone leaves us with $\{a, c\}$ or $\{a, b\}$, both of which are \textbf{not} closed under $\bv{f}$ and therefore are \textbf{not} $(B, \bv{f})$ inductive.
-				
-				A set $N$ is $(B, \bv{f})$ inductive if
-				\begin{equation*}
-					\subset B \cup \bigcup_{i\in I} \text{Ran}(f_i|_{N^{\nu_i}}) \subset N.
-				\end{equation*}
-				One might be tempted to propose that a set is minimally $(B, \bv{f})$ inductive if
-				\begin{equation*}
-					B \cup \bigcup_{i\in I} \text{Ran}(f_i|_{N^{\nu_i}})=N,
-				\end{equation*}
-				however, the set $\{a, b, c\}$ in the most recent example satisfies this condition while not being minimally $(B, \bv{f})$ inductive.
-				The condition that $N$ is a subset of the union of $B$ and the range of each $f_i$ restricted to $N^{\nu_i}$ turns out to be too weak to characterize that $N$ is minimally $(B, \bv{f})$ inductive in the sense that $N$ has no proper $(B, \bv{f})$ inductive subsets.
-				
-				Finally, after this discussion, I will emphasize that it is important that a minimally $(B, \bv{f})$ inductive set $N$ has no proper $(B, \bv{f})$ inductive sets because then, by showing $M \subset N$ is $(B, \bv{f})$ inductive, we know that $M=N$.
-				This is the content of the induction theorem.
-				
 				\begin{preformal theorem}[There exists at least one minimally $(B, \bv{f})$ inductive set]
 					\label{thm:minimalinductiveexistence}
 					We have that $\bv{f}$ is a $U$ function family. 
