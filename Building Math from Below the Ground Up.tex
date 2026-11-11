@@ -234,14 +234,9 @@
 			
 			\begin{preformal definition}[Object]
 				An object is a clearly definable and delineated entity.
+				We denote objects using a variety of symbols.
 			\end{preformal definition}
-			
-			\begin{preformal definition}[Symbol]
-				A symbols is a type of object.
-				Written symbols are specific two-dimensional patterns depicted on two-dimensional surfaces like paper or screens.
-				We will typically use symbols from the English alphabet and numeral system as well as some punctuation symbols and brackets.
-			\end{preformal definition}
-			
+						
 			\begin{preformal definition}[Object Equality]
 				Suppose the symbols $x$, $y$, and $z$ represent objects.
 				If $x$ and $y$ are the same object then we may write $x = y$. Otherwise we write $x\not = y$.
@@ -436,12 +431,12 @@
 			\end{preformal definition}
 			
 			\begin{preformal definition}[Functional Relation]
-				Suppose $R\subset X \times Y$.
-				If, for all $y, y' \in Y$ we have that $\braket{x, y}, \braket{x, y'}\in R$ implies that $y=y'$ then we say $R$ is a functional relation.
-				If $R$ is a functional relation and $x\in \text{Dom}(R)$ then there is a unique $y\in \text{Ran}(R)$ such that $\braket{x, y} \in R$.
-				We denote this unique $y$ by $R(x)$.
+				Suppose $f\subset X \times Y$.
+				If, for all $y, y' \in Y$ we have that $\braket{x, y}, \braket{x, y'}\in f$ implies that $y=y'$ then we say $f$ is a functional relation.
+				If $f$ is a functional relation and $x\in \text{Dom}(f)$ then there is a unique $y\in \text{Ran}(f)$ such that $\braket{x, y} \in f$.
+				We denote this unique $y$ by $f(x)$.
 				We may simply call a functional relation a function.
-				Note that $R_{\text{Img}}(\{x\}) = \{R(x)\}$.
+				Note that $f_{\text{Img}}(\{x\}) = \{f(x)\}$.
 			\end{preformal definition}
 			
 			\begin{preformal definition}[Injective Relation]
@@ -506,6 +501,28 @@
 				Note that it is possible to define $R|_{X'}$ even if $X' \not\subset X$ or $X' \not\subset \text{Dom}(R)$.
 			\end{preformal definition}
 			
+			\begin{preformal definition}[Relation composition]
+				Suppose $R \subset X \times Y$ and $S \subset Y \times Z$.
+				We define $S \circ R \subset X \times Z$ by
+				\begin{equation*}
+					S\circ R = \left\{\braket{x, z} \in X \times Z \middle| \begin{aligned}
+						&\text{There exists } y \in Y\\
+						&\text{ such that } \braket{x, y} \in R \text{ and } \braket{y, z} \in S
+					\end{aligned}\right\}
+				\end{equation*}
+			\end{preformal definition}
+			
+			\begin{preformal theorem}[Function composition is functional]
+				\label{thm:function composition is functional}
+				Suppose $R \subset X \times Y$ and $S\subset Y \times Z$.
+				Suppose $R$ and $S$ are both functional.
+				Suppose $\braket{x, z}, \braket{x, z'} \in S \circ R$.
+				This means there exists $y \in Y$ such that $\braket{y, z} \in S$ and $\braket{x, y} \in R$ but there also exists $y' \in Y$ such that $\braket{y', z'} \in S$ and $\braket{x, y'} \in R$.
+				But since $R$ is functional and $\braket{x, y},  \braket{x, y'} \in R$ we must have $y'= y$.
+				But this means $\braket{y, z}, \braket{y, z'} \in S$ but since $S$ is functional we must have $z=z'$.
+				This means $S \circ R \subset X \times Z$ is functional.
+			\end{preformal theorem}
+			
 		\section{Preformal Tuples and Related Concepts}
 			\begin{preformal definition}[Tuple]
 				An $I$-tuple is a functional relation $\bv{t}$ with $\text{Dom}(\bv{t}) = I$.
@@ -561,6 +578,17 @@
 				From the notation $f: X\to Y$ we are meant to infer that $f\subset X\times Y$, $f$ is functional, $\text{Dom}(f) = X$.
 			\end{preformal definition}
 			
+			\begin{preformal theorem}[Function composition]
+				Suppose $f: X \to Y'$ and $g: Y \to Z$ with $Y' \subset Y$.
+				Then $g \circ f: X \to Z$.
+				We know from Theorem \ref{} that $g\circ f$ is functional.
+				We know that $\braket{x, f(x)} \in f$ and since $f(x) \in Y' \subset Y= \text{Dom}(g)$, we know $\braket{f(x), g(f(x))} \in g$ so this means $\braket{x, g(f(x))} \in g\circ f$ so we can see $\text{Dom}(g\circ f) = X$. Since $\text{Dom}(g \circ f) = X$ and $g\circ f$ is functional we have that $g\circ f: X \to Z$.
+				We can see that
+				\begin{equation*}
+					(g\circ f)(x) = g(f(x)).
+				\end{equation*}
+			\end{preformal theorem}
+			
 			\begin{preformal definition}[All Functions from $X$ to $Y$]
 				Suppose $f:X\to Y$ then $f\subset X\times Y$. 
 				This means $f\in \mc{P}(X\times Y)$.
@@ -570,7 +598,7 @@
 				$$				
 			\end{preformal definition}
 			
-			\begin{preformal definition}
+			\begin{preformal definition}[Partial functions from $X$ to $Y$]
 				Suppose $f: X' \to Y$ and $X' \subset X$. 
 				Then we say $f$ is a partial function from $X \to Y$ and we denote this by $f:X\rightharpoonup Y$.
 				We denote the set of all partial functions by
@@ -1421,7 +1449,7 @@
 				\end{equation*}
 			\end{preformal definition}
 			
-			The induction principle allows us to prove a principle $\phi(n)$ for all $n\in N$ by 
+			The induction theorem allows us to prove a principle $\phi(n)$ for all $n\in N$ by 
 			\begin{itemize}
 				\item{proving for each $i\in I$ and $\bv{n}\in\text{Dom}(f_i|_{N^{\nu_i}})$ that if we assume $\phi(n_j)$ for each $j\in [\nu_i]$ we can prove $\phi(f_i(\bv{n}))$.}
 			\end{itemize}
@@ -1470,8 +1498,8 @@
 					D_f = \bigcup_{n\in N} S^{\text{Pred}(n)},
 				\end{equation*}
 				that is, the set of all functions with domain equal to $\text{Pred}(n)$ for some $n\in N$ and target equal to $S$.
-				Suppose $h_i: D_f \to S$.
-				The strong recursion theorem then guarantees the unique existence of a function $h:N \to S$ which satisfies for all $n \in N$
+				Suppose $\bv{h} = (h_i)_{i\in I}$ with $h_i: D_f \to S$ for each $i\in I$.
+				The strong recursion theorem then guarantees the unique existence of a function $h:N \to S$ which satisfies for all $i\in I$ and $\bv{n} \in \text{Dom}(f_i)$ the recursion relation
 				\begin{equation*}
 					h(f_i(\bv{n})) = h_i(h|_{\text{Pred}(f_i(\bv{n}))}).
 				\end{equation*}
@@ -1482,14 +1510,14 @@
 				We assume $N$ and $S$ are both non-empty.
 				First we define
 				\begin{equation*}
-					D_R = \{R \in N\times S \mid \text{Dom}(R) = \text{Pred}(n) \text{ for some } n \in N.
+					D_R = \{R \in \mc{P}(N\times S) \mid \text{Dom}(R) = \text{Pred}(n) \text{ for some } n \in N.
 				\end{equation*}
 				We can see that $D_f \subset D_R$.
 				
-				Because $N$ is non-empty this means $B_{\bv{f}} \neq 0$ which means there is some 0-ary function $f_j$. 
-				We have that $\text{Pred}(f_j(\varnothing)) = \emptyset$.
-				This means that $\emptyset \in D_f$.
-				We now define extensions $\hat{h}_i: D_R \to S$ by
+				Because $N$ is non-empty this means $B_{\bv{f}} \neq 0$ which means there is some $i\in I$ such that $f_i$ is a 0-ary function. 
+				We have that $\text{Pred}(f_i(\varnothing)) = \emptyset$.
+				This means that $\emptyset \in D_f = \text{Dom}(h_i)$ for each $i\in I$.
+				We now define, for each $i\in I$ an extension of $h_i$ called $\hat{h}_i: D_R \to S$ which is given by
 				\begin{equation*}
 					\hat{h}_i(g) = \begin{cases}
 						h_i(g) & \text{if } g \in D_f\\
@@ -1498,80 +1526,99 @@
 				\end{equation*}
 				
 				We are now ready to set up to use the weak tagged recursion theorem.
-				We let $S' = D_R$ and we define $H_i: N^{\nu_i} \times (S')^{\nu_i} \to S'$
+				We define $H_i: N^{\nu_i} \times D_R^{\nu_i} \to D_R$
+				\begin{align*}
+					H_i(\bv{n}, \bv{g}) =& \left(\bigcup_{j\in [\nu_i]} g_j\right) \cup \left\{\Braket{f_i(\bv{n}), \hat{h}_i\left( \bigcup_{j\in [\nu_i]} g_j\right)}\right\}\\
+					=& G(\bv{g}) \cup \{\braket{f_i(\bv{n}), \hat{h}_i(G(\bv{n}))}\}
+				\end{align*}
+				where we've defined $G: D_R^{\nu_i} \to D_R$ by
 				\begin{equation*}
-					H_i(\bv{n}, \bv{g}) = \left(\bigcup_{j\in [\nu_i]} g_j\right) \cup \left\{\Braket{f_i(\bv{n}), \hat{h}_i\left( \bigcup_{j\in [\nu_i]} g_j\right)}\right\}.
+					G(\bv{g}) = \bigcup_{j\in [\nu_i]} g_j.
 				\end{equation*}
-				Note that $\bigcup_{j\in [\nu_i]} g_j$ is not necessarily functional because different $g_j$ may disagree on their common domains.
-				This is why we need the extension $\hat{h}_i$ of $h_i$.
-				The tagged recursion theorem then guarantees the unique existence of a function $H: N \to D_R$ which satisfies the recursion relation
+				Note that $G(\bv{g})$ is not necessarily functional because different $g_j$ may disagree on their common domains so we can see that the range of $H_i$ cannot be merely $D_f$, but must be $D_R$.
+				We chose the domain of $H_i$ to be $N^{\nu_i}\times D_R^{\nu_i}$ rather than $N^{\nu_i} \times D_f^{\nu_i}$ so that we can apply the tagged weak recursion theorem.
+				Apply the tagged weak recursion theorem to the $H_i$ gives us the unique existence of a function $H:N \to D_R$ which satisfies the recursion relation
 				\begin{align*}
 					H(f_i(\bv{n})) =& H_i(\bv{n}, H^{(\nu_i)}(\bv{n}))\\
 					=& \left(\bigcup_{j\in [\nu_i]}H(n_j)\right) \cup \left\{\Braket{f_i(\bv{n}), \hat{h}_i\left(\bigcup_{j\in [\nu_i]} H(n_j)\right)}\right\}\\
+					=& G(H^{(\nu_i)}(\bv{n})) \cup \{\braket{f_I(\bv{n}), \hat{h}_i(G(H^{(\nu_i)}(\bv{n})))}\}\\
+					=& \hat{G}(\bv{n}) \cup \{\braket{f_i(\bv{n}), \hat{h}_i(\hat{G}(\bv{n}))}\}
 				\end{align*}
-				We prove by induction that $\text{Dom}(H(n)) = \text{Pred}(n) \cup \{n\}$ for each $n\in N$.
-				Suppose $\text{Dom}(n_j) = \text{Pred}(n_j)$ for each $j\in [\nu_i]$.
+				where we've defined $\hat{G}: \text{Dom}(f_i) \to D_R$ by
+				\begin{equation*}
+					\hat{G}(\bv{n}) = G(H^{(\nu_i)}(\bv{n})).
+				\end{equation*}
+				We prove by (weak) induction that for all $n\in N$, $\text{Dom}(H(n)) = \text{Pred}(n) \cup \{n\}$ for each $n\in N$.
+				Now, consider $i\in I$ and $\bv{n} \in \text{Dom}(f_i)$ and suppose $\text{Dom}(n_j) = \text{Pred}(n_j) \cup \{n_j\}$ for each $j\in [\nu_i]$.
 				Then
 				\begin{align*}
 					\text{Dom}(H(f_i(\bv{n}))) =& \left(\bigcup_{j\in [\nu_i]} \text{Dom}(H(n_j))\right) \cup \{f_i(\bv{n})\}\\
-					=& \left(\bigcup_{j\in [\nu_j]} \left(\text{Pred}(n) \cup \{n\}\right)\right) \cup \{f_i(\bv{n})\}\\
+					=& \left(\bigcup_{j\in [\nu_j]} \left(\text{Pred}(n_j) \cup \{n_j\}\right)\right) \cup \{f_i(\bv{n})\}\\
 					=& \text{Pred}(f_i(\bv{n})) \cup \{f_i(\bv{n})\}.
 				\end{align*}
-				Let
+				
+				Next we prove that for all $n\in N$ that for $n'\in \text{Pred}(n)$ that $H(n') \subset H(n)$ by (weak) induction.
+				Consider $i\in I$ and $\bv{n} \in \text{Dom}(f_i)$ and suppose that for each $j \in [\nu_i]$ we have that for all $n' \in \text{Pred}(n_j)$ that $H(n') \subset H(n_j)$.
+				We can see from the recursion relation for $H(f_i(\bv{n}))$ that $H(n_j) \subset H(f_i(\bv{n}))$ for all $j\in [\nu_i]$.
+				Now consider $n' \in \text{Pred}(f_i(\bv{n})$.
+				If $n' = n_j$ for some $j\in [\nu_i]$ then we know from the recursion relation that $H(n') \subset H(f_i(\bv{n}))$.
+				Otherwise, we know that $n' \in \text{Pred}(n_j)$ for some $j\in [\nu_i]$ so we know
+				\begin{equation*}
+					H(n') \subset H(n_j) \subset H(f_i(\bv{n}))
+				\end{equation*}
+				where the first subset relation follows by the induction hypothesis applied to $n_j$ and the second subset relation follows from ther recursion relation.
+				This concludes our proof by weak induction that for all $n\in N$ that for all $n' \in \text{Pred}(n)$ that $H(n') \subset H(n)$.
+				
+				We now prove by induction that for all $n\in N$ we have that $H(n)$ is functional.
+				Consider $i\in I$ and $\bv{n} \in \text{Dom}(f_i)$.
+				Suppose that $H(n_j)$ is functional for each $j\in [\nu_i]$.
+				We now prove that $H(n_j)$ and $H(n_{j'})$ agree on their shared domain for each $j, j' \in [\nu_i]$.
+				Suppose $n' \in \text{Dom}(H(n_j)) \cap \text{Dom}(H(n_{j'}))$.
+				This means $n' \in \text{Pred}(n_j)\cup \{n_j\}$ and $n' \in \text{Pred}(n_{j'}) \cup \{n_{j'}\}$.
+				Either $n' = n_j$ or $n' \in \text{Pred}(n_j)$; in either case we have that $H(n') \subset H(n_j)$ and likewise for $n_{j'}$ so that $H(n') \subset H(n_{j'})$.
+				We also know that $n' \in \text{Dom}(H(n'))$.
+				But, this means that 
+				\begin{equation*}
+					H(n_j)(n') = H(n')(n') = H(n_{j'})(n')
+				\end{equation*}
+				so we can see that $H(n_j)$ and $H(n_{j'})$ agree at any $n'$ in their shared domain.
+				Since $H(n_j)$ and $H(n_{j'})$ agree on their shared domain, we know that
 				\begin{equation*}
 					G(\bv{n}) = \bigcup_{j\in [\nu_i]} H(n_j)
 				\end{equation*}
+				is functional.
+				We also know that $\text{Dom}(G(\bv{n})) = \text{Pred}(f_i(\bv{n}))$.
+				When we take the union
+				\begin{equation*}
+					H(f_i(\bv{n})) = G(\bv{n}) \cup \{\braket{f_i(\bv{n}), \hat{h}_i(G(\bv{n}))}\}
+				\end{equation*}
+				we know the result is functional because the domain of the first term, $\text{Pred}(f_i(\bv{n}))$ is disjoint from the domain of the second term, $f_i(\bv{n})$.
+				Therefore $H(f_i(\bv{n}))$.
+				This completes our proof by induction that $H(n)$ is functional for each $n\in N$.
+				We also saw that $G(\bv{n})$ is functional.
+				
+				Since $G(\bv{n})$ is functional we have
+				\begin{equation*}
+					H(f_i(\bv{n})) = G(\bv{n}) \cup \{\braket{f_i(\bv{n}), h_i(G(\bv{n}))}\}.
+				\end{equation*}
+				We now define $h: N \to S$ by
+				\begin{equation*}
+					h(n) = H(n)(n)
+				\end{equation*}
+				so we can see
+				\begin{equation*}
+					h(f_i(\bv{n})) = H(f_i(\bv{n}))(f_i(\bv{n})) = h_i(G(\bv{n})) = h_i\left(\bigcup_{j\in [\nu_i]} H(n_j)\right)
+				\end{equation*}
+				Note that
+				\begin{equation*}
+					h|_{\text{Pred}(f_i(\bv{n}))} = \left(H(f_i(\bv{n}))\right)|_{\text{Pred}(f_i(\bv{n}))} = G(\bv{n})
+				\end{equation*}
 				so that
 				\begin{equation*}
-					H(f_i(\bv{n})) = G(\bv{n}) \cup \{\braket{f_i(\bv{n}), G(\bv{n})}\}.
-				\end{equation*}
-				We have that
-				\begin{equation*}
-					\text{Dom}(G(\bv{n})) = \bigcup_{j\in [\nu_i]} \left(\text{Pred}(n) \cup \{n\}\right) = \text{Pred}(f_i(\bv{n})).
-				\end{equation*}
-				Note also that since $G(\bv{n})$ is the union of functional relations it is, again, a functional relation.
-				
-				
-				
-				
-				Define $h:N \to S$ by $h(n) = H(n)(n)$
-				\begin{equation*}
-					h|_{\text{Pred}(f_i(\bv{n}))} = H(n)|_{\text{Pred}(f_i(\bv{n}))} = \bigcup_{j\in [\nu_i]} H(n_j)
-				\end{equation*}
-				which means
-				\begin{equation*}
-					h(f_i(\bv{n})) = h_i\left(\left(\bigcup_{j\in [\nu_i]} H(n_j)\right)\right)
+					h(f_i(\bv{n})) = h_i(h|_{\text{Pred}(f_i(\bv{n}))})
 				\end{equation*}
 				
-				We define
-				\begin{equation*}
-					h'_i: N^{\nu_i} \times D_f^{\nu_i} \to D_f
-				\end{equation*}
-				by
-				\begin{equation*}
-					h'_i(\bv{n}, \bv{g}) = 
-				\end{equation*}
-				
-				
-				BREAK
-				
-				
-				Let 
-				\begin{equation*}
-					D_R = \{R \in \mc{P}(N \times S) \mid \text{Dom}(R) = \text{Pred}(n) \text{ for some } n \in N\}
-				\end{equation*}
-				that is, the set of all relations with domain equal to $\text{Pred}(n)$ for some $n\in N$ and target equal ot $S$.
-				Define
-				\begin{equation*}
-					h_i: N^{\nu_i} \times D_f^{\nu_i} \to D_R
-				\end{equation*}
-				by 
-				\begin{equation*}
-					h_i(\bv{n}, \bv{g}) = \bigcup_{j\in [\nu_i]} \left(g_j \cup \braket{n_j, H(g_j)}\right)
-				\end{equation*}
-				
-				
-	
+
 				
 				
 				
